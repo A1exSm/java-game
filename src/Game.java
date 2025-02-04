@@ -1,0 +1,7 @@
+import game.GameWorld;
+
+public class Game {
+    public static void main(String[] args) {
+        new GameWorld();
+    }
+}
