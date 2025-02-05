@@ -1,10 +1,11 @@
-package game;
+package body;
 
 import city.cs.engine.BoxShape;
 import city.cs.engine.StaticBody;
+import game.GameWorld;
 import org.jbox2d.common.Vec2;
 
-class Ground extends StaticBody {
+public class Ground extends StaticBody {
     private Vec2 halfDimensions;
     private Vec2 originPos;
     private static int count = -1;
@@ -32,7 +33,7 @@ class Ground extends StaticBody {
     public static int getCount() {
         return count;
     }
-    static class Platform extends Ground {
+    public static class Platform extends Ground {
         public Platform(GameWorld gameWorld, Vec2 originPos) {
             super(gameWorld, new Vec2(5, 0.5f), originPos);
         }

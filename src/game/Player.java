@@ -13,6 +13,7 @@ class Player extends Walker {
 
     protected Player(GameWorld world) {
         super(world, new BoxShape(1, 2));
+        setName("Player");
         setPosition(new Vec2(0, 3f));
         action("IDLEr");
     }

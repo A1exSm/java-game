@@ -1,8 +1,9 @@
-package game;
+package body;
 
 import city.cs.engine.BoxShape;
 import city.cs.engine.SolidFixture;
 import city.cs.engine.StaticBody;
+import game.GameWorld;
 import org.jbox2d.common.Vec2;
 class Stairs extends StaticBody {
     public Stairs(GameWorld gameWorld, Vec2 halfStepDimensions, Vec2 originPos, int numSteps, String vertical, String horizontal) {
