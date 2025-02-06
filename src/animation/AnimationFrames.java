@@ -5,15 +5,15 @@ import city.cs.engine.BodyImage;
 import java.util.ArrayList;
 
 class AnimationFrames {
-    // fields
+    // Fields
     private final ArrayList<BodyImage> animationFrames = new ArrayList<>();
     protected String parentFolder;
     protected String folder;
     protected int numFrames;
     protected float height;
-    // constructor
+    // Constructor
     public AnimationFrames() {}
-    // methods
+    // Methods
     protected void loadFrames() {
         if (animationFrames.isEmpty()) { // ensures no accidental duplicate frames if somehow loadFrames is called a second time (only while I have not implemented exception handling)
             for (int i = 0; i < numFrames; i++) {
@@ -21,7 +21,7 @@ class AnimationFrames {
             }
         }
     }
-    // getter
+    // Getter
     protected ArrayList<BodyImage> getAnimationFrames() {
         return animationFrames;
     }

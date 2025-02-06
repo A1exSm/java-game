@@ -1,25 +1,26 @@
 package game;
-
+// Imports
 import org.jbox2d.common.Vec2;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+// Class
 class Controls {
+    // Fields
     private final GameView view;
     private final Player player;
     private final GameWorld world;
-
-    protected Controls(GameView view, Player player, GameWorld world) {
+    // Constructor
+    protected Controls(GameWorld world, Player player, GameView view) {
         this.view = view;
         this.player = player;
         this.world = world;
         addKeyboardInputs();
         addMouseInputs();
     }
-
+    // Methods
     private void addMouseInputs() {
         view.addMouseListener(new MouseListener() {
             @Override
@@ -36,7 +37,6 @@ class Controls {
             public void mouseExited(MouseEvent e) {}
         });
     }
-
     private void addKeyboardInputs() {
         view.addKeyListener(new KeyAdapter() {
             int keyPressed;

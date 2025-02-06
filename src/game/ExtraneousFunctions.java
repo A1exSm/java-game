@@ -1,15 +1,16 @@
 package game;
-
+// Imports
 import city.cs.engine.BoxShape;
 import city.cs.engine.StaticBody;
 import org.jbox2d.common.Vec2;
-
+// Class
 class ExtraneousFunctions {
+    // Fields
     private final GameWorld world;
     protected ExtraneousFunctions(GameWorld world) {
         this.world = world;
     }
-
+    // Constructor
     private void Stairs(Vec2 halfStepDimensions, Vec2 originPos, int numSteps, String vertical, String horizontal) {
         if (vertical.equals("DOWN")) halfStepDimensions.y = -halfStepDimensions.y;
         if (horizontal.equals("LEFT")) halfStepDimensions.x = -halfStepDimensions.x;

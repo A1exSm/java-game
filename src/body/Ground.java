@@ -1,11 +1,12 @@
 package body;
-
+// Imports
 import city.cs.engine.BoxShape;
 import city.cs.engine.StaticBody;
 import game.GameWorld;
 import org.jbox2d.common.Vec2;
-
+// Class
 public class Ground extends StaticBody {
+    // Fields
     private Vec2 halfDimensions;
     private Vec2 originPos;
     private static int count = -1;
@@ -23,7 +24,7 @@ public class Ground extends StaticBody {
         this.setPosition(originPos);
         this.setName("Ground"+count);
     }
-    // getters
+    // Getters
     public Vec2 getHalfDimensions() {
         return halfDimensions;
     }
@@ -33,6 +34,7 @@ public class Ground extends StaticBody {
     public static int getCount() {
         return count;
     }
+    // subClass - Will probs be moved to its own file if it grows, but most likely won't make it to later versions anyway.
     public static class Platform extends Ground {
         public Platform(GameWorld gameWorld, Vec2 originPos) {
             super(gameWorld, new Vec2(5, 0.5f), originPos);

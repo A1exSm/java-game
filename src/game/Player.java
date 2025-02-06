@@ -1,22 +1,22 @@
 package game;
-
+// Imports
 import city.cs.engine.BodyImage;
 import city.cs.engine.BoxShape;
-import city.cs.engine.Shape;
 import city.cs.engine.Walker;
 import org.jbox2d.common.Vec2;
-
+// Class
 class Player extends Walker {
+    // Fields
     private final Vec2 halfSize = new Vec2(1f, 2f);
-    private final Shape shape  = new BoxShape(halfSize.x, halfSize.y);
     protected boolean isAttacking = false;
-
+    // Constructor
     protected Player(GameWorld world) {
         super(world, new BoxShape(1, 2));
         setName("Player");
         setPosition(new Vec2(0, 3f));
-        action("IDLEr");
+//        action("IDLEr");
     }
+    // Methods
     protected void action(String direction) {
         removeAllImages();
         BodyImage attackImage = new BodyImage("data/gifs/attack1.gif", 18f);
@@ -34,11 +34,14 @@ class Player extends Walker {
             case "ATTACKl" -> addImage(attackImage).flipHorizontal();
         }
     }
-
     protected void attack() {
         if (!isAttacking) {
             isAttacking = true;
         }
+    }
+    // Getters
+    public Vec2 getHalfSize() { // will be used to check if mouse is within players hit box :)
+        return halfSize;
     }
 }
 

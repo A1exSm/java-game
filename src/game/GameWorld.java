@@ -1,26 +1,27 @@
 package game;
-
+// Imports
 import city.cs.engine.*;
 import org.jbox2d.common.Vec2;
 import body.*;
 import animation.*;
-
+// Class
 public class GameWorld extends World {
+    // Fields
     private final GameView view;
     private final Player player;
     private boolean debugOn;
     protected boolean isPaused = false;
     public static GameTime gameTime;
-
-    // constructor
+    // Constructor
     public GameWorld() {
         super();
         this.view = new GameView(this, 1200, 630);
         GameFrame frame = new GameFrame("GamePlayground", this.view);
         player = new Player(this);
         new GameMenu(frame, this);
-        new PlayerStepListener(player, this);
-        new Controls(view, player, this);
+        new PlayerStepListener(this, player);
+        new AnimationStepListener(this, player);
+        new Controls(this, player, view);
         populate();
         viewTracker();
         new PlayerFrames(PlayerState.RUN, this);
@@ -28,7 +29,7 @@ public class GameWorld extends World {
         // end of constructor start of a new world :)
         start();
     }
-    // debug methods
+    // Debug Methods
     protected void debugOn() {
         view.setGridResolution(!debugOn ? 1 : 0);
         for (Body body : getDynamicBodies()) {
@@ -36,7 +37,7 @@ public class GameWorld extends World {
         }
         debugOn = !debugOn;
     }
-    // population methods
+    // Population methods
     private void populate() {
         Ground ground = new Ground(this, new Vec2(500, 0.5f), new Vec2(0, -0.5f));
         playGround(ground);
@@ -63,7 +64,7 @@ public class GameWorld extends World {
             }
         });
     }
-    // settings
+    // Settings' Methods
     protected void togglePause() {
         if (isPaused) {
             isPaused = false;
@@ -75,5 +76,12 @@ public class GameWorld extends World {
             gameTime.toggleTimer();
             stop();
         }
+    }
+    // External Getters & Setters
+    public void togglePlayerAttack() {
+        player.isAttacking = false;
+    }
+    public boolean getPlayerAttack() {
+        return player.isAttacking;
     }
 }

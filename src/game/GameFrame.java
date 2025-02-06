@@ -1,8 +1,9 @@
 package game;
-
+// Imports
 import javax.swing.*;
-
+// Class
 class GameFrame extends JFrame {
+    // Constructor
     protected GameFrame(String title, GameView view) {
         super(title);
         add(view);

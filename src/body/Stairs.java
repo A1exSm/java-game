@@ -1,11 +1,13 @@
 package body;
-
+// Imports
 import city.cs.engine.BoxShape;
 import city.cs.engine.SolidFixture;
 import city.cs.engine.StaticBody;
 import game.GameWorld;
 import org.jbox2d.common.Vec2;
+// Class
 class Stairs extends StaticBody {
+    // Constructor
     public Stairs(GameWorld gameWorld, Vec2 halfStepDimensions, Vec2 originPos, int numSteps, String vertical, String horizontal) {
         super(gameWorld, new BoxShape(halfStepDimensions.x, halfStepDimensions.y));
         this.setPosition(originPos);
