@@ -7,16 +7,13 @@ import org.jbox2d.common.Vec2;
 // Class
 public class Ground extends StaticBody {
     // Fields
-    private Vec2 halfDimensions;
-    private Vec2 originPos;
+    private final Vec2 halfDimensions;
+    private final Vec2 originPos;
     private static int count = -1;
     {
         count += 1;
     }
     // constructor
-    public Ground(GameWorld gameWorld) {
-        super(gameWorld);
-    }
     public Ground(GameWorld gameWorld, Vec2 halfDimensions, Vec2 originPos) {
         super(gameWorld, new BoxShape(halfDimensions.x, halfDimensions.y));
         this.halfDimensions = halfDimensions;
