@@ -13,7 +13,7 @@ class PlayerAnimation {
     // Constructor
     protected PlayerAnimation(World world, Walker player, PlayerState animation) {
         this.player = player;
-        playerFrame = new PlayerFrames(animation, world);
+        playerFrame = new PlayerFrames(animation, world); // creating a new Frame for the animation (= PlayerState)
         currentFrame = 1;
     }
     // Methods
@@ -22,14 +22,14 @@ class PlayerAnimation {
     }
     protected void incrementFrame(Direction direction) {
         currentFrame++;
-        if (currentFrame > playerFrame.numFrames) currentFrame = 1;
+        if (currentFrame > playerFrame.numFrames) currentFrame = 1; // ensures that there is no situation where we are accessing a Frame which is out of range (of the array indexing)
         cycleFrame(direction);
     }
     protected void cycleFrame(Direction direction) {
         player.removeAllImages();
         switch (direction) {
             case RIGHT -> player.addImage(playerFrame.getAnimationFrames().get(currentFrame - 1));
-            case LEFT -> player.addImage(playerFrame.getAnimationFrames().get(currentFrame - 1)).flipHorizontal();
+            case LEFT -> player.addImage(playerFrame.getAnimationFrames().get(currentFrame - 1)).flipHorizontal(); // PNG is facing right, so if the movement is to the left with call .flipHorizontal();
         }
     }
     // Getters
