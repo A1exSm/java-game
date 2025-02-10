@@ -39,10 +39,13 @@ public class AnimationStepListener implements StepListener {
     // Override Methods
     @Override
     public void preStep(StepEvent stepEvent) {
-        linearVelocity = player.getLinearVelocity();
-        findDirection();
-        getState();
-
+        if (world.isRunning()) {
+            linearVelocity = player.getLinearVelocity();
+            findDirection();
+            getState();
+        } else if (timer!=null) {
+            if (timer.isRunning()) timer.stop();
+        }
     }
     @Override
     public void postStep(StepEvent stepEvent) {

@@ -16,7 +16,7 @@ public class GameWorld extends World {
     private final GameView view;
     private final Player player;
     private boolean debugOn;
-    protected boolean isPaused = false;
+    private boolean isPaused = false;
     public static GameTime gameTime;
     private ArrayList<Mob> mobs;
     // Constructor

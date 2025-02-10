@@ -35,7 +35,7 @@ class Player extends Walker {
                         System.out.println("HIT");
                     }
                 }
-                if (body.getPosition().x < )
+//                if (body.getPosition().x < )
             }
         }
     }

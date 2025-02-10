@@ -27,7 +27,9 @@ class Controls {
             public void mouseClicked(MouseEvent e) {}
             @Override
             public void mousePressed(MouseEvent e) {
-                player.attack();
+                if (world.isRunning()) {
+                    player.attack();
+                }
             }
             @Override
             public void mouseReleased(MouseEvent e) {}
@@ -43,7 +45,7 @@ class Controls {
             int keyReleased;
             @Override
             public void keyPressed(KeyEvent e) {
-                if (!world.isPaused) {
+                if (world.isRunning()) {
                     keyPressed = e.getKeyCode();
                     if (keyPressed == KeyEvent.VK_A) {
                         player.startWalking(-7);
@@ -58,7 +60,7 @@ class Controls {
             }
             @Override
             public void keyReleased(KeyEvent e) {
-                if (!world.isPaused) {
+                if (world.isRunning()) {
                     keyReleased = e.getKeyCode();
                     // the second condition in the "&&" allows inputs to jitter between keys without stutters in the movement and that linear velocity is handles properly during a jump
                     if ((keyReleased == KeyEvent.VK_A || keyReleased == KeyEvent.VK_D) && (keyPressed == keyReleased || keyPressed == KeyEvent.VK_SPACE)) {
