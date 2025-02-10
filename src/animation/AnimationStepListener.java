@@ -69,7 +69,7 @@ public class AnimationStepListener implements StepListener {
         }
     }
     private void setAnimation(PlayerState state) {
-        if (currentAnimation != animations.get(state)) { // we just skip this if it's the same state
+        if (currentAnimation == null || currentAnimation != animations.get(state)) { // we just skip this if it's the same state
             currentAnimation = animations.get(state);
             if (currentAnimation == animations.get(ATTACK1)) { // separate sequence for attack timer
                 invokeAttackTimer();

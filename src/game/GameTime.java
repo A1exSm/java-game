@@ -26,4 +26,7 @@ public class GameTime {
     public int getTimeMinutes() {
         return (time/60);
     }
+    public int getTime() {
+        return time;
+    }
 }

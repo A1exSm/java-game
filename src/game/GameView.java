@@ -24,9 +24,14 @@ class GameView extends UserView {
     }
     @Override
     protected void paintForeground(Graphics2D g) {
-        g.setColor(Color.BLUE);
         g.setFont(STATUS_FONT);
-        g.drawString(String.format("Timer: %02d" + ":%02d", GameWorld.gameTime.getTimeMinutes(), GameWorld.gameTime.getTimeSeconds()), 5, 20);
-//        g.drawString(String.format("GameTime: %02d",GameWorld.gameTime.getTimeSeconds()), 5, 50);
+        if (GameWorld.gameTime.getTime() == 0) {
+            g.setColor(Color.RED);
+            g.drawString("LOADING...", 600, 315);
+        } else {
+            g.setColor(Color.BLUE);
+            g.drawString(String.format("Timer: %02d" + ":%02d", GameWorld.gameTime.getTimeMinutes(), GameWorld.gameTime.getTimeSeconds()), 5, 20);
+        }
+//        g.drawString(String.format("GameTime: %02d",GameWorld.gameTime.getTimeSeconds()), a5, 50);
     }
 }

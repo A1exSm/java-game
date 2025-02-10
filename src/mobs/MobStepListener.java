@@ -12,7 +12,7 @@ public class MobStepListener implements StepListener {
     // Fields
     private final Mob mob;
     private final GameWorld world;
-    protected Direction lastDirection;
+    protected Direction lastDirection = Direction.RIGHT;
     // Constructor
     public MobStepListener(GameWorld world, Mob mob ) {
         this.world = world;
@@ -23,15 +23,17 @@ public class MobStepListener implements StepListener {
     public void preStep(StepEvent stepEvent) {
         Vec2 pos = mob.getPosition();
         if (nearView(pos)) {
-            if (pos.x == mob.ORIGIN_X || !mob.isWalking) {
+            if (!mob.isWalking) {
                 mob.startWalking(2);
                 lastDirection = Direction.RIGHT;
-            } else if (pos.x + 2 > (mob.ORIGIN_X + 1f) + 30) {
+            } else if (pos.x + 2 >= (mob.ORIGIN_X + 1f) + 30) {
                 mob.startWalking(-2);
                 lastDirection = Direction.LEFT;
-            } else if (pos.x - 2 < (mob.ORIGIN_X - 1f) - 30) {
+            } else if (pos.x - 2 <= (mob.ORIGIN_X - 1f) - 30) {
                 mob.startWalking(2);
                 lastDirection = Direction.RIGHT;
+            } else if (mob.getLinearVelocity().x < 1 && mob.getLinearVelocity().x > -1) {
+                mob.setPosition(new Vec2(mob.getPosition().x+1, mob.getPosition().y)); // has a tendency to get stuck for no apparent reason which debugging can explain so we have to treat it like a baby and free it
             }
             mob.isWalking = true;
             mob.animation(PlayerState.IDLE, lastDirection);

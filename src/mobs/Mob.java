@@ -2,9 +2,7 @@ package mobs;
 // Imports
 import animation.Direction;
 import animation.PlayerState;
-import city.cs.engine.BodyImage;
-import city.cs.engine.BoxShape;
-import city.cs.engine.Walker;
+import city.cs.engine.*;
 import game.GameWorld;
 import org.jbox2d.common.Vec2;
 
@@ -12,13 +10,15 @@ import org.jbox2d.common.Vec2;
 public class Mob extends Walker {
     // Fields
     private final Vec2 halfSize = new Vec2(1f, 2f);
-    public float ORIGIN_X = 5;
+    public float ORIGIN_X = -50;
     public float ORIGIN_Y = 2;
     public boolean isWalking = false;
-    private MobStepListener mobStepListener;
+    private final MobStepListener mobStepListener;
     // Constructor
     public Mob(GameWorld world) {
         super(world, new BoxShape(1,2));
+//        new GhostlyFixture(this, new BoxShape(1,2, new Vec2(0, 1f)));
+        this.setName("Wizard");
         setPosition(new Vec2(ORIGIN_X, ORIGIN_Y));
         mobStepListener = new MobStepListener(world, this);
         world.addStepListener(mobStepListener);
@@ -47,10 +47,11 @@ public class Mob extends Walker {
     }
     protected void animation(PlayerState mobState, Direction direction) {
         removeAllImages();
+        AttachedImage image;
         switch (mobState) {
             case IDLE -> {
-                if (direction == Direction.RIGHT) addImage(new BodyImage("data/WizardGifs/IDLE.gif", 15f));
-                else addImage(new BodyImage("data/WizardGifs/IDLE.gif", 15f)).flipHorizontal();
+                image = new AttachedImage(this,new BodyImage("data/WizardGifs/IDLE.gif", 18f),1f, 0, new Vec2(0, 1));
+                if (direction == Direction.LEFT) image.flipHorizontal();
             }
             default -> {}
         }
