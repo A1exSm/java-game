@@ -1,5 +1,7 @@
 package mobs;
 // Imports
+import animation.Direction;
+import animation.PlayerState;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.GameWorld;
@@ -10,6 +12,7 @@ public class MobStepListener implements StepListener {
     // Fields
     private final Mob mob;
     private final GameWorld world;
+    protected Direction lastDirection;
     // Constructor
     public MobStepListener(GameWorld world, Mob mob ) {
         this.world = world;
@@ -22,12 +25,16 @@ public class MobStepListener implements StepListener {
         if (nearView(pos)) {
             if (pos.x == mob.ORIGIN_X || !mob.isWalking) {
                 mob.startWalking(2);
+                lastDirection = Direction.RIGHT;
             } else if (pos.x + 2 > (mob.ORIGIN_X + 1f) + 30) {
                 mob.startWalking(-2);
+                lastDirection = Direction.LEFT;
             } else if (pos.x - 2 < (mob.ORIGIN_X - 1f) - 30) {
                 mob.startWalking(2);
+                lastDirection = Direction.RIGHT;
             }
             mob.isWalking = true;
+            mob.animation(PlayerState.IDLE, lastDirection);
         } else {
             mob.stopWalking();
             mob.isWalking = false;

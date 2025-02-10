@@ -1,6 +1,8 @@
 package mobs;
 // Imports
-
+import animation.Direction;
+import animation.PlayerState;
+import city.cs.engine.BodyImage;
 import city.cs.engine.BoxShape;
 import city.cs.engine.Walker;
 import game.GameWorld;
@@ -13,11 +15,13 @@ public class Mob extends Walker {
     public float ORIGIN_X = 5;
     public float ORIGIN_Y = 2;
     public boolean isWalking = false;
+    private MobStepListener mobStepListener;
     // Constructor
     public Mob(GameWorld world) {
         super(world, new BoxShape(1,2));
         setPosition(new Vec2(ORIGIN_X, ORIGIN_Y));
-        world.addStepListener(new MobStepListener(world, this));
+        mobStepListener = new MobStepListener(world, this);
+        world.addStepListener(mobStepListener);
         detectPlayerCollision();
     }
     // Methods
@@ -31,12 +35,24 @@ public class Mob extends Walker {
                     if (e.getNormal().y == 0) { // if it is, are we running into the player? (y == 0 suggests that the collision was on the x not from above - y)
                         if (e.getNormal().x < 0) { // if so lets walk in the opposite direction to the collision
                             this.startWalking(2);
+                            mobStepListener.lastDirection = Direction.RIGHT;
                         } else {
                             this.startWalking(-2);
+                            mobStepListener.lastDirection = Direction.LEFT;
                         }
                     }
                 }
             }
         });
+    }
+    protected void animation(PlayerState mobState, Direction direction) {
+        removeAllImages();
+        switch (mobState) {
+            case IDLE -> {
+                if (direction == Direction.RIGHT) addImage(new BodyImage("data/WizardGifs/IDLE.gif", 15f));
+                else addImage(new BodyImage("data/WizardGifs/IDLE.gif", 15f)).flipHorizontal();
+            }
+            default -> {}
+        }
     }
 }
