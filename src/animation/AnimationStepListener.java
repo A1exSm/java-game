@@ -14,7 +14,7 @@ import static animation.Direction.*;
 // Class
 public class AnimationStepListener implements StepListener {
     // Fields
-    private Direction direction = RIGHT; // initial direction
+    private static Direction direction = RIGHT; // initial direction
     private PlayerAnimation currentAnimation;
     private javax.swing.Timer timer;
     private int timerCount;
@@ -40,7 +40,7 @@ public class AnimationStepListener implements StepListener {
     @Override
     public void preStep(StepEvent stepEvent) {
         linearVelocity = player.getLinearVelocity();
-        getDirection();
+        findDirection();
         getState();
 
     }
@@ -49,7 +49,7 @@ public class AnimationStepListener implements StepListener {
 
     }
     // Animation Methods
-    private void getDirection() {
+    private void findDirection() {
         if (linearVelocity.x > 2) {
             direction = Direction.RIGHT;
         } else if (linearVelocity.x < -2) {
@@ -109,5 +109,9 @@ public class AnimationStepListener implements StepListener {
         });
         timer.setRepeats(true);
         timer.start();
+    }
+    // Getters
+    public static Direction getDirection() {
+        return direction;
     }
 }

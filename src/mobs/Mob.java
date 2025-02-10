@@ -14,6 +14,7 @@ public class Mob extends Walker {
     public float ORIGIN_Y = 2;
     public boolean isWalking = false;
     private final MobStepListener mobStepListener;
+    public boolean isHit = false;
     // Constructor
     public Mob(GameWorld world) {
         super(world, new BoxShape(1,2));
