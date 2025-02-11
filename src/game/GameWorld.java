@@ -95,6 +95,9 @@ public class GameWorld extends World {
             start();
         }
         else {
+            // 1 & 2 ensure player does not get stuck in movement since inputs won't be checked during pause
+            player.stopWalking(); // 1
+            player.setLinearVelocity(new Vec2(0, player.getLinearVelocity().y)); // 2
             isPaused = true;
             gameTime.toggleTimer();
             stop();

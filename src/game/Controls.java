@@ -12,6 +12,8 @@ class Controls {
     private final GameView view;
     private final Player player;
     private final GameWorld world;
+    private int keyPressed;
+    private int keyReleased;
     // Constructor
     protected Controls(GameWorld world, Player player, GameView view) {
         this.view = view;
@@ -41,8 +43,6 @@ class Controls {
     }
     private void addKeyboardInputs() {
         view.addKeyListener(new KeyAdapter() {
-            int keyPressed;
-            int keyReleased;
             @Override
             public void keyPressed(KeyEvent e) {
                 if (world.isRunning()) {
@@ -62,13 +62,15 @@ class Controls {
             public void keyReleased(KeyEvent e) {
                 if (world.isRunning()) {
                     keyReleased = e.getKeyCode();
-                    // the second condition in the "&&" allows inputs to jitter between keys without stutters in the movement and that linear velocity is handles properly during a jump
-                    if ((keyReleased == KeyEvent.VK_A || keyReleased == KeyEvent.VK_D) && (keyPressed == keyReleased || keyPressed == KeyEvent.VK_SPACE)) {
+                    if ((keyReleased == KeyEvent.VK_A && keyPressed != KeyEvent.VK_D) || (keyReleased == KeyEvent.VK_D && keyPressed != KeyEvent.VK_A)) { // ensures order logic
                         player.stopWalking();
                         player.setLinearVelocity(new Vec2(0, player.getLinearVelocity().y));
                     }
                 }
             }
         });
+    }
+    private void jump() {
+        // will check if player's collision normal's y != 0 i.e the player is standing on something, thus can jump
     }
 }
