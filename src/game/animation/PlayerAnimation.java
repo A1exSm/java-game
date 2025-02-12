@@ -1,8 +1,8 @@
-package animation;
+package game.animation;
 // Imports
 import city.cs.engine.World;
-import game.BoolTimer;
 import city.cs.engine.Walker;
+import game.body.walkers.PlayerWalker;
 
 // Class
 class PlayerAnimation {
@@ -11,9 +11,9 @@ class PlayerAnimation {
     private final PlayerFrames playerFrame;
     private int currentFrame;
     // Constructor
-    protected PlayerAnimation(World world, Walker player, PlayerState animation) {
+    protected PlayerAnimation(World world, PlayerWalker player, PlayerState animation) {
         this.player = player;
-        playerFrame = new PlayerFrames(animation, world); // creating a new Frame for the animation (= PlayerState)
+        playerFrame = new PlayerFrames(animation, world); // creating a new Frame for the game.animation (= PlayerState)
         currentFrame = 1;
     }
     // Methods

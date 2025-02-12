@@ -43,8 +43,8 @@
     / potential asset repository: https://kenney.nl<br>
     + open source gif sprites from various sources, converted from sprite sheets.<br>
     + game menu class to handle settings, only present setting as of right now is pause with a shortcut of ctrl + p<br>
-    + animation direction and file based of player's velocity, if the player has a non-zero y-velocity the player animation falls/jumps accordingly to the x-direction. This is using stepListener.<br>
-    + game remembers what position the player is facing and sets idle animation in that direction.<br>
+    + game.animation direction and file based of player's velocity, if the player has a non-zero y-velocity the player game.animation falls/jumps accordingly to the x-direction. This is using stepListener.<br>
+    + game remembers what position the player is facing and sets idle game.animation in that direction.<br>
     + timer to stop the attack gif 0.8s after execution<br>
     / gifs seem to be cached in memory and un-paused (I think this is the issue) causing gifs to be re-used, however my gifs only run once (an attempt at preventing some bugs) thus they can't be executed again, maybe using a separate declaration everytime will fix this (hopefully future me will remember this)<br>
     / FYI I used ezgif.com sprite sheet splitter to make the gifs, allows manipulation of frames, speed, colour etc... very useful.<br>

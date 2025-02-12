@@ -1,4 +1,4 @@
-package animation;
+package game.animation;
 
 import city.cs.engine.BodyImage;
 

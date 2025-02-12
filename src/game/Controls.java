@@ -1,7 +1,11 @@
 package game;
 // Imports
+import city.cs.engine.Body;
+import city.cs.engine.CollisionEvent;
+import game.body.walkers.PlayerWalker;
+import city.cs.engine.CollisionListener;
+import game.utils.GameView;
 import org.jbox2d.common.Vec2;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -10,12 +14,13 @@ import java.awt.event.MouseListener;
 class Controls {
     // Fields
     private final GameView view;
-    private final Player player;
+    private final PlayerWalker player;
     private final GameWorld world;
     private int keyPressed;
     private int keyReleased;
+    private CollisionListener surfaceListener;
     // Constructor
-    protected Controls(GameWorld world, Player player, GameView view) {
+    protected Controls(GameWorld world, PlayerWalker player, GameView view) {
         this.view = view;
         this.player = player;
         this.world = world;
@@ -30,7 +35,7 @@ class Controls {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (world.isRunning()) {
-                    player.attack();
+                    player.toggleOnAttack();
                 }
             }
             @Override
@@ -54,7 +59,9 @@ class Controls {
                     } else if (keyPressed == KeyEvent.VK_1) {
                         world.debugOn();
                     } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
-                        player.jump(10);
+                        if (isOnSurface()) {
+                            player.jump(10);
+                        }
                     }
                 }
             }
@@ -70,7 +77,13 @@ class Controls {
             }
         });
     }
-    private void jump() {
-        // will check if player's collision normal's y != 0 i.e the player is standing on something, thus can jump
+
+    private boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half height
+        for (Body body : player.getBodiesInContact()) {
+            if (body.getPosition().y < player.getPosition().y-2) {
+                return true;
+            }
+        }
+        return false;
     }
 }

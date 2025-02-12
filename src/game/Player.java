@@ -1,7 +1,6 @@
 package game;
 // Imports
-import animation.AnimationStepListener;
-import city.cs.engine.BodyImage;
+import game.animation.AnimationStepListener;
 import city.cs.engine.BoxShape;
 import city.cs.engine.DynamicBody;
 import city.cs.engine.Walker;
@@ -23,22 +22,22 @@ class Player extends Walker {
             isAttacking = true;
         }
     }
-    private void isHitting() { // 6
-        if (isAttacking) {
-            for (DynamicBody body : getWorld().getDynamicBodies()) {
-                if (AnimationStepListener.getDirection() == animation.Direction.RIGHT) {
-                    if (body.getPosition().x > getPosition().x && body.getPosition().x < getPosition().x + 6) {
-                        body.getName();
-                    }
-                } else {
-                    if (body.getPosition().x < getPosition().x && body.getPosition().x > getPosition().x - 7) {
-                        System.out.println("HIT");
-                    }
-                }
-//                if (body.getPosition().x < )
-            }
-        }
-    }
+//    private void isHitting() { // 6
+//        if (isAttacking) {
+//            for (DynamicBody body : getWorld().getDynamicBodies()) {
+//                if (AnimationStepListener.getDirection() == game.animation.Direction.RIGHT) {
+//                    if (body.getPosition().x > getPosition().x && body.getPosition().x < getPosition().x + 6) {
+//                        body.getName();
+//                    }
+//                } else {
+//                    if (body.getPosition().x < getPosition().x && body.getPosition().x > getPosition().x - 7) {
+//                        System.out.println("HIT");
+//                    }
+//                }
+////                if (game.body.getPosition().x < )
+//            }
+//        }
+//    }
     // Getters
     public Vec2 getHalfSize() { // will be used to check if mouse is within players hit box :)
         return halfSize;

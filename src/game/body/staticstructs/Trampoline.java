@@ -1,4 +1,4 @@
-package body;
+package game.body.staticstructs;
 // Imports
 import city.cs.engine.BodyImage;
 import city.cs.engine.BoxShape;

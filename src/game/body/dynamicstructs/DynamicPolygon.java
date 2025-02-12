@@ -1,4 +1,4 @@
-package body;
+package game.body.dynamicstructs;
 // Imports
 import city.cs.engine.PolygonShape;
 import org.jbox2d.common.Vec2;

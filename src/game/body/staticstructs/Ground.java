@@ -1,4 +1,4 @@
-package body;
+package game.body.staticstructs;
 // Imports
 import city.cs.engine.BoxShape;
 import city.cs.engine.StaticBody;
@@ -11,7 +11,7 @@ public class Ground extends StaticBody {
     private final Vec2 originPos;
     private static int count = -1;
     {
-        count += 1;
+        count ++;
     }
     // constructor
     public Ground(GameWorld gameWorld, Vec2 halfDimensions, Vec2 originPos) {

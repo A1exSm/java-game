@@ -1,14 +1,16 @@
-package game;
+package game.utils;
 // Imports
+import game.GameWorld;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 // Class
-class GameMenu extends MenuBar {
+public class GameMenu extends MenuBar {
     // Fields
     private final MenuBar gameMenu = new MenuBar();
     // Constructor
-    protected GameMenu(JFrame frame, GameWorld gameWorld) {
+    public GameMenu(JFrame frame, GameWorld gameWorld) {
         super();
         addSettings(gameWorld);
         frame.setMenuBar(gameMenu);

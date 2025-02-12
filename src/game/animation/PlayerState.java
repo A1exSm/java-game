@@ -1,4 +1,4 @@
-package animation;
+package game.animation;
 
 public enum PlayerState {
     IDLE,

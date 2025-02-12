@@ -1,7 +1,7 @@
-package mobs;
+package game.mobs;
 // Imports
-import animation.Direction;
-import animation.PlayerState;
+import game.animation.Direction;
+import game.animation.PlayerState;
 import city.cs.engine.*;
 import game.GameWorld;
 import org.jbox2d.common.Vec2;
@@ -19,8 +19,9 @@ public class Mob extends Walker {
     public Mob(GameWorld world) {
         super(world, new BoxShape(1,2));
 //        new GhostlyFixture(this, new BoxShape(1,2, new Vec2(0, 1f)));
-        this.setName("Wizard");
+        this.setName("mob");
         setPosition(new Vec2(ORIGIN_X, ORIGIN_Y));
+        startWalking(2); // starts patrol
         mobStepListener = new MobStepListener(world, this);
         world.addStepListener(mobStepListener);
         detectPlayerCollision();
@@ -29,6 +30,7 @@ public class Mob extends Walker {
     public Vec2 getHalfSize() {
         return halfSize;
     }
+
     private void detectPlayerCollision() {
         this.addCollisionListener(e -> {
             if (e.getOtherBody().getName() != null) {

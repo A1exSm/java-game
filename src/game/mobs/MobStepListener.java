@@ -1,7 +1,7 @@
-package mobs;
+package game.mobs;
 // Imports
-import animation.Direction;
-import animation.PlayerState;
+import game.animation.Direction;
+import game.animation.PlayerState;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.GameWorld;
@@ -22,24 +22,17 @@ public class MobStepListener implements StepListener {
     @Override
     public void preStep(StepEvent stepEvent) {
         Vec2 pos = mob.getPosition();
+        if (pos.x >= (mob.ORIGIN_X) + 30) {
+            mob.startWalking(-2);
+            lastDirection = Direction.LEFT;
+        } else if (pos.x <= (mob.ORIGIN_X) - 30) {
+            mob.startWalking(2);
+            lastDirection = Direction.RIGHT;
+        } else if (mob.getLinearVelocity().x < 1 && mob.getLinearVelocity().x > -1) {
+            mob.setPosition(new Vec2(mob.getPosition().x + 1, mob.getPosition().y)); // has a tendency to get stuck for no apparent reason which debugging can explain so we have to treat it like a baby and free it
+        }
         if (nearView(pos)) {
-            if (!mob.isWalking) {
-                mob.startWalking(2);
-                lastDirection = Direction.RIGHT;
-            } else if (pos.x + 2 >= (mob.ORIGIN_X + 1f) + 30) {
-                mob.startWalking(-2);
-                lastDirection = Direction.LEFT;
-            } else if (pos.x - 2 <= (mob.ORIGIN_X - 1f) - 30) {
-                mob.startWalking(2);
-                lastDirection = Direction.RIGHT;
-            } else if (mob.getLinearVelocity().x < 1 && mob.getLinearVelocity().x > -1) {
-                mob.setPosition(new Vec2(mob.getPosition().x+1, mob.getPosition().y)); // has a tendency to get stuck for no apparent reason which debugging can explain so we have to treat it like a baby and free it
-            }
-            mob.isWalking = true;
             mob.animation(PlayerState.IDLE, lastDirection);
-        } else {
-            mob.stopWalking();
-            mob.isWalking = false;
         }
     }
 

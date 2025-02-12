@@ -25,7 +25,7 @@ import java.util.*;
  * is printed to the console; this text can be copied and pasted as a parameter list
  * for the city.cs.engine.PolygonShape(float... coords) constructor BUT you
  * will have problems if the polygon is not convex (remember though that a Body
- * can have multiple shapes, so you can get pretty much any shaped body by using
+ * can have multiple shapes, so you can get pretty much any shaped game.body by using
  * overlapping convex polygons).
  * 
  * If the editor is initialised with a non-null file name parameter, the editor

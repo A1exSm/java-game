@@ -1,29 +1,30 @@
-package animation;
+package game.animation;
 // Imports
+import city.cs.engine.Body;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
-import city.cs.engine.Walker;
+import game.body.walkers.PlayerWalker;
+import game.body.walkers.WizardWalker;
 import org.jbox2d.common.Vec2;
 import java.util.HashMap; // I hope this is allowed :)
 import game.GameWorld;
 // importing my enums as static constants for ease of use.
 import javax.swing.*;
 
-import static animation.PlayerState.*;
-import static animation.Direction.*;
+import static game.animation.PlayerState.*;
+import static game.animation.Direction.*;
 // Class
 public class AnimationStepListener implements StepListener {
     // Fields
-    private static Direction direction = RIGHT; // initial direction
     private PlayerAnimation currentAnimation;
     private javax.swing.Timer timer;
     private int timerCount;
     private Vec2 linearVelocity;
-    private final Walker player;
+    private final PlayerWalker player;
     private final GameWorld world;
     private final HashMap<PlayerState, PlayerAnimation> animations = new HashMap<>();
     // Constructor
-    public AnimationStepListener(GameWorld world, Walker player) {
+    public AnimationStepListener(GameWorld world, PlayerWalker player) {
         this.player = player;
         this.world = world;
         world.addStepListener(this);
@@ -42,34 +43,35 @@ public class AnimationStepListener implements StepListener {
         if (world.isRunning()) {
             linearVelocity = player.getLinearVelocity();
             findDirection();
-            getState();
+            setState();
         } else if (timer!=null) {
             if (timer.isRunning()) timer.stop();
         }
+
     }
     @Override
     public void postStep(StepEvent stepEvent) {
-
+        player.checkWizards();
     }
     // Animation Methods
     private void findDirection() {
         if (linearVelocity.x > 2) {
-            direction = Direction.RIGHT;
+            player.setDirection(RIGHT);
         } else if (linearVelocity.x < -2) {
-            direction = Direction.LEFT;
+            player.setDirection(LEFT);
         }
-        currentAnimation.cycleFrame(direction);
+        currentAnimation.cycleFrame(player.getDirection());
     }
-    private void getState() { // detects what sort of movement the player is performing based of the player's velocity.
-        if (world.getPlayerAttack()) {
-            setAnimation(ATTACK1); // currently only handles ATTACK1, still thinking of a use for ATTACK2, Maybe a finisher move or Combo?
+    private void setState() { // detects what sort of movement the player is performing based of the player's velocity.
+        if (player.getAttacking()) {
+            player.setState(ATTACK1); // currently only handles ATTACK1, still thinking of a use for ATTACK2, Maybe a finisher move or Combo?
         } else {
-            if (linearVelocity.y > 2) setAnimation(JUMP); // threshold of 2 to prevent jitter between surfaces.
-            else if (linearVelocity.y < -2 || player.getBodiesInContact().isEmpty())
-                setAnimation(FALL); // check if player is in contact with other bodies, as we don't want a random idle animation when the player jumps/falls slower than 2.
-            else if (linearVelocity.x > 2 || linearVelocity.x < -2) setAnimation(RUN);
-            else setAnimation(IDLE);
+            if (linearVelocity.y > 2) player.setState(JUMP); // threshold of 2 to prevent jitter between surfaces.
+            else if (linearVelocity.y < -2 || player.getBodiesInContact().isEmpty()) player.setState(FALL); // check if player is in contact with other bodies, as we don't want a random idle game.animation when the player jumps/falls slower than 2.
+            else if (linearVelocity.x > 2 || linearVelocity.x < -2) player.setState(RUN);
+            else player.setState(IDLE);
         }
+        setAnimation(player.getState());
     }
     private void setAnimation(PlayerState state) {
         if (currentAnimation == null || currentAnimation != animations.get(state)) { // we just skip this if it's the same state
@@ -86,7 +88,7 @@ public class AnimationStepListener implements StepListener {
         if (timerCount == currentAnimation.getNumFrames()) { // although PlayerAnimation.incrementFrame ensures we don't go out of index there, we need to also do that on this side, might be worth making a function which handles both...
             if (currentAnimation == animations.get(ATTACK1)) world.togglePlayerAttack();
             timerCount = 0;
-            timer.restart(); // timer needs to restart so animation doesn't "stall" - where we have to wait for one animation to finish for the next to start
+            timer.restart(); // timer needs to restart so game.animation doesn't "stall" - where we have to wait for one game.animation to finish for the next to start
         }
     }
     private void toggleTimer() {
@@ -102,19 +104,16 @@ public class AnimationStepListener implements StepListener {
         timer.stop();
         setAnimation(ATTACK1);
         setTimer(100); // attack needs to be faster so we set it to 100ms, typical gifs (as far as ik) have a 200ms gap between frames.
+        player.hurtWizards();
     }
     private void setTimer(int delay) {
         timerCount = 0;
         timer = new javax.swing.Timer(delay, e -> {
             timerCount++;
-            currentAnimation.incrementFrame(direction);
+            currentAnimation.incrementFrame(player.getDirection());
             checkTimer(timer);
         });
         timer.setRepeats(true);
         timer.start();
-    }
-    // Getters
-    public static Direction getDirection() {
-        return direction;
     }
 }
