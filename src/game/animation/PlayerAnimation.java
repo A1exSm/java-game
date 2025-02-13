@@ -3,6 +3,8 @@ package game.animation;
 import city.cs.engine.World;
 import city.cs.engine.Walker;
 import game.body.walkers.PlayerWalker;
+import game.enums.Direction;
+import game.enums.State;
 
 // Class
 class PlayerAnimation {
@@ -11,7 +13,7 @@ class PlayerAnimation {
     private final PlayerFrames playerFrame;
     private int currentFrame;
     // Constructor
-    protected PlayerAnimation(World world, PlayerWalker player, PlayerState animation) {
+    protected PlayerAnimation(World world, PlayerWalker player, State animation) {
         this.player = player;
         playerFrame = new PlayerFrames(animation, world); // creating a new Frame for the game.animation (= PlayerState)
         currentFrame = 1;

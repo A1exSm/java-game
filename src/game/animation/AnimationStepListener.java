@@ -1,18 +1,17 @@
 package game.animation;
 // Imports
-import city.cs.engine.Body;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.body.walkers.PlayerWalker;
-import game.body.walkers.WizardWalker;
+import game.enums.State;
 import org.jbox2d.common.Vec2;
 import java.util.HashMap; // I hope this is allowed :)
 import game.GameWorld;
 // importing my enums as static constants for ease of use.
 import javax.swing.*;
 
-import static game.animation.PlayerState.*;
-import static game.animation.Direction.*;
+import static game.enums.State.*;
+import static game.enums.Direction.*;
 // Class
 public class AnimationStepListener implements StepListener {
     // Fields
@@ -22,7 +21,7 @@ public class AnimationStepListener implements StepListener {
     private Vec2 linearVelocity;
     private final PlayerWalker player;
     private final GameWorld world;
-    private final HashMap<PlayerState, PlayerAnimation> animations = new HashMap<>();
+    private final HashMap<State, PlayerAnimation> animations = new HashMap<>();
     // Constructor
     public AnimationStepListener(GameWorld world, PlayerWalker player) {
         this.player = player;
@@ -33,7 +32,7 @@ public class AnimationStepListener implements StepListener {
     }
     // Constructor Methods
     private void hashMapSetup() {
-        for (PlayerState state : PlayerState.values()) {
+        for (State state : State.values()) {
             animations.put(state, new PlayerAnimation(world, player, state));
         }
     }
@@ -73,7 +72,7 @@ public class AnimationStepListener implements StepListener {
         }
         setAnimation(player.getState());
     }
-    private void setAnimation(PlayerState state) {
+    private void setAnimation(State state) {
         if (currentAnimation == null || currentAnimation != animations.get(state)) { // we just skip this if it's the same state
             currentAnimation = animations.get(state);
             if (currentAnimation == animations.get(ATTACK1)) { // separate sequence for attack timer

@@ -4,12 +4,12 @@ import game.body.dynamicstructs.DynamicPolygon;
 import game.body.staticstructs.Ground;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
-import game.body.walkers.WizardWalker;
+import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
+import game.enums.State;
 import game.utils.*;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
-import game.mobs.Mob;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class GameWorld extends World {
     private boolean debugOn;
     private boolean isPaused = false;
     public static GameTime gameTime;
-    private ArrayList<WizardWalker> wizards = new ArrayList<>();
+    private static ArrayList<WizardWalker> wizards = new ArrayList<>();
     // Constructor
     public GameWorld() {
         super();
@@ -32,7 +32,7 @@ public class GameWorld extends World {
         new AnimationStepListener(this, player);
         new Controls(this, player, view);
         viewTracker();
-        new PlayerFrames(PlayerState.RUN, this);
+        new PlayerFrames(State.RUN, this);
         populate();
         // end of constructor start of a new world :)
         start();
@@ -79,12 +79,12 @@ public class GameWorld extends World {
 
     // Store
     private void initWizards() {
-        wizards.add(new WizardWalker(this, new Vec2(80,2)));
-        wizards.add(new WizardWalker(this, new Vec2(110, 2)));
-        wizards.add(new WizardWalker(this, new Vec2(-10,2)));
-        wizards.add(new WizardWalker(this, new Vec2(-30,2)));
-        wizards.add(new WizardWalker(this, new Vec2(-80,2)));
-        wizards.add(new WizardWalker(this, new Vec2(-110,2)));
+        new WizardWalker(this, new Vec2(80,2));
+        new WizardWalker(this, new Vec2(110, 2));
+        new WizardWalker(this, new Vec2(-10,2));
+        new WizardWalker(this, new Vec2(-30,2));
+        new WizardWalker(this, new Vec2(-80,2));
+        new WizardWalker(this, new Vec2(-110,2));
     }
     // Method Override
     private void viewTracker() {
@@ -127,5 +127,8 @@ public class GameWorld extends World {
     }
     public PlayerWalker getPlayer() {
         return player;
+    }
+    public static void addWizard(WizardWalker wizard) {
+        wizards.add(wizard);
     }
 }

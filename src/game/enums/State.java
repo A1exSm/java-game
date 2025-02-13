@@ -1,6 +1,6 @@
-package game.animation;
+package game.enums;
 
-public enum PlayerState {
+public enum State {
     IDLE,
     RUN,
     JUMP,

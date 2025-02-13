@@ -2,11 +2,10 @@ package game.body.walkers;
 // Imports
 
 import game.GameWorld;
-import game.animation.Direction;
-import game.animation.PlayerState;
+import game.enums.Direction;
+import game.enums.State;
 import city.cs.engine.Shape;
 import city.cs.engine.Walker;
-import city.cs.engine.World;
 import org.jbox2d.common.Vec2;
 
 // Class
@@ -16,7 +15,7 @@ public class WalkerFrame extends Walker {
     public final float ORIGIN_Y;
     private boolean attacking = false;
     private boolean hit = false;
-    private PlayerState state = PlayerState.IDLE;
+    private State state = State.IDLE;
     private Direction direction = Direction.RIGHT;
     private final GameWorld gameWorld;
     // Constructor
@@ -41,15 +40,17 @@ public class WalkerFrame extends Walker {
 
     public void toggleOnHit() {
         hit = true;
+        state = State.HIT;
     }
 
     public void toggleOffHit() {
         hit = false;
+        state = State.IDLE;
     }
 
 
     // Setters
-    public void setState(PlayerState state) {
+    public void setState(State state) {
         this.state = state;
     }
 
@@ -66,7 +67,7 @@ public class WalkerFrame extends Walker {
         return hit;
     }
 
-    public PlayerState getState() {
+    public State getState() {
         return state;
     }
 

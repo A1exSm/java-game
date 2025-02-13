@@ -1,4 +1,4 @@
-package game.animation;
+package game.enums;
 
 public enum Direction {
     RIGHT,

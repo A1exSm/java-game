@@ -2,13 +2,14 @@ package game.animation;
 
 import city.cs.engine.DynamicBody;
 import city.cs.engine.World;
+import game.enums.State;
 
 public class PlayerFrames extends AnimationFrames {
     // Fields
-    private final PlayerState animationName;
+    private final State animationName;
     private final World world;
     // Constructor
-    public PlayerFrames(PlayerState animationName, World world) {
+    public PlayerFrames(State animationName, World world) {
         super(); // parent constructor is empty, but is here to facilitate future implementation
         this.animationName = animationName;
         this.world = world;
