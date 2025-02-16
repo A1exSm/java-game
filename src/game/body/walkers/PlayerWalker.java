@@ -5,6 +5,7 @@ import city.cs.engine.*;
 import game.GameWorld;
 import game.enums.Direction;
 import game.body.walkers.mobs.WizardWalker;
+import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class PlayerWalker extends WalkerFrame {
     private final ArrayList<WizardWalker> inLeftSensor = new ArrayList<>();
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
-        super(gameWorld, new BoxShape(1,2), new Vec2(0,3));
+        super(gameWorld, new BoxShape(1,2), new Vec2(0,3), Walkers.PLAYER);
         setName("Player");
         createSensorListeners();
         rightSensor = new Sensor(this, new BoxShape(3,1.5f, new Vec2(4,0)));
@@ -84,6 +85,7 @@ public class PlayerWalker extends WalkerFrame {
             timer2.setRepeats(false);
             javax.swing.Timer timer1 = new javax.swing.Timer(200, e -> { // delay timer so that it looks like they were hurt as animation blade hits them
                 wizard.toggleOnHit();
+                wizard.takeDamage(500, getName());
                 timer2.start();
             });
             timer1.setRepeats(false);

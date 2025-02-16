@@ -7,6 +7,7 @@ import game.body.walkers.PlayerWalker;
 import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
 import game.enums.State;
+import game.enums.Walkers;
 import game.utils.*;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
@@ -32,7 +33,7 @@ public class GameWorld extends World {
         new AnimationStepListener(this, player);
         new Controls(this, player, view);
         viewTracker();
-        new PlayerFrames(State.RUN, this);
+        new WalkerAnimationFrames(State.RUN, Walkers.PLAYER);
         populate();
         // end of constructor start of a new world :)
         start();
@@ -130,5 +131,8 @@ public class GameWorld extends World {
     }
     public static void addWizard(WizardWalker wizard) {
         wizards.add(wizard);
+    }
+    public static void removeWizard(String wizardName) {
+        wizards.removeIf(w -> w.getName().equals(wizardName));
     }
 }

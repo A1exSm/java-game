@@ -1,5 +1,6 @@
 package game.body.walkers.mobs;
 // Imports
+import game.animation.WalkerAnimationStepListener;
 import game.enums.Direction;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
@@ -12,17 +13,19 @@ public class MobStepListener implements StepListener {
     // Fields
     private final MobWalker mob;
     private final GameWorld world;
+    private final WalkerAnimationStepListener animations;
     // Constructor
     public MobStepListener(GameWorld world, MobWalker mob ) {
         this.world = world;
         this.mob = mob;
         world.addStepListener(this);
+        animations = new WalkerAnimationStepListener(mob);
     }
     // Override Methods
     @Override
     public void preStep(StepEvent stepEvent) {
         Vec2 pos = mob.getPosition();
-        if (mob.getHit()) {
+        if (mob.getHit() || mob.isDead()) {
             mob.stopWalking();
         } else {
             if (mob.getLinearVelocity().x < 1 && mob.getLinearVelocity().y > -1 ) {
@@ -39,7 +42,7 @@ public class MobStepListener implements StepListener {
             }
         }
         if (nearView(pos)) {
-            mob.animate();
+            animations.step();
         }
     }
 
@@ -52,4 +55,8 @@ public class MobStepListener implements StepListener {
         return playerPos.x < (mobPos.x + 40) && playerPos.x > (mobPos.x - 40); // since the world width is 60, thus -30 < player.pos < 30 and +10 so things start before the player comes
     }
     // Methods
+    public void remove() {
+        animations.remove();
+        world.removeStepListener(this);
+    }
 }

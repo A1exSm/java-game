@@ -15,13 +15,13 @@ import static game.enums.Direction.*;
 // Class
 public class AnimationStepListener implements StepListener {
     // Fields
-    private PlayerAnimation currentAnimation;
+    private FrameHandler currentAnimation;
     private javax.swing.Timer timer;
     private int timerCount;
     private Vec2 linearVelocity;
     private final PlayerWalker player;
     private final GameWorld world;
-    private final HashMap<State, PlayerAnimation> animations = new HashMap<>();
+    private final HashMap<State, FrameHandler> animations = new HashMap<>();
     // Constructor
     public AnimationStepListener(GameWorld world, PlayerWalker player) {
         this.player = player;
@@ -33,7 +33,7 @@ public class AnimationStepListener implements StepListener {
     // Constructor Methods
     private void hashMapSetup() {
         for (State state : State.values()) {
-            animations.put(state, new PlayerAnimation(world, player, state));
+            animations.put(state, new FrameHandler(player, state));
         }
     }
     // Override Methods

@@ -6,6 +6,7 @@ import game.enums.Direction;
 import game.enums.State;
 import city.cs.engine.Shape;
 import city.cs.engine.Walker;
+import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
 // Class
@@ -18,12 +19,15 @@ public class WalkerFrame extends Walker {
     private State state = State.IDLE;
     private Direction direction = Direction.RIGHT;
     private final GameWorld gameWorld;
+    private boolean dead = false;
+    private final Walkers WALKER_TYPE; // for now, walkers cannot transform into another
     // Constructor
-    public WalkerFrame(GameWorld gameWorld, Shape shape, Vec2 origin) {
+    public WalkerFrame(GameWorld gameWorld, Shape shape, Vec2 origin, Walkers walkerType) {
         super(gameWorld, shape);
         // Initialising constants
         this.ORIGIN_X = origin.x;
         this.ORIGIN_Y = origin.y;
+        this.WALKER_TYPE = walkerType;
         setPosition(origin);
         this.gameWorld = gameWorld;
     }
@@ -45,9 +49,14 @@ public class WalkerFrame extends Walker {
 
     public void toggleOffHit() {
         hit = false;
-        state = State.IDLE;
+        if (!dead) {
+            state = State.IDLE;
+        }
     }
-
+    // Destruction Functions
+    public void die() {
+        destroy();
+    }
 
     // Setters
     public void setState(State state) {
@@ -58,6 +67,10 @@ public class WalkerFrame extends Walker {
         this.direction = direction;
     }
 
+    public void beginDeath() {
+        dead = true;
+        state = State.DEATH;
+    }
     // Getters
     public boolean getAttacking() {
         return attacking;
@@ -77,5 +90,13 @@ public class WalkerFrame extends Walker {
 
     public GameWorld getGameWorld() {
         return gameWorld;
+    }
+
+    public boolean isDead() {
+        return dead;
+    }
+
+    public Walkers getWalkerType() {
+        return WALKER_TYPE;
     }
 }

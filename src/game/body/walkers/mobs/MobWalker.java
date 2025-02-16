@@ -4,6 +4,7 @@ import game.enums.Direction;
 import city.cs.engine.*;
 import game.GameWorld;
 import game.body.walkers.WalkerFrame;
+import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
 // Class
@@ -12,15 +13,15 @@ public class MobWalker extends WalkerFrame {
     public final float HALF_X;
     public final float HALF_Y;
     private static int mobCount = -1;
+    private final MobStepListener mobStepListener;
 
     {
         mobCount++;
     }
 
     // Constructor
-    public MobWalker(GameWorld gameWorld, BoxShape boxShape, Vec2 origin, Boolean patroller) {
-        super(gameWorld, boxShape, origin);
-
+    public MobWalker(GameWorld gameWorld, BoxShape boxShape, Vec2 origin, Boolean patroller, Walkers mobType) {
+        super(gameWorld, boxShape, origin, mobType);
         HALF_X = origin.x;
         HALF_Y = origin.y;
 
@@ -31,7 +32,7 @@ public class MobWalker extends WalkerFrame {
         }
 
         startWalking(2);
-        MobStepListener mobStepListener = new MobStepListener(gameWorld, this);
+        mobStepListener = new MobStepListener(gameWorld, this);
     }
     // Methods
 
@@ -52,17 +53,11 @@ public class MobWalker extends WalkerFrame {
         });
     }
 
-    protected void animate() {
-        removeAllImages();
-        BodyImage bodyImage = new BodyImage("data/WizardGifs/IDLE.gif", 18f);
-        switch (getState()) {
-            case IDLE -> {
-                AttachedImage image = new AttachedImage(this, bodyImage, 1f, 0, new Vec2(0, 1));
-                if (getDirection() == Direction.LEFT) image.flipHorizontal();
-            }
-            default -> {
-            }
-        }
+
+    @Override
+    public void die() {
+        mobStepListener.remove();
+        destroy();
     }
 
 }

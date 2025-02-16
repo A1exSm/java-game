@@ -11,6 +11,7 @@ class AnimationFrames {
     protected String folder;
     protected int numFrames;
     protected float height;
+    protected float Y_OFFSET;
     // Constructor
     public AnimationFrames() {}
     // Methods

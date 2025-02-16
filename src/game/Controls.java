@@ -4,6 +4,7 @@ import city.cs.engine.Body;
 import city.cs.engine.CollisionEvent;
 import game.body.walkers.PlayerWalker;
 import city.cs.engine.CollisionListener;
+import game.body.walkers.mobs.WizardWalker;
 import game.utils.GameView;
 import org.jbox2d.common.Vec2;
 import java.awt.event.KeyAdapter;
@@ -56,6 +57,13 @@ class Controls {
                         player.startWalking(-7);
                     } else if (keyPressed == KeyEvent.VK_D) {
                         player.startWalking(7);
+                    } else if (keyPressed == KeyEvent.VK_3) {
+                      for (WizardWalker walker : world.getWizards()) {
+                          walker.takeDamage(10, "hey");
+                      }
+                      for (WizardWalker walker : world.getWizards()) {
+                          System.out.println(walker.toString());
+                      }
                     } else if (keyPressed == KeyEvent.VK_1) {
                         world.debugOn();
                     } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
