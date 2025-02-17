@@ -1,5 +1,6 @@
 package game.body.walkers.mobs;
 // Imports
+import game.body.walkers.PlayerWalker;
 import game.enums.Direction;
 import city.cs.engine.*;
 import game.GameWorld;
@@ -22,8 +23,13 @@ public class MobWalker extends WalkerFrame {
     // Constructor
     public MobWalker(GameWorld gameWorld, BoxShape boxShape, Vec2 origin, Boolean patroller, Walkers mobType) {
         super(gameWorld, boxShape, origin, mobType);
-        HALF_X = origin.x;
-        HALF_Y = origin.y;
+        if (mobType == Walkers.WIZARD) {
+            HALF_X = WizardWalker.HALF_X;
+            HALF_Y = WizardWalker.HALF_Y;
+        } else {
+            HALF_X = 0.0f;
+            HALF_Y = 0.0f;
+        }
 
         this.setName("Mob" + mobCount);
 
@@ -51,6 +57,14 @@ public class MobWalker extends WalkerFrame {
                 }
             }
         });
+    }
+
+    public void attack(PlayerWalker player) {
+        if (!getCooldown() && !getHit()) {
+            toggleActionCoolDown();
+            toggleOnAttack();
+            player.takeDamage(100, getWalkerType());
+        }
     }
 
 

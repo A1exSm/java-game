@@ -3,8 +3,10 @@ package game.body.walkers;
 
 import city.cs.engine.*;
 import game.GameWorld;
+import game.animation.PlayerAnimationStepListener;
 import game.enums.Direction;
 import game.body.walkers.mobs.WizardWalker;
+import game.enums.State;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
@@ -20,6 +22,10 @@ public class PlayerWalker extends WalkerFrame {
     private final Sensor leftSensor;
     private final ArrayList<WizardWalker> inRightSensor = new ArrayList<>();
     private final ArrayList<WizardWalker> inLeftSensor = new ArrayList<>();
+    private final PlayerAnimationStepListener stepListener;
+    private static final int MAX_HP = 1000;
+    private int healthPoints = 1000;
+    public boolean destroyed = false;
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
         super(gameWorld, new BoxShape(1,2), new Vec2(0,3), Walkers.PLAYER);
@@ -28,6 +34,7 @@ public class PlayerWalker extends WalkerFrame {
         rightSensor = new Sensor(this, new BoxShape(3,1.5f, new Vec2(4,0)));
         leftSensor = new Sensor(this, new BoxShape(3,1.5f, new Vec2(-4,0)));
         addSensorListeners();
+        stepListener = new PlayerAnimationStepListener(gameWorld, this);
     }
     // Methods
     private void createSensorListeners() {
@@ -79,18 +86,31 @@ public class PlayerWalker extends WalkerFrame {
         if (getDirection() == Direction.RIGHT) temp = inRightSensor;
         else temp = inLeftSensor;
         for (WizardWalker wizard : temp) {
-            javax.swing.Timer timer2 = new javax.swing.Timer(600, e -> {
-                wizard.toggleOffHit();
-            });
-            timer2.setRepeats(false);
             javax.swing.Timer timer1 = new javax.swing.Timer(200, e -> { // delay timer so that it looks like they were hurt as animation blade hits them
                 wizard.toggleOnHit();
-                wizard.takeDamage(500, getName());
-                timer2.start();
+                wizard.takeDamage(500);
             });
             timer1.setRepeats(false);
             timer1.start();
         }
+    }
+
+    // Player health
+    public void takeDamage(int damage, Walkers  walker) {
+        healthPoints -= damage;
+        toggleOnHit();
+        if (healthPoints <= 0) {
+            beginDeath();
+        }
+    }
+
+    @Override
+    public void die() {
+        getGameWorld().removeStepListener(stepListener);
+        removeAllImages();
+        if (getDirection() == Direction.LEFT) addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f)).flipHorizontal();
+        else addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f));
+        destroyed = true;
     }
 
 }

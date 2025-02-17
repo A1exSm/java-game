@@ -60,13 +60,13 @@ public class WalkerAnimationStepListener {
         if (timerCount == currentHandler.getNumFrames()) {
             if (currentHandler == animations.get(ATTACK1)) walker.toggleOffAttack();
             if (currentHandler == animations.get(DEATH)) walker.die();
-            timerCount = 0;
+            timerCount = 1;
             animationTimer.restart();
         }
     }
 
     private void setTimer(int delay) {
-        timerCount = 0;
+        timerCount = 1;
         animationTimer = new javax.swing.Timer(delay, e ->{
             timerCount++;
             currentHandler.incrementFrame(walker.getDirection());

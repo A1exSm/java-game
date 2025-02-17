@@ -12,6 +12,7 @@ import game.utils.*;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 // Class
@@ -19,6 +20,7 @@ public class GameWorld extends World {
     // Fields
     private final GameView view;
     private final PlayerWalker player;
+    private final GameFrame frame;
     private boolean debugOn;
     private boolean isPaused = false;
     public static GameTime gameTime;
@@ -27,10 +29,9 @@ public class GameWorld extends World {
     public GameWorld() {
         super();
         this.view = new GameView(this, 1200, 630);
-        GameFrame frame = new GameFrame("GamePlayground", this.view);
+        frame = new GameFrame("GamePlayground", this.view);
         player = new PlayerWalker(this);
         new GameMenu(frame, this);
-        new AnimationStepListener(this, player);
         new Controls(this, player, view);
         viewTracker();
         new WalkerAnimationFrames(State.RUN, Walkers.PLAYER);
@@ -94,6 +95,7 @@ public class GameWorld extends World {
             public void preStep(StepEvent event) {
 //                view.setCentre(new Vec2(player.getPosition().x, player.getPosition().y+10)); // +10 so that the view does not show the void under the ground
                 view.setCentre(player.getPosition());
+                if(player.destroyed) view.gameOver();
             }
             @Override
             public void postStep(StepEvent event) {
@@ -102,12 +104,12 @@ public class GameWorld extends World {
     }
     // Settings' Methods
     public void togglePause() {
-        if (isPaused) {
+        if (isPaused && !player.isDead()) {
             isPaused = false;
             gameTime.toggleTimer();
             start();
         }
-        else {
+        else if (!isPaused) {
             // 1 & 2 ensure player does not get stuck in movement since inputs won't be checked during pause
             player.stopWalking(); // 1
             player.setLinearVelocity(new Vec2(0, player.getLinearVelocity().y)); // 2
@@ -120,19 +122,39 @@ public class GameWorld extends World {
     public void togglePlayerAttack() {
         player.toggleOffAttack();
     }
+
     public boolean getPlayerAttack() {
         return player.getAttacking();
     }
+
     public ArrayList<WizardWalker> getWizards() {
-        return wizards;
+        ArrayList<WizardWalker> aliveWizards = new ArrayList<>();
+        for (WizardWalker wizard : wizards) {
+            if (!wizard.isDead()) aliveWizards.add(wizard);
+        }
+        return aliveWizards;
     }
+
     public PlayerWalker getPlayer() {
         return player;
     }
+
+
     public static void addWizard(WizardWalker wizard) {
         wizards.add(wizard);
     }
+
     public static void removeWizard(String wizardName) {
         wizards.removeIf(w -> w.getName().equals(wizardName));
+    }
+
+    public void exit() {
+        frame.dispose();
+        System.exit(0);
+    }
+
+    public void restart() {
+        frame.dispose();
+        Game.game =  new GameWorld();
     }
 }

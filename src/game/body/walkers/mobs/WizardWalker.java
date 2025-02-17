@@ -15,11 +15,11 @@ import java.util.HashMap;
 // Class
 public class WizardWalker extends MobWalker {
     // Fields
-    public static final float HALF_X = 1;
-    public static final float HALF_Y = 2;
+    public static final float HALF_X = 1.0f;
+    public static final float HALF_Y = 2.0f;
     private static int wizardCount = -1;
     private static final int MAX_HP = 1000;
-    private int HealthPoints = 1000;
+    private int healthPoints = 1000;
 
     // Constructor
     public WizardWalker(GameWorld gameWorld, Vec2 origin) {
@@ -31,13 +31,13 @@ public class WizardWalker extends MobWalker {
         GameWorld.addWizard(this);
     }
 
-    public void takeDamage(int damage, String String) {
-        HealthPoints -= damage;
+    public void takeDamage(int damage) {
+        healthPoints -= damage;
         checkHealth();
     }
 
     private void checkHealth() {
-        if (HealthPoints <= 0) {
+        if (healthPoints <= 0) {
             beginDeath();
         } else {
 

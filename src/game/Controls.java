@@ -4,6 +4,7 @@ import city.cs.engine.Body;
 import city.cs.engine.CollisionEvent;
 import game.body.walkers.PlayerWalker;
 import city.cs.engine.CollisionListener;
+import game.body.walkers.WalkerFrame;
 import game.body.walkers.mobs.WizardWalker;
 import game.utils.GameView;
 import org.jbox2d.common.Vec2;
@@ -57,15 +58,20 @@ class Controls {
                         player.startWalking(-7);
                     } else if (keyPressed == KeyEvent.VK_D) {
                         player.startWalking(7);
-                    } else if (keyPressed == KeyEvent.VK_3) {
-                      for (WizardWalker walker : world.getWizards()) {
-                          walker.takeDamage(10, "hey");
-                      }
-                      for (WizardWalker walker : world.getWizards()) {
-                          System.out.println(walker.toString());
-                      }
+                    // Hotswap keys (for quick assignment to test things)
                     } else if (keyPressed == KeyEvent.VK_1) {
                         world.debugOn();
+                    } else if (keyPressed == KeyEvent.VK_2) {
+                        for (WizardWalker wizard : world.getWizards()) {
+                            wizard.toggleOnHit();
+                        }
+                    } else if (keyPressed == KeyEvent.VK_3) {
+                        world.getWizards().forEach(WalkerFrame::toggleOnAttack);
+                    } else if (keyPressed == KeyEvent.VK_4) {
+                    } else if (keyPressed == KeyEvent.VK_5) {
+                    } else if (keyPressed == KeyEvent.VK_6) {
+                    } else if (keyPressed == KeyEvent.VK_7) {
+                    } else if (keyPressed == KeyEvent.VK_8) {
                     } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
                         if (isOnSurface()) {
                             player.jump(10);

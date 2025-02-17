@@ -1,6 +1,7 @@
 package game.body.walkers;
 // Imports
-
+import city.cs.engine.BoxShape;
+import city.cs.engine.Sensor;
 import game.GameWorld;
 import game.enums.Direction;
 import game.enums.State;
@@ -21,7 +22,8 @@ public class WalkerFrame extends Walker {
     private final GameWorld gameWorld;
     private boolean dead = false;
     private final Walkers WALKER_TYPE; // for now, walkers cannot transform into another
-    // Constructor
+    private boolean isCooldown = false;
+
     public WalkerFrame(GameWorld gameWorld, Shape shape, Vec2 origin, Walkers walkerType) {
         super(gameWorld, shape);
         // Initialising constants
@@ -36,15 +38,22 @@ public class WalkerFrame extends Walker {
     // Toggle Setter Methods
     public void toggleOnAttack() {
         attacking = true;
+        state = State.ATTACK1;
     }
 
     public void toggleOffAttack() {
         attacking = false;
+        state = State.IDLE;
     }
 
     public void toggleOnHit() {
         hit = true;
         state = State.HIT;
+        javax.swing.Timer hitTimer = new javax.swing.Timer(300, e -> {
+            toggleOffHit();
+        });
+        hitTimer.setRepeats(false);
+        hitTimer.start();
     }
 
     public void toggleOffHit() {
@@ -53,9 +62,25 @@ public class WalkerFrame extends Walker {
             state = State.IDLE;
         }
     }
+
+    public void toggleActionCoolDown() {
+        if (!isCooldown) {
+            javax.swing.Timer coolDowntimer = new javax.swing.Timer(1500, e -> {
+                isCooldown = false;
+            });
+            coolDowntimer.setRepeats(false);
+            coolDowntimer.start();
+            isCooldown = true;
+        }
+    }
+
     // Destruction Functions
     public void die() {
         destroy();
+    }
+    public void beginDeath() {
+        dead = true;
+        state = State.DEATH;
     }
 
     // Setters
@@ -67,10 +92,6 @@ public class WalkerFrame extends Walker {
         this.direction = direction;
     }
 
-    public void beginDeath() {
-        dead = true;
-        state = State.DEATH;
-    }
     // Getters
     public boolean getAttacking() {
         return attacking;
@@ -98,5 +119,9 @@ public class WalkerFrame extends Walker {
 
     public Walkers getWalkerType() {
         return WALKER_TYPE;
+    }
+
+    public boolean getCooldown() {
+        return isCooldown;
     }
 }

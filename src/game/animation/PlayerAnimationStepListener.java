@@ -13,7 +13,7 @@ import javax.swing.*;
 import static game.enums.State.*;
 import static game.enums.Direction.*;
 // Class
-public class AnimationStepListener implements StepListener {
+public class PlayerAnimationStepListener implements StepListener {
     // Fields
     private FrameHandler currentAnimation;
     private javax.swing.Timer timer;
@@ -23,7 +23,7 @@ public class AnimationStepListener implements StepListener {
     private final GameWorld world;
     private final HashMap<State, FrameHandler> animations = new HashMap<>();
     // Constructor
-    public AnimationStepListener(GameWorld world, PlayerWalker player) {
+    public PlayerAnimationStepListener(GameWorld world, PlayerWalker player) {
         this.player = player;
         this.world = world;
         world.addStepListener(this);
@@ -62,30 +62,34 @@ public class AnimationStepListener implements StepListener {
         currentAnimation.cycleFrame(player.getDirection());
     }
     private void setState() { // detects what sort of movement the player is performing based of the player's velocity.
-        if (player.getAttacking()) {
-            player.setState(ATTACK1); // currently only handles ATTACK1, still thinking of a use for ATTACK2, Maybe a finisher move or Combo?
-        } else {
-            if (linearVelocity.y > 2) player.setState(JUMP); // threshold of 2 to prevent jitter between surfaces.
-            else if (linearVelocity.y < -2 || player.getBodiesInContact().isEmpty()) player.setState(FALL); // check if player is in contact with other bodies, as we don't want a random idle game.animation when the player jumps/falls slower than 2.
-            else if (linearVelocity.x > 2 || linearVelocity.x < -2) player.setState(RUN);
-            else player.setState(IDLE);
+        if (player.getState() != DEATH) {
+            if (player.getAttacking()) {
+                player.setState(ATTACK1); // currently only handles ATTACK1, still thinking of a use for ATTACK2, Maybe a finisher move or Combo?
+            } else {
+                if (linearVelocity.y > 2) player.setState(JUMP); // threshold of 2 to prevent jitter between surfaces.
+                else if (linearVelocity.y < -2 || player.getBodiesInContact().isEmpty())
+                    player.setState(FALL); // check if player is in contact with other bodies, as we don't want a random idle game.animation when the player jumps/falls slower than 2.
+                else if (linearVelocity.x > 2 || linearVelocity.x < -2) player.setState(RUN);
+                else {
+                    player.setState(IDLE);
+                }
+            }
         }
         setAnimation(player.getState());
     }
     private void setAnimation(State state) {
         if (currentAnimation == null || currentAnimation != animations.get(state)) { // we just skip this if it's the same state
             currentAnimation = animations.get(state);
-            if (currentAnimation == animations.get(ATTACK1)) { // separate sequence for attack timer
-                invokeAttackTimer();
-            } else {
-                toggleTimer();
-            }
+            if (currentAnimation == animations.get(ATTACK1)) invokeAttackTimer();
+            if (currentAnimation == animations.get(DEATH)) invokeDeathTimer();
+            toggleTimer();
         }
     }
     // Timer Methods
     private void checkTimer(Timer timer) {
         if (timerCount == currentAnimation.getNumFrames()) { // although PlayerAnimation.incrementFrame ensures we don't go out of index there, we need to also do that on this side, might be worth making a function which handles both...
             if (currentAnimation == animations.get(ATTACK1)) world.togglePlayerAttack();
+            if (currentAnimation == animations.get(DEATH)) player.die();
             timerCount = 0;
             timer.restart(); // timer needs to restart so game.animation doesn't "stall" - where we have to wait for one game.animation to finish for the next to start
         }
@@ -105,6 +109,11 @@ public class AnimationStepListener implements StepListener {
         setTimer(100); // attack needs to be faster so we set it to 100ms, typical gifs (as far as ik) have a 200ms gap between frames.
         player.hurtWizards();
     }
+    private void invokeDeathTimer() {
+        timer.stop();
+        setTimer(300);
+    }
+
     private void setTimer(int delay) {
         timerCount = 0;
         timer = new javax.swing.Timer(delay, e -> {
