@@ -12,6 +12,7 @@ class AnimationFrames {
     protected int numFrames;
     protected float height;
     protected float Y_OFFSET;
+    protected float X_OFFSET;
     // Constructor
     public AnimationFrames() {}
     // Methods

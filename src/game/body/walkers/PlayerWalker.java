@@ -4,9 +4,8 @@ package game.body.walkers;
 import city.cs.engine.*;
 import game.GameWorld;
 import game.animation.PlayerAnimationStepListener;
+import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
-import game.body.walkers.mobs.WizardWalker;
-import game.enums.State;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
@@ -20,8 +19,8 @@ public class PlayerWalker extends WalkerFrame {
     private SensorListener attackLeft;
     private final Sensor rightSensor;
     private final Sensor leftSensor;
-    private final ArrayList<WizardWalker> inRightSensor = new ArrayList<>();
-    private final ArrayList<WizardWalker> inLeftSensor = new ArrayList<>();
+    private final ArrayList<MobWalker> inRightSensor = new ArrayList<>();
+    private final ArrayList<MobWalker> inLeftSensor = new ArrayList<>();
     private final PlayerAnimationStepListener stepListener;
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
@@ -63,32 +62,32 @@ public class PlayerWalker extends WalkerFrame {
         leftSensor.addSensorListener(attackLeft);
     }
 
-    private void updateSensor(SensorEvent e, ArrayList<WizardWalker> sensorArray) {
-        for (WizardWalker wizard : getGameWorld().getWizards()) {
-            if (e.getContactBody().getName().equals(wizard.getName())) {
-                if (!sensorArray.contains(wizard)) {
-                    sensorArray.add(wizard);
+    private void updateSensor(SensorEvent e, ArrayList<MobWalker> sensorArray) {
+        for (MobWalker mob : GameWorld.getMobs()) {
+            if (e.getContactBody().getName().equals(mob.getName())) {
+                if (!sensorArray.contains(mob)) {
+                    sensorArray.add(mob);
                 }
             }
         }
     }
-    public void checkWizards() {
+    public void checkMob() {
         // x handling
-        inRightSensor.removeIf(wizard -> (wizard.getPosition().x > (getPosition().x + 7 + WizardWalker.HALF_X)) || wizard.getPosition().x < getPosition().x);
-        inLeftSensor.removeIf(wizard -> (wizard.getPosition().x < (getPosition().x + (-4 - 3)) + (-WizardWalker.HALF_X)) || wizard.getPosition().x > getPosition().x);
+        inRightSensor.removeIf(mob -> (mob.getPosition().x > (getPosition().x + 7 + mob.HALF_X)) || mob.getPosition().x < getPosition().x);
+        inLeftSensor.removeIf(mob -> (mob.getPosition().x < (getPosition().x + (-4 - 3)) + (-mob.HALF_X)) || mob.getPosition().x > getPosition().x);
         // y handling
-        inRightSensor.removeIf(wizard -> wizard.getPosition().y + wizard.ORIGIN_Y < getPosition().y - 1.5f || wizard.getPosition().y - wizard.ORIGIN_Y > getPosition().y + 1.5f);
-        inLeftSensor.removeIf(wizard -> wizard.getPosition().y + wizard.ORIGIN_Y < getPosition().y - 1.5f || wizard.getPosition().y - wizard.ORIGIN_Y > getPosition().y + 1.5f);
+        inRightSensor.removeIf(mob -> mob.getPosition().y + mob.ORIGIN_Y < getPosition().y - 1.5f || mob.getPosition().y - mob.ORIGIN_Y > getPosition().y + 1.5f);
+        inLeftSensor.removeIf(mob -> mob.getPosition().y + mob.ORIGIN_Y < getPosition().y - 1.5f || mob.getPosition().y - mob.ORIGIN_Y > getPosition().y + 1.5f);
     }
 
-    public void hurtWizards() {
-        ArrayList<WizardWalker> temp = new ArrayList<>();
+    public void hurtMob() {
+        ArrayList<MobWalker> temp = new ArrayList<>();
         if (getDirection() == Direction.RIGHT) temp = inRightSensor;
         else temp = inLeftSensor;
-        for (WizardWalker wizard : temp) {
+        for (MobWalker mob : temp) {
             javax.swing.Timer timer1 = new javax.swing.Timer(200, e -> { // delay timer so that it looks like they were hurt as animation blade hits them
-                wizard.toggleOnHit();
-                wizard.takeDamage(500);
+                mob.toggleOnHit();
+                mob.takeDamage(500);
             });
             timer1.setRepeats(false);
             timer1.start();

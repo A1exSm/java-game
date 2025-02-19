@@ -29,9 +29,10 @@ class FrameHandler {
     }
     protected void cycleFrame(Direction direction) {
         walker.removeAllImages();
+        System.out.println();
         switch (direction) {
-            case RIGHT -> new AttachedImage(walker, walkerFrame.getAnimationFrames().get(currentFrame - 1), 1, 0, new Vec2(0, walkerFrame.Y_OFFSET));
-            case LEFT -> new AttachedImage(walker, walkerFrame.getAnimationFrames().get(currentFrame - 1), 1, 0, new Vec2(0, walkerFrame.Y_OFFSET)).flipHorizontal();
+            case RIGHT -> new AttachedImage(walker, walkerFrame.getAnimationFrames().get(currentFrame - 1), 1, 0, new Vec2(walkerFrame.X_OFFSET, walkerFrame.Y_OFFSET));
+            case LEFT -> new AttachedImage(walker, walkerFrame.getAnimationFrames().get(currentFrame - 1), 1, 0, new Vec2(walkerFrame.X_OFFSET, walkerFrame.Y_OFFSET)).flipHorizontal();
         }
     }
     // Getters

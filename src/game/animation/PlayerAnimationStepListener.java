@@ -50,7 +50,7 @@ public class PlayerAnimationStepListener implements StepListener {
     }
     @Override
     public void postStep(StepEvent stepEvent) {
-        player.checkWizards();
+        player.checkMob();
     }
     // Animation Methods
     private void findDirection() {
@@ -107,7 +107,7 @@ public class PlayerAnimationStepListener implements StepListener {
         timer.stop();
         setAnimation(ATTACK1);
         setTimer(100); // attack needs to be faster so we set it to 100ms, typical gifs (as far as ik) have a 200ms gap between frames.
-        player.hurtWizards();
+        player.hurtMob();
     }
     private void invokeDeathTimer() {
         timer.stop();

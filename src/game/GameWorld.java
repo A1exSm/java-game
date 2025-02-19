@@ -4,8 +4,10 @@ import game.body.dynamicstructs.DynamicPolygon;
 import game.body.staticstructs.Ground;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
+import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
+import game.body.walkers.mobs.WormWalker;
 import game.enums.State;
 import game.enums.Walkers;
 import game.utils.*;
@@ -25,6 +27,7 @@ public class GameWorld extends World {
     private boolean isPaused = false;
     public static GameTime gameTime;
     private static ArrayList<WizardWalker> wizards = new ArrayList<>();
+    private static ArrayList<MobWalker>  mobs = new ArrayList<>();
     // Constructor
     public GameWorld() {
         super();
@@ -83,10 +86,10 @@ public class GameWorld extends World {
     private void initWizards() {
         new WizardWalker(this, new Vec2(80,2));
         new WizardWalker(this, new Vec2(110, 2));
-        new WizardWalker(this, new Vec2(-10,2));
         new WizardWalker(this, new Vec2(-30,2));
         new WizardWalker(this, new Vec2(-80,2));
         new WizardWalker(this, new Vec2(-110,2));
+        new WormWalker(this, new Vec2(-10,2));
     }
     // Method Override
     private void viewTracker() {
@@ -127,26 +130,11 @@ public class GameWorld extends World {
         return player.getAttacking();
     }
 
-    public ArrayList<WizardWalker> getWizards() {
-        ArrayList<WizardWalker> aliveWizards = new ArrayList<>();
-        for (WizardWalker wizard : wizards) {
-            if (!wizard.isDead()) aliveWizards.add(wizard);
-        }
-        return aliveWizards;
-    }
-
     public PlayerWalker getPlayer() {
         return player;
     }
 
 
-    public static void addWizard(WizardWalker wizard) {
-        wizards.add(wizard);
-    }
-
-    public static void removeWizard(String wizardName) {
-        wizards.removeIf(w -> w.getName().equals(wizardName));
-    }
 
     public void exit() {
         frame.dispose();
@@ -156,5 +144,37 @@ public class GameWorld extends World {
     public void restart() {
         frame.dispose();
         Game.game =  new GameWorld();
+    }
+    // Wizardry
+    public static ArrayList<WizardWalker> getWizards() {
+        ArrayList<WizardWalker> aliveWizards = new ArrayList<>();
+        for (WizardWalker wizard : wizards) {
+            if (!wizard.isDead()) aliveWizards.add(wizard);
+        }
+        return aliveWizards;
+    }
+
+    public static void addWizard(WizardWalker wizard) {
+        wizards.add(wizard);
+    }
+
+    public static void removeWizard(String wizardName) {
+        wizards.removeIf(w -> w.getName().equals(wizardName));
+    }
+    //Mobology
+    public static ArrayList<MobWalker> getMobs() {
+        ArrayList<MobWalker> aliveMobs = new ArrayList<>();
+        for (MobWalker mob : mobs) {
+            if(!mob.isDead()) aliveMobs.add(mob);
+        }
+        return aliveMobs;
+    }
+
+    public static void addMob(MobWalker mob) {
+        mobs.add(mob);
+    }
+
+    public static void removeMob(MobWalker mob) {
+        mobs.remove(mob);
     }
 }

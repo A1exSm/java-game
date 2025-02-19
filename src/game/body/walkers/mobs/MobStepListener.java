@@ -1,7 +1,6 @@
 package game.body.walkers.mobs;
 // Imports
 import game.animation.WalkerAnimationStepListener;
-import game.body.walkers.PlayerWalker;
 import game.enums.Direction;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;

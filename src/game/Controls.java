@@ -1,11 +1,9 @@
 package game;
 // Imports
 import city.cs.engine.Body;
-import city.cs.engine.CollisionEvent;
 import game.body.walkers.PlayerWalker;
 import city.cs.engine.CollisionListener;
-import game.body.walkers.WalkerFrame;
-import game.body.walkers.mobs.WizardWalker;
+import game.body.walkers.mobs.MobWalker;
 import game.utils.GameView;
 import org.jbox2d.common.Vec2;
 import java.awt.event.KeyAdapter;
@@ -37,7 +35,9 @@ class Controls {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (world.isRunning()) {
-                    player.toggleOnAttack();
+                    if (!player.isDead()) {
+                        player.toggleOnAttack();
+                    }
                 }
             }
             @Override
@@ -53,28 +53,30 @@ class Controls {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (world.isRunning()) {
-                    keyPressed = e.getKeyCode();
-                    if (keyPressed == KeyEvent.VK_A) {
-                        player.startWalking(-7);
-                    } else if (keyPressed == KeyEvent.VK_D) {
-                        player.startWalking(7);
-                    // Hotswap keys (for quick assignment to test things)
-                    } else if (keyPressed == KeyEvent.VK_1) {
-                        world.debugOn();
-                    } else if (keyPressed == KeyEvent.VK_2) {
-                        for (WizardWalker wizard : world.getWizards()) {
-                            wizard.toggleOnHit();
-                        }
-                    } else if (keyPressed == KeyEvent.VK_3) {
-                        world.getWizards().forEach(WalkerFrame::toggleOnAttack);
-                    } else if (keyPressed == KeyEvent.VK_4) {
-                    } else if (keyPressed == KeyEvent.VK_5) {
-                    } else if (keyPressed == KeyEvent.VK_6) {
-                    } else if (keyPressed == KeyEvent.VK_7) {
-                    } else if (keyPressed == KeyEvent.VK_8) {
-                    } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
-                        if (isOnSurface()) {
-                            player.jump(10);
+                    if (!player.isDead()) {
+                        keyPressed = e.getKeyCode();
+                        if (keyPressed == KeyEvent.VK_A) {
+                            player.startWalking(-7);
+                        } else if (keyPressed == KeyEvent.VK_D) {
+                            player.startWalking(7);
+                            // Hotswap keys (for quick assignment to test things)
+                        } else if (keyPressed == KeyEvent.VK_1) {
+                            world.debugOn();
+                        } else if (keyPressed == KeyEvent.VK_2) {
+                            for (MobWalker mob : GameWorld.getMobs()) {
+                                mob.toggleOnHit();
+                            }
+                        } else if (keyPressed == KeyEvent.VK_3) {
+                            GameWorld.getMobs().forEach(MobWalker::toggleOnAttack);
+                        } else if (keyPressed == KeyEvent.VK_4) {
+                        } else if (keyPressed == KeyEvent.VK_5) {
+                        } else if (keyPressed == KeyEvent.VK_6) {
+                        } else if (keyPressed == KeyEvent.VK_7) {
+                        } else if (keyPressed == KeyEvent.VK_8) {
+                        } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
+                            if (isOnSurface()) {
+                                player.jump(10);
+                            }
                         }
                     }
                 }
@@ -82,10 +84,12 @@ class Controls {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (world.isRunning()) {
-                    keyReleased = e.getKeyCode();
-                    if ((keyReleased == KeyEvent.VK_A && keyPressed != KeyEvent.VK_D) || (keyReleased == KeyEvent.VK_D && keyPressed != KeyEvent.VK_A)) { // ensures order logic
-                        player.stopWalking();
-                        player.setLinearVelocity(new Vec2(0, player.getLinearVelocity().y));
+                    if (!player.isDead()) {
+                        keyReleased = e.getKeyCode();
+                        if ((keyReleased == KeyEvent.VK_A && keyPressed != KeyEvent.VK_D) || (keyReleased == KeyEvent.VK_D && keyPressed != KeyEvent.VK_A)) { // ensures order logic
+                            player.stopWalking();
+                            player.setLinearVelocity(new Vec2(0, player.getLinearVelocity().y));
+                        }
                     }
                 }
             }

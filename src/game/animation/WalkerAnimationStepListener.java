@@ -3,6 +3,7 @@ package game.animation;
 
 import game.GameWorld;
 import game.body.walkers.WalkerFrame;
+import game.body.walkers.mobs.MobWalker;
 import game.enums.State;
 
 import java.awt.*;
@@ -16,18 +17,18 @@ public class WalkerAnimationStepListener {
     private  FrameHandler currentHandler;
     private javax.swing.Timer animationTimer;
     private int timerCount;
-    private final WalkerFrame walker;
+    private final MobWalker walker;
     private final GameWorld gameWorld;
     private final HashMap<State, FrameHandler> animations = new HashMap<>();
     // Constructor
-    public WalkerAnimationStepListener(WalkerFrame walker) {
+    public WalkerAnimationStepListener(MobWalker walker) {
         this.walker = walker;
         this.gameWorld = walker.getGameWorld();
         populateHashMap();
     }
     // Methods
     private void populateHashMap() {
-        for (State state : State.values()) {
+        for (State state : walker.getSupportedStates()) {
             animations.put(state, new FrameHandler(walker, state));
         }
     }

@@ -5,6 +5,7 @@ import game.enums.Direction;
 import city.cs.engine.*;
 import game.GameWorld;
 import game.body.walkers.WalkerFrame;
+import game.enums.State;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
@@ -15,6 +16,8 @@ public class MobWalker extends WalkerFrame {
     public final float HALF_Y;
     private static int mobCount = -1;
     private final MobStepListener mobStepListener;
+    private static final int MAX_HP = 1000;
+    private int healthPoints = 1000;
 
     {
         mobCount++;
@@ -30,23 +33,27 @@ public class MobWalker extends WalkerFrame {
             HALF_X = 0.0f;
             HALF_Y = 0.0f;
         }
-
-        this.setName("Mob" + mobCount);
-
+        initName();
         if (patroller) {
             patrolCollisions();
         }
 
         startWalking(2);
         mobStepListener = new MobStepListener(gameWorld, this);
+
+        GameWorld.addMob(this);
     }
     // Methods
+    protected void initName() {
+        setName(getWalkerType().name().toLowerCase() + mobCount);
+    }
+
 
     private void patrolCollisions() {
         this.addCollisionListener(e -> {
             Vec2 normal = e.getNormal();
             if (normal.y == 0) {
-                if (e.getOtherBody().getName().equals("Player") || getWorld().getStaticBodies().contains(e.getOtherBody()) || getGameWorld().getWizards().contains(e.getOtherBody())) {
+                if (e.getOtherBody().getName().equals("Player") || getWorld().getStaticBodies().contains(e.getOtherBody()) || GameWorld.getMobs().contains(e.getOtherBody())) {
                     if (normal.x < 0) {
                         setDirection(Direction.RIGHT);
                         startWalking(2);
@@ -72,6 +79,21 @@ public class MobWalker extends WalkerFrame {
     public void die() {
         mobStepListener.remove();
         destroy();
+    }
+
+    public void takeDamage(int damage) {
+        healthPoints -= damage;
+        if (healthPoints <= 0) {
+            beginDeath();
+        }
+    }
+
+    public State[] getSupportedStates() {
+        switch (getWalkerType()) {
+            case WIZARD -> {return WizardWalker.SUPPORTED_STATES;}
+            case WORM -> {return WormWalker.SUPPORTED_STATES;}
+            default -> {return null;}
+        }
     }
 
 }
