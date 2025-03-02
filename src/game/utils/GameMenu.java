@@ -1,5 +1,6 @@
 package game.utils;
 // Imports
+import game.Game;
 import game.GameWorld;
 import javax.swing.*;
 import java.awt.*;
@@ -29,10 +30,10 @@ public class GameMenu extends MenuBar {
 
     private void createSettingsItems(Menu settings) {
         pause = new MenuItem("Pause", new MenuShortcut(KeyEvent.VK_P, false));
-        restart = new MenuItem("Restart Game", new MenuShortcut(KeyEvent.VK_R, false));
+//        restart = new MenuItem("Restart Game", new MenuShortcut(KeyEvent.VK_R, false));
         exit = new MenuItem("Exit", new MenuShortcut(KeyEvent.VK_E, false));
         settings.add(pause);
-        settings.add(restart);
+//        settings.add(restart);
         settings.add(exit);
         addSettingsActionListeners();
     }
@@ -47,18 +48,18 @@ public class GameMenu extends MenuBar {
                 else pause.setLabel("Unpause");
             }
         });
-        // Reset
-        restart.setActionCommand("restart");
-        restart.addActionListener(i->{
-            if (i.getActionCommand().equals("restart")) {
-                gameWorld.restart();
-            }
-        });
+//        // Reset
+//        restart.setActionCommand("restart");
+//        restart.addActionListener(i->{
+//            if (i.getActionCommand().equals("restart")) {
+//                Game.restart();
+//            }
+//        });
         // Exit
         exit.setActionCommand("exit");
         exit.addActionListener(i->{
             if (i.getActionCommand().equals("exit")) {
-                gameWorld.exit();
+                Game.exit();
             }
         });
     }

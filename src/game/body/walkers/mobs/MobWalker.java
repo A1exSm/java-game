@@ -1,10 +1,13 @@
 package game.body.walkers.mobs;
 // Imports
+import game.body.items.HealthVial;
 import game.body.walkers.PlayerWalker;
 import game.enums.Direction;
 import city.cs.engine.*;
 import game.GameWorld;
 import game.body.walkers.WalkerFrame;
+import game.enums.items.ItemSize;
+import game.enums.items.Items;
 import game.enums.State;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
@@ -26,12 +29,20 @@ public class MobWalker extends WalkerFrame {
     // Constructor
     public MobWalker(GameWorld gameWorld, BoxShape boxShape, Vec2 origin, Boolean patroller, Walkers mobType) {
         super(gameWorld, boxShape, origin, mobType);
-        if (mobType == Walkers.WIZARD) {
-            HALF_X = WizardWalker.HALF_X;
-            HALF_Y = WizardWalker.HALF_Y;
-        } else {
-            HALF_X = 0.0f;
-            HALF_Y = 0.0f;
+        switch  (mobType) {
+            case WIZARD -> {
+                HALF_X = WizardWalker.HALF_X;
+                HALF_Y = WizardWalker.HALF_Y;
+            }
+            case WORM -> {
+                HALF_X = WormWalker.HALF_X;
+                HALF_Y = WormWalker.HALF_Y;
+            }
+            default -> {
+                HALF_X = 0.0f;
+                HALF_Y = 0.0f;
+
+            }
         }
         initName();
         if (patroller) {
@@ -70,7 +81,7 @@ public class MobWalker extends WalkerFrame {
         if (!getCooldown() && !getHit()) {
             toggleActionCoolDown();
             toggleOnAttack();
-            player.takeDamage(100, getWalkerType());
+            player.takeDamage(125, getWalkerType());
         }
     }
 
@@ -78,11 +89,14 @@ public class MobWalker extends WalkerFrame {
     @Override
     public void die() {
         mobStepListener.remove();
+        new HealthVial(ItemSize.SMALL, new Vec2(getPosition().x, getPosition().y-(HALF_Y/1.7f))); // -HALF_Y/1.7f to make the item appear slightly buried in the ground under the mob
         destroy();
     }
 
     public void takeDamage(int damage) {
+        System.out.println(getName() + " taking damage: " + healthPoints + " - " + damage);
         healthPoints -= damage;
+        toggleOnHit();
         if (healthPoints <= 0) {
             beginDeath();
         }

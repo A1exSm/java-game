@@ -1,12 +1,9 @@
 package game.body.walkers;
 // Imports
-import city.cs.engine.BoxShape;
-import city.cs.engine.Sensor;
+import city.cs.engine.*;
 import game.GameWorld;
 import game.enums.Direction;
 import game.enums.State;
-import city.cs.engine.Shape;
-import city.cs.engine.Walker;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
@@ -15,6 +12,7 @@ public class WalkerFrame extends Walker {
     // Fields
     public final float ORIGIN_X;
     public final float ORIGIN_Y;
+    private final Shape SHAPE;
     private boolean attacking = false;
     private boolean hit = false;
     private State state = State.IDLE;
@@ -29,6 +27,7 @@ public class WalkerFrame extends Walker {
         // Initialising constants
         this.ORIGIN_X = origin.x;
         this.ORIGIN_Y = origin.y;
+        this.SHAPE = shape;
         this.WALKER_TYPE = walkerType;
         setPosition(origin);
         this.gameWorld = gameWorld;
@@ -78,7 +77,16 @@ public class WalkerFrame extends Walker {
     public void die() {
         destroy();
     }
+
+    private void makeGhostly() {
+        getFixtureList().forEach(Fixture::destroy);
+        Sensor ghostSensor = new Sensor(this, SHAPE);
+        setGravityScale(0);
+
+    }
+
     public void beginDeath() {
+        makeGhostly();
         dead = true;
         state = State.DEATH;
     }

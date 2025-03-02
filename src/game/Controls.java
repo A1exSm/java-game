@@ -4,6 +4,7 @@ import city.cs.engine.Body;
 import game.body.walkers.PlayerWalker;
 import city.cs.engine.CollisionListener;
 import game.body.walkers.mobs.MobWalker;
+import game.enums.Walkers;
 import game.utils.GameView;
 import org.jbox2d.common.Vec2;
 import java.awt.event.KeyAdapter;
@@ -61,7 +62,7 @@ class Controls {
                             player.startWalking(7);
                             // Hotswap keys (for quick assignment to test things)
                         } else if (keyPressed == KeyEvent.VK_1) {
-                            world.debugOn();
+                            Game.debugOn();
                         } else if (keyPressed == KeyEvent.VK_2) {
                             for (MobWalker mob : GameWorld.getMobs()) {
                                 mob.toggleOnHit();
@@ -69,6 +70,9 @@ class Controls {
                         } else if (keyPressed == KeyEvent.VK_3) {
                             GameWorld.getMobs().forEach(MobWalker::toggleOnAttack);
                         } else if (keyPressed == KeyEvent.VK_4) {
+                            for (MobWalker mob : GameWorld.getMobs()) {
+                                if (mob.getWalkerType() == Walkers.WORM) mob.die();
+                            }
                         } else if (keyPressed == KeyEvent.VK_5) {
                         } else if (keyPressed == KeyEvent.VK_6) {
                         } else if (keyPressed == KeyEvent.VK_7) {

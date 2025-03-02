@@ -74,19 +74,18 @@ public class PlayerWalker extends WalkerFrame {
     public void checkMob() {
         // x handling
         inRightSensor.removeIf(mob -> (mob.getPosition().x > (getPosition().x + 7 + mob.HALF_X)) || mob.getPosition().x < getPosition().x);
-        inLeftSensor.removeIf(mob -> (mob.getPosition().x < (getPosition().x + (-4 - 3)) + (-mob.HALF_X)) || mob.getPosition().x > getPosition().x);
+        inLeftSensor.removeIf(mob -> (mob.getPosition().x < (getPosition().x -7) + (-mob.HALF_X)) || mob.getPosition().x > getPosition().x);
         // y handling
         inRightSensor.removeIf(mob -> mob.getPosition().y + mob.ORIGIN_Y < getPosition().y - 1.5f || mob.getPosition().y - mob.ORIGIN_Y > getPosition().y + 1.5f);
         inLeftSensor.removeIf(mob -> mob.getPosition().y + mob.ORIGIN_Y < getPosition().y - 1.5f || mob.getPosition().y - mob.ORIGIN_Y > getPosition().y + 1.5f);
     }
 
     public void hurtMob() {
-        ArrayList<MobWalker> temp = new ArrayList<>();
-        if (getDirection() == Direction.RIGHT) temp = inRightSensor;
-        else temp = inLeftSensor;
+        ArrayList<MobWalker> temp;
+        if (getDirection() == Direction.RIGHT) temp = new ArrayList<>(inRightSensor);
+        else temp = new ArrayList<>(inLeftSensor);
         for (MobWalker mob : temp) {
-            javax.swing.Timer timer1 = new javax.swing.Timer(200, e -> { // delay timer so that it looks like they were hurt as animation blade hits them
-                mob.toggleOnHit();
+            javax.swing.Timer timer1 = new javax.swing.Timer(100, e -> { // delay timer so that it looks like they were hurt as animation blade hits them
                 mob.takeDamage(500);
             });
             timer1.setRepeats(false);
@@ -96,11 +95,25 @@ public class PlayerWalker extends WalkerFrame {
 
     // Player health
     public void takeDamage(int damage, Walkers  walker) {
+        System.out.println(getName() + " taking damage from " + walker.name() + ": " + healthPoints + " - " + damage);
         healthPoints -= damage;
         toggleOnHit();
         if (healthPoints <= 0) {
             beginDeath();
         }
+    }
+
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
+    public void addHealthPoints(int healthPoints) {
+        this.healthPoints += healthPoints;
+        if (this.healthPoints > MAX_HP) this.healthPoints = MAX_HP;
+    }
+
+    public boolean isHealthFull() {
+        return healthPoints == MAX_HP;
     }
 
     @Override

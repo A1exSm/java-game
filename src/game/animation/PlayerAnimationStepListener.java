@@ -40,6 +40,7 @@ public class PlayerAnimationStepListener implements StepListener {
     @Override
     public void preStep(StepEvent stepEvent) {
         if (world.isRunning()) {
+            player.checkMob();
             linearVelocity = player.getLinearVelocity();
             findDirection();
             setState();
@@ -49,9 +50,7 @@ public class PlayerAnimationStepListener implements StepListener {
 
     }
     @Override
-    public void postStep(StepEvent stepEvent) {
-        player.checkMob();
-    }
+    public void postStep(StepEvent stepEvent) {}
     // Animation Methods
     private void findDirection() {
         if (linearVelocity.x > 2) {

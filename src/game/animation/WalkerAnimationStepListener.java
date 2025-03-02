@@ -92,6 +92,6 @@ public class WalkerAnimationStepListener {
     }
 
     private void endAnimations() {
-        animationTimer.setRepeats(false); // ensures timer does not continue after walker is dead
+        if (animationTimer != null) animationTimer.setRepeats(false); // ensures timer does not continue after walker is dead
     }
 }

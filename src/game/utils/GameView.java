@@ -1,9 +1,12 @@
 package game.utils;
 // Imports
 import city.cs.engine.UserView;
+import game.Game;
 import game.GameWorld;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
+
 // Class
 public class GameView extends UserView {
     // Fields
@@ -16,24 +19,31 @@ public class GameView extends UserView {
         super(gameWorld, width, height);
         requestFocus();
         setFocusable(true);
-        GameWorld.gameTime = new GameTime();
+        Game.gameTime = new GameTime();
         this.gameWorld = gameWorld;
     }
     // Methods
     @Override
     protected void paintBackground(Graphics2D g) {
-//        background = background.getScaledInstance(800, 600, Image.SCALE_DEFAULT); // IDK how this works :( can't get it to work
         g.drawImage(background, 0, 0, this);
+        // Drawing health bar
+        int xPos = (int)Game.getFrameDimensions().x - 520;
+        int healthPointWidth = 48;
+        Image healthImage = new ImageIcon("data/Display_assets/health_bar/tile000.png").getImage();
+        g.drawImage(healthImage, xPos, 0, 500, 50, this);
+        for (int i = 0; i < gameWorld.getPlayer().getHealthPoints()/125; i++) {
+            g.drawImage(new ImageIcon("data/Display_assets/health_bar/tile007.png").getImage(), xPos + healthPointWidth*i, 0, 500, 50, this);
+        }
     }
     @Override
     protected void paintForeground(Graphics2D g) {
         g.setFont(STATUS_FONT);
-        if (GameWorld.gameTime.getTime() == 0) {
+        if (Game.gameTime.getTime() == 0) {
             g.setColor(Color.RED);
             g.drawString("LOADING...", 550, 315);
         } else {
             g.setColor(Color.BLUE);
-            g.drawString(String.format("Timer: %02d" + ":%02d", GameWorld.gameTime.getTimeMinutes(), GameWorld.gameTime.getTimeSeconds()), 5, 20);
+            g.drawString(String.format("Timer: %02d" + ":%02d", Game.gameTime.getTimeMinutes(), Game.gameTime.getTimeSeconds()), 5, 20);
         }
         if (gameOver) {
             g.setColor(Color.RED);

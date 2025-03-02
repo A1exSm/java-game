@@ -17,7 +17,6 @@ public class WizardWalker extends MobWalker {
     // Constructor
     public WizardWalker(GameWorld gameWorld, Vec2 origin) {
         super(gameWorld, new BoxShape(1,2), origin, true, Walkers.WIZARD);
-        GameWorld.addWizard(this);
     }
 
 }
