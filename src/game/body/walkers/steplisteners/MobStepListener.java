@@ -15,11 +15,10 @@ public class MobStepListener implements MobStepListenerFrame {
     // Fields
     protected final MobWalker mob;
     protected final WalkerAnimationStepListener animationsListener;
-    protected static final float CHASE_DISTANCE = 3.0f;
     protected static final float CHASE_RADIUS_X = 30.0f;
     protected static final float CHASE_RADIUS_Y = 10.0f;
     protected static final float ANIMATION_RADIUS = 40.0f;
-    protected static final float VIEW_RADIUS_X = 10.0f;
+    protected static final float VIEW_RADIUS_X = 20.0f;
     protected static final float VIEW_RADIUS_Y = 3.0f;
     protected static final float WALK_SPEED = 2.0f;
     protected final GameWorld gameWorld;

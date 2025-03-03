@@ -1,22 +1,28 @@
 package game.animation;
 // Imports
 import city.cs.engine.AttachedImage;
+import game.GameWorld;
 import game.body.walkers.WalkerFrame;
 import game.enums.Direction;
 import game.enums.State;
+import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
+
+import java.util.Objects;
 
 // Class
 class FrameHandler {
     // Fields
     private final WalkerFrame walker;
     private final WalkerAnimationFrames walkerFrame;
+    private final State animationType;
     private int currentFrame;
     // Constructor
     protected FrameHandler(WalkerFrame walker, State animation) {
         this.walker = walker;
         walkerFrame = new WalkerAnimationFrames(animation, walker.getWalkerType()); // creating a new Frame for the game.animation (= PlayerState)
         currentFrame = 1;
+        animationType = animation;
     }
     // Methods
     protected void resetFrame() {
@@ -25,6 +31,9 @@ class FrameHandler {
     protected void incrementFrame(Direction direction) {
         currentFrame++;
         if (currentFrame > walkerFrame.numFrames) currentFrame = 1; // ensures that there is no situation where we are accessing a Frame which is out of range (of the array indexing)
+        if (walker.getWalkerType() == Walkers.WORM && animationType == State.ATTACK1 && currentFrame == 11) {
+            Objects.requireNonNull(GameWorld.nameToWorm(walker.getName())).shootProjectile(); // Apparently requireNonNull is good practice
+        }
         cycleFrame(direction);
     }
     protected void cycleFrame(Direction direction) {

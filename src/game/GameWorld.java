@@ -1,6 +1,5 @@
 package game;
 // Imports
-import game.body.dynamicstructs.DynamicPolygon;
 import game.body.staticstructs.Ground;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
@@ -50,15 +49,15 @@ public class GameWorld extends World {
     private void playGround() {
         float offset = 100f;
         new Ground(this, new Vec2(2, 2f), new Vec2(-5+offset, 2f));
-        DynamicBody toy = new DynamicBody(this, new DynamicPolygon(new Vec2[]{new Vec2(0, 0), new Vec2(), new Vec2(6, 0), new Vec2(6, 2), new Vec2(4, 4), new Vec2(2, 4), new Vec2(0, 2), new Vec2(0, 0)}));
-        toy.setLinearVelocity(new Vec2(offset, 1));
-        toy.setName("Toy");
+//        DynamicBody toy = new DynamicBody(this, new DynamicPolygon(new Vec2[]{new Vec2(0, 0), new Vec2(), new Vec2(6, 0), new Vec2(6, 2), new Vec2(4, 4), new Vec2(2, 4), new Vec2(0, 2), new Vec2(0, 0)}));
+//        toy.setLinearVelocity(new Vec2(offset, 1));
+//        toy.setName("Toy");
         new Ground.Platform(this, new Vec2(20+offset, 4));
         new Ground.Platform(this, new Vec2(27+offset, 7));
         new Trampoline(this, new Vec2(-20+offset, 1));
         initWizards();
         for (MobWalker mob : mobs) {
-            if (mob.getWalkerType() == Walkers.WORM) {
+            if (mob.getWalkerType() == Walkers.WIZARD) {
                 mob.setBehaviour(WalkerBehaviour.PASSIVE);
             }
         }
@@ -71,7 +70,7 @@ public class GameWorld extends World {
         new WizardWalker(this, new Vec2(-30,2));
         new WizardWalker(this, new Vec2(-80,2));
         new WizardWalker(this, new Vec2(-110,2));
-        new WormWalker(this, new Vec2(-10,2));
+        new WormWalker(this, new Vec2(20,2));
     }
 
     // External Getters & Setters
@@ -102,5 +101,25 @@ public class GameWorld extends World {
 
     public static void removeMob(MobWalker mob) {
         mobs.remove(mob);
+    }
+
+    public static WormWalker nameToWorm(String name) {
+        for (MobWalker mob : mobs) {
+            if (mob.getWalkerType().equals(Walkers.WORM) && mob.getName().equals(name)) { // ensures correct type & name
+                return (WormWalker) mob; // casts the mob to a WormWalker
+            }
+        }
+        System.err.println("WormWalker with name: "+ name + " not found! Returning null.");
+        return null;
+    }
+
+    public static WizardWalker nameToWizard(String name) {
+        for (MobWalker mob : mobs) {
+            if (mob.getWalkerType().equals(Walkers.WIZARD) && mob.getName().equals(name)) { // ensures correct type & name
+                return (WizardWalker) mob; // casts the mob to a WormWalker
+            }
+        }
+        System.err.println("WizardWalker with name: "+ name + " not found! Returning null.");
+        return null;
     }
 }

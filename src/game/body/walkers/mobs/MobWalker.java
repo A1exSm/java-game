@@ -98,7 +98,7 @@ public class MobWalker extends WalkerFrame {
         if (!getCooldown() && !getHit()) {
             toggleActionCoolDown();
             toggleOnAttack();
-            player.takeDamage(125, getWalkerType());
+            player.takeDamage(125, this);
         }
     }
 
@@ -138,10 +138,21 @@ public class MobWalker extends WalkerFrame {
     private void setMobStepListener(WalkerBehaviour behaviour) {
         switch (behaviour) {
             case PASSIVE -> mobStepListener = new PassiveStepListener(this, getGameWorld());
-            case AGGRESSIVE -> mobStepListener = new AggressiveStepListener(this, getGameWorld());
+            case AGGRESSIVE -> mobStepListener = new AggressiveStepListener(this, getGameWorld(), getChaseDistance());
             default -> {
                 mobStepListener = new PassiveStepListener(this, getGameWorld());
                 System.err.println(this.getName() + ": Invalid behaviour, defaulting to passive.");
+            }
+        }
+    }
+
+    private float getChaseDistance() {
+        switch (getWalkerType()) {
+            case WIZARD -> {return WizardWalker.CHASE_DISTANCE;}
+            case WORM -> {return WormWalker.CHASE_DISTANCE;}
+            default -> {
+                System.err.println("Invalid mob type, defaulting to 3.0f");
+                return 3.0f;
             }
         }
     }
@@ -151,6 +162,7 @@ public class MobWalker extends WalkerFrame {
     }
 
     public void setBehaviour(WalkerBehaviour behaviour) {
+        if (this.behaviour == behaviour) {return;}
         this.behaviour = behaviour;
         getGameWorld().removeStepListener(mobStepListener);
         setMobStepListener(behaviour);

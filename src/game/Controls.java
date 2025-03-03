@@ -19,7 +19,6 @@ class Controls {
     private final GameWorld world;
     private int keyPressed;
     private int keyReleased;
-    private CollisionListener surfaceListener;
     // Constructor
     protected Controls(GameWorld world, PlayerWalker player, GameView view) {
         this.view = view;
@@ -100,7 +99,7 @@ class Controls {
         });
     }
 
-    private boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half height
+    private boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
         for (Body body : player.getBodiesInContact()) {
             if (body.getPosition().y < player.getPosition().y-2) {
                 return true;

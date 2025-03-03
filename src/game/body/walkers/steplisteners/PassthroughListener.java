@@ -22,7 +22,7 @@ public class PassthroughListener implements StepListener {
     @Override
     public void preStep(StepEvent stepEvent) {
         if ((mob.getPosition().x - mob.HALF_X) > (passThroughMob.getPosition().x + passThroughMob.HALF_X) || (mob.getPosition().x + mob.HALF_X) < (passThroughMob.getPosition().x - passThroughMob.HALF_X)) {
-            mob.makeUnGhostly();
+            mob.makeSolid();
             Game.gameWorld.removeStepListener(this);
         }
 

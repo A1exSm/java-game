@@ -7,7 +7,7 @@ import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 // Class
-public class WizardWalker extends MobWalker {
+public final class WizardWalker extends MobWalker {
     // Fields
     public static final float HALF_X = 1.0f;
     public static final float HALF_Y = 2.0f;
@@ -16,9 +16,9 @@ public class WizardWalker extends MobWalker {
             State.HIT, State.IDLE, State.JUMP, State.RUN
     };
     public static final WalkerBehaviour DEFAULT_BEHAVIOUR = WalkerBehaviour.AGGRESSIVE;
+    public static final float CHASE_DISTANCE = 10.0f;
     // Constructor
     public WizardWalker(GameWorld gameWorld, Vec2 origin) {
         super(gameWorld, new BoxShape(1,2), origin, Walkers.WIZARD);
     }
-
 }

@@ -17,6 +17,7 @@ public class HealthVial extends ItemBody implements ItemFrame {
     // Fields
     public static final float HALF_X = 1;
     public static final float HALF_Y = 1;
+    private int potionStrength;
     // Constructor
     /**
      * Constructs an ItemBody object.
@@ -27,11 +28,12 @@ public class HealthVial extends ItemBody implements ItemFrame {
     public HealthVial(ItemSize size, Vec2 position) {
         super(new BoxShape(1,1), Items.VIAL, position);
         addSensor(new BoxShape(1,1));
+        setItem(size);
     }
     // Methods
     @Override
     public void use() {
-        Game.gameWorld.getPlayer().addHealthPoints(300);
+        Game.gameWorld.getPlayer().addHealthPoints(potionStrength);
         this.destroyItem();
     }
 
@@ -46,8 +48,12 @@ public class HealthVial extends ItemBody implements ItemFrame {
     }
 
     @Override
-    public void setItem() {
-
+    public void setItem(ItemSize size) {
+        switch (size) {
+            case SMALL -> potionStrength = 125;
+            case BIG -> potionStrength = 250;
+            case LARGE -> potionStrength = 500;
+        }
     }
 
     @Override

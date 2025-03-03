@@ -9,9 +9,11 @@ import org.jbox2d.common.Vec2;
 // Class
 public class AggressiveStepListener extends MobStepListener implements MobStepListenerFrame {
     // Fields
+    protected final float CHASE_DISTANCE;
     // Constructor
-    public AggressiveStepListener(MobWalker mob, GameWorld gameWorld) {
+    public AggressiveStepListener(MobWalker mob, GameWorld gameWorld, float chaseDistance) {
         super(mob, gameWorld);
+        this.CHASE_DISTANCE = chaseDistance;
     }
     // Methods
     @Override

@@ -84,7 +84,7 @@ public class WalkerFrame extends Walker {
         setGravityScale(0);
     }
 
-    public void makeUnGhostly() {
+    public void makeSolid() {
         getFixtureList().forEach(Fixture::destroy);
         // this means I will need a function to re-add the fixture if I choose to have fixture which make up the hit box.
         new SolidFixture(this, SHAPE);

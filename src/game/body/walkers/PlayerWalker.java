@@ -94,8 +94,8 @@ public class PlayerWalker extends WalkerFrame {
     }
 
     // Player health
-    public void takeDamage(int damage, Walkers  walker) {
-        System.out.println(getName() + " taking damage from " + walker.name() + ": " + healthPoints + " - " + damage);
+    public void takeDamage(int damage, WalkerFrame  walker) {
+        System.out.println(getName() + " taking damage from " + walker.getName() + ": " + healthPoints + " - " + damage);
         healthPoints -= damage;
         toggleOnHit();
         if (healthPoints <= 0) {
@@ -105,6 +105,10 @@ public class PlayerWalker extends WalkerFrame {
 
     public int getHealthPoints() {
         return healthPoints;
+    }
+
+    public int getMaxHealth() {
+        return MAX_HP;
     }
 
     public void addHealthPoints(int healthPoints) {

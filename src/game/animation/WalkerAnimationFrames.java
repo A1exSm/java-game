@@ -1,8 +1,6 @@
 package game.animation;
 import static game.enums.Walkers.*;
 import static game.enums.State.*;
-
-import city.cs.engine.Walker;
 import game.enums.State;
 import game.enums.Walkers;
 import java.util.HashMap;
