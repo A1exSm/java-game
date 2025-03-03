@@ -78,11 +78,17 @@ public class WalkerFrame extends Walker {
         destroy();
     }
 
-    private void makeGhostly() {
+    public void makeGhostly() {
         getFixtureList().forEach(Fixture::destroy);
         Sensor ghostSensor = new Sensor(this, SHAPE);
         setGravityScale(0);
+    }
 
+    public void makeUnGhostly() {
+        getFixtureList().forEach(Fixture::destroy);
+        // this means I will need a function to re-add the fixture if I choose to have fixture which make up the hit box.
+        new SolidFixture(this, SHAPE);
+        setGravityScale(1);
     }
 
     public void beginDeath() {

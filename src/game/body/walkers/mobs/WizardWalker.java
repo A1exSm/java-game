@@ -3,6 +3,7 @@ package game.body.walkers.mobs;
 import city.cs.engine.*;
 import game.GameWorld;
 import game.enums.State;
+import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 // Class
@@ -14,9 +15,10 @@ public class WizardWalker extends MobWalker {
             State.ATTACK1, State.ATTACK2, State.DEATH, State.FALL,
             State.HIT, State.IDLE, State.JUMP, State.RUN
     };
+    public static final WalkerBehaviour DEFAULT_BEHAVIOUR = WalkerBehaviour.AGGRESSIVE;
     // Constructor
     public WizardWalker(GameWorld gameWorld, Vec2 origin) {
-        super(gameWorld, new BoxShape(1,2), origin, true, Walkers.WIZARD);
+        super(gameWorld, new BoxShape(1,2), origin, Walkers.WIZARD);
     }
 
 }

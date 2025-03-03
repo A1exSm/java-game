@@ -1,6 +1,7 @@
-package game.body.walkers.mobs;
+package game.body.walkers.steplisteners;
 // Imports
 import game.animation.WalkerAnimationStepListener;
+import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
@@ -9,7 +10,7 @@ import game.enums.State;
 import org.jbox2d.common.Vec2;
 
 // Class
-public class MobStepListener implements StepListener {
+public class MobOldStepListener implements StepListener {
     // Fields
     private final MobWalker mob;
     private final GameWorld world;
@@ -17,7 +18,7 @@ public class MobStepListener implements StepListener {
     private static final float CHASE_DISTANCE = 3.0f;
 
     // Constructor
-    public MobStepListener(GameWorld world, MobWalker mob) {
+    public MobOldStepListener(GameWorld world, MobWalker mob) {
         this.world = world;
         this.mob = mob;
         world.addStepListener(this);

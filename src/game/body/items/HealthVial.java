@@ -33,7 +33,6 @@ public class HealthVial extends ItemBody implements ItemFrame {
     public void use() {
         Game.gameWorld.getPlayer().addHealthPoints(300);
         this.destroyItem();
-        System.out.println("item is destroyed = " + isDestroyed());
     }
 
     @Override

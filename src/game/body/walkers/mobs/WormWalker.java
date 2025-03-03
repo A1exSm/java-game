@@ -4,6 +4,7 @@ package game.body.walkers.mobs;
 import city.cs.engine.BoxShape;
 import game.GameWorld;
 import game.enums.State;
+import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
@@ -15,9 +16,10 @@ public class WormWalker extends MobWalker{
     public static final State[] SUPPORTED_STATES = new State[]{
             State.ATTACK1, State.DEATH, State.HIT, State.IDLE, State.RUN
     };
+    public static final WalkerBehaviour DEFAULT_BEHAVIOUR = WalkerBehaviour.AGGRESSIVE;
     // Constructor
     public WormWalker(GameWorld gameWorld, Vec2 origin) {
-        super(gameWorld, new BoxShape(2, 2), origin, true, Walkers.WORM);
+        super(gameWorld, new BoxShape(2, 2), origin, Walkers.WORM);
         GameWorld.addMob(this);
     }
 

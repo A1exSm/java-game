@@ -10,10 +10,6 @@ import game.utils.GameTime;
 import game.utils.GameView;
 import org.jbox2d.common.Vec2;
 
-import javax.swing.*;
-import javax.swing.plaf.PanelUI;
-import java.awt.*;
-
 // Class
 public class Game {
     // Fields

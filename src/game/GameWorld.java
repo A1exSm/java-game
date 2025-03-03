@@ -9,6 +9,7 @@ import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
 import game.body.walkers.mobs.WormWalker;
 import game.enums.State;
+import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
@@ -56,6 +57,11 @@ public class GameWorld extends World {
         new Ground.Platform(this, new Vec2(27+offset, 7));
         new Trampoline(this, new Vec2(-20+offset, 1));
         initWizards();
+        for (MobWalker mob : mobs) {
+            if (mob.getWalkerType() == Walkers.WORM) {
+                mob.setBehaviour(WalkerBehaviour.PASSIVE);
+            }
+        }
     }
 
     // Store
