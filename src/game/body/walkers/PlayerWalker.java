@@ -17,25 +17,61 @@ public class PlayerWalker extends WalkerFrame {
     public final float HALF_Y = 2; // not using Vec2 since objects' contents can be changed when final
     private SensorListener attackRight;
     private SensorListener attackLeft;
-    private final Sensor rightSensor;
-    private final Sensor leftSensor;
+    private Sensor rightSensor;
+    private Sensor leftSensor;
     private final ArrayList<MobWalker> inRightSensor = new ArrayList<>();
     private final ArrayList<MobWalker> inLeftSensor = new ArrayList<>();
     private final PlayerAnimationStepListener stepListener;
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
     public boolean destroyed = false;
+    private int damage = 200;
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
-        super(gameWorld, new BoxShape(1,2), new Vec2(0,3), Walkers.PLAYER);
+        super(gameWorld, new BoxShape(0.2f,1.6F), new Vec2(0,3), Walkers.PLAYER);
         setName("Player");
+        constructFixtures();
         createSensorListeners();
-        rightSensor = new Sensor(this, new BoxShape(3,1.5f, new Vec2(4,0)));
-        leftSensor = new Sensor(this, new BoxShape(3,1.5f, new Vec2(-4,0)));
+        rightSensor = new Sensor(this, new BoxShape(3, 1.5f, new Vec2(4, 0)));
+        leftSensor = new Sensor(this, new BoxShape(3, 1.5f, new Vec2(-4, 0)));
         addSensorListeners();
         stepListener = new PlayerAnimationStepListener(gameWorld, this);
     }
     // Methods
+    private void constructFixtures() {
+        constructSolidFixture(new PolygonShape(1.08f,-0.83f, 0.9f,-1.84f, 0f,-1.84f, 0f,0.07f, 0.5f,0.07f));
+        constructSolidFixture(new PolygonShape(-1.08f,-0.83f, -0.9f,-1.84f, 0f,-1.84f, 0f,0.07f, -0.5f,0.07f));
+        constructSolidFixture(new PolygonShape(0.0f,1.66f, -1.22f,0.58f, -0.43f,-0.07f, 0.0f,-0.04f));
+        constructSolidFixture(new PolygonShape(1.22f,0.58f, 0.43f,-0.07f, 0.0f,-0.04f, 0.0f,1.66f));
+        constructSolidFixture(new PolygonShape(-0.18f,1.48f, -0.5f,1.87f, 0.0f,1.98f, 0.0f,1.48f));
+        constructSolidFixture(new PolygonShape(0.18f,1.48f, 0.5f,1.87f, 0.0f,1.98f, 0.0f,1.48f));
+    }
+
+    public void makePlayerSolid() {
+        makeSolid();
+        reconstructSensors();
+    }
+    public void makePlayerGhostly() {
+        makeGhostly();
+        reconstructSensors();
+    }
+
+    // Methods | Sensors
+    private void reconstructSensors() {
+        if (rightSensor.getBody() == null && leftSensor.getBody() == null) {
+            rightSensor = new Sensor(this, new BoxShape(3, 1.5f, new Vec2(4, 0)));
+            leftSensor = new Sensor(this, new BoxShape(3, 1.5f, new Vec2(-4, 0)));
+            addSensorListeners();
+            return;
+        }
+        System.err.println("Constructing Player Sensors: Sensors already exist!");
+    }
+
+    public void addSensorListeners() {
+        rightSensor.addSensorListener(attackRight);
+        leftSensor.addSensorListener(attackLeft);
+    }
+
     private void createSensorListeners() {
         attackRight = new SensorListener() {
             @Override
@@ -56,10 +92,6 @@ public class PlayerWalker extends WalkerFrame {
             public void endContact(SensorEvent e) {}
         };
 
-    }
-    public void addSensorListeners() {
-        rightSensor.addSensorListener(attackRight);
-        leftSensor.addSensorListener(attackLeft);
     }
 
     private void updateSensor(SensorEvent e, ArrayList<MobWalker> sensorArray) {
@@ -86,7 +118,7 @@ public class PlayerWalker extends WalkerFrame {
         else temp = new ArrayList<>(inLeftSensor);
         for (MobWalker mob : temp) {
             javax.swing.Timer timer1 = new javax.swing.Timer(100, e -> { // delay timer so that it looks like they were hurt as animation blade hits them
-                mob.takeDamage(500);
+                mob.takeDamage(damage);
             });
             timer1.setRepeats(false);
             timer1.start();

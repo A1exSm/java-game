@@ -25,23 +25,6 @@ public class GameView extends UserView {
     @Override
     protected void paintBackground(Graphics2D g) {
         g.drawImage(background, 0, 0, this);
-        // Health bar dimensions and position
-        int xPos = (int)Game.getFrameDimensions().x - 490;
-        int healthBarWidth = 480;
-        int healthBarHeight = 35;
-        int borderThickness = 3;
-        // Calculate health percentage
-        double healthPercentage = (double) gameWorld.getPlayer().getHealthPoints() / gameWorld.getPlayer().getMaxHealth();
-        int filledWidth = (int)(healthPercentage * (healthBarWidth-82));
-        String currentColour = getColour(healthBarWidth);
-        // Drawing health bar base colour
-        g.setColor(getRGBValues(currentColour, 1));
-        g.fillRect((xPos+38) + borderThickness, 10 + borderThickness, filledWidth, healthBarHeight-10);
-        // Drawing health bar shadow colour
-        g.setColor(getRGBValues(currentColour, 2));
-        g.fillRect((xPos+37) + borderThickness, 25 + borderThickness, filledWidth, healthBarHeight-30);
-        // Drawing the health bar border image
-        g.drawImage(new ImageIcon("data/Display_assets/health_bar/tile000.png").getImage(), xPos, 10, healthBarWidth, healthBarHeight, this);
     }
 
     @Override
@@ -60,7 +43,24 @@ public class GameView extends UserView {
             g.drawString("GAME OVER", 520, 250);
             gameWorld.togglePause();
         }
-//        g.drawString(String.format("GameTime: %02d",GameWorld.gameTime.getTimeSeconds()), a5, 50);
+        // Health bar dimensions and position
+        int xPos = (int)Game.getFrameDimensions().x - 490;
+        int healthBarWidth = 480;
+        int healthBarHeight = 35;
+        int borderThickness = 3;
+        // Calculate health percentage
+        double healthPercentage = (double) gameWorld.getPlayer().getHealthPoints() / gameWorld.getPlayer().getMaxHealth();
+        int filledWidth = (int)(healthPercentage * (healthBarWidth-82));
+        String currentColour = getColour(healthBarWidth);
+        // Drawing health bar base colour
+        g.setColor(getRGBValues(currentColour, 1));
+        g.fillRect((xPos+38) + borderThickness, 10 + borderThickness, filledWidth, healthBarHeight-10);
+        // Drawing health bar shadow colour
+        g.setColor(getRGBValues(currentColour, 2));
+        g.fillRect((xPos+37) + borderThickness, 25 + borderThickness, filledWidth, healthBarHeight-30);
+        // Drawing the health bar border image
+        g.drawImage(new ImageIcon("data/Display_assets/health_bar/tile000.png").getImage(), xPos, 10, healthBarWidth, healthBarHeight, this);
+        g.fill3DRect(20, 20, 100, 200, true);
     }
 
     private String getColour(double healthPercentage) {

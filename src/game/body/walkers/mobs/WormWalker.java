@@ -2,6 +2,7 @@ package game.body.walkers.mobs;
 // Imports
 
 import city.cs.engine.BoxShape;
+import city.cs.engine.PolygonShape;
 import game.GameWorld;
 import game.body.Projectile;
 import game.body.walkers.PlayerWalker;
@@ -12,7 +13,7 @@ import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
 // Class
-public class WormWalker extends MobWalker{
+public class WormWalker extends MobWalker { // worm does not have additional fixtures due to animation constraints (it moves ALOT)
     // Fields
     public static final float HALF_X = 2.0f;
     public static final float HALF_Y = 2.0f;

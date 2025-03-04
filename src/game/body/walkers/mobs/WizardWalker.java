@@ -9,8 +9,8 @@ import org.jbox2d.common.Vec2;
 // Class
 public final class WizardWalker extends MobWalker {
     // Fields
-    public static final float HALF_X = 1.0f;
-    public static final float HALF_Y = 2.0f;
+    public static final float HALF_X = 0.8f;
+    public static final float HALF_Y = 1.9f;
     public static final State[] SUPPORTED_STATES = new State[]{
             State.ATTACK1, State.ATTACK2, State.DEATH, State.FALL,
             State.HIT, State.IDLE, State.JUMP, State.RUN
@@ -19,6 +19,6 @@ public final class WizardWalker extends MobWalker {
     public static final float CHASE_DISTANCE = 10.0f;
     // Constructor
     public WizardWalker(GameWorld gameWorld, Vec2 origin) {
-        super(gameWorld, new BoxShape(1,2), origin, Walkers.WIZARD);
+        super(gameWorld, new BoxShape(0.8f,1.9f), origin, Walkers.WIZARD);
     }
 }

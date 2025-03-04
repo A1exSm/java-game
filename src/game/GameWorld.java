@@ -1,5 +1,7 @@
 package game;
 // Imports
+import game.body.items.Inventory;
+import game.body.items.InventoryItem;
 import game.body.staticstructs.Ground;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
@@ -20,6 +22,7 @@ public class GameWorld extends World {
     private static Game game;
     private final PlayerWalker player;
     private static final ArrayList<MobWalker> mobs = new ArrayList<>();
+    public static final Inventory playerInventory = new Inventory(8);
 
     // Constructor
     public GameWorld(Game game) {

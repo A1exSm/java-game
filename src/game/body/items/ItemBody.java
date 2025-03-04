@@ -3,6 +3,8 @@ package game.body.items;
 
 import city.cs.engine.*;
 import game.Game;
+import game.GameWorld;
+import game.enums.items.ItemSize;
 import game.enums.items.Items;
 import org.jbox2d.common.Vec2;
 
@@ -17,6 +19,8 @@ public class ItemBody extends DynamicBody {
     private boolean onSurface = false;
     private static int itemCount = -1;
     private boolean destroyed = false;
+    private final ItemSize itemSize;
+    private boolean inInventory = false;
     // Constructor
     /**
      * Constructs an ItemBody object.
@@ -24,11 +28,12 @@ public class ItemBody extends DynamicBody {
      * @param itemType the item type of the ItemBody enums, allows for potential static references of future item classes with only the ItemBody accessible.
      * @param position the position the item is set in the game world.
      */
-    public ItemBody(Shape shape, Items itemType, Vec2 position) {
+    public ItemBody(Shape shape, Items itemType, ItemSize itemSize, Vec2 position) {
         super(Game.gameWorld);
         this.itemType = itemType;
         chooseImage();
         itemCount++;
+        this.itemSize = itemSize;
         setName(itemType.name()+itemCount);
         addFixtures(shape);
         setPosition(position);
@@ -41,6 +46,10 @@ public class ItemBody extends DynamicBody {
      */
     public Items getItemType() {
         return itemType;
+    }
+
+    public ItemSize getItemSize() {
+        return itemSize;
     }
 
     private void addFixtures(Shape shape) {
@@ -67,7 +76,18 @@ public class ItemBody extends DynamicBody {
      */
     public void destroyItem() {
         destroyed = true;
+        if (inInventory) {
+            GameWorld.playerInventory.removeItem(this);
+        }
         this.destroy();
+    }
+
+    public boolean isInInventory() {
+        return inInventory;
+    }
+
+    public void setInInventory(boolean inInventory) {
+        this.inInventory = inInventory;
     }
 
 }

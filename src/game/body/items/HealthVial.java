@@ -2,11 +2,15 @@ package game.body.items;
 // Imports
 
 import city.cs.engine.*;
+import city.cs.engine.Shape;
 import game.Game;
+import game.GameWorld;
 import game.body.walkers.PlayerWalker;
 import game.enums.items.ItemSize;
 import game.enums.items.Items;
 import org.jbox2d.common.Vec2;
+
+import java.awt.*;
 
 // Class
 /**
@@ -17,6 +21,7 @@ public class HealthVial extends ItemBody implements ItemFrame {
     // Fields
     public static final float HALF_X = 1;
     public static final float HALF_Y = 1;
+    private Sensor itemSensor;
     private int potionStrength;
     // Constructor
     /**
@@ -26,7 +31,7 @@ public class HealthVial extends ItemBody implements ItemFrame {
      * @param position the position the item is set in the game world.
      */
     public HealthVial(ItemSize size, Vec2 position) {
-        super(new BoxShape(1,1), Items.VIAL, position);
+        super(new PolygonShape(-0.175f,0.9f, -0.579f,-0.9f, 0.565f,-0.99f, 0.165f,0.99f), Items.VIAL, size, position);
         addSensor(new BoxShape(1,1));
         setItem(size);
     }
@@ -39,12 +44,25 @@ public class HealthVial extends ItemBody implements ItemFrame {
 
     @Override
     public void drop() {
+        setInInventory(false);
 
     }
 
     @Override
-    public void pickUp() {
+    public void pickUp(Inventory inventory) {
+        setInInventory(true);
+        inventory.addItem(this);
+        hide();
+        System.out.println(inventory.getSize());
+    }
 
+    @Override
+    public void hide() {
+        this.removeAllImages();
+        Color transparent = new Color(0,0,0,0);
+        this.setFillColor(transparent);
+        this.setLineColor(transparent);
+        removeSensor();
     }
 
     @Override
@@ -73,18 +91,36 @@ public class HealthVial extends ItemBody implements ItemFrame {
 
     @Override
     public void addSensor(Shape shape) {
-        Sensor itemSensor = new Sensor(this, shape);
-        itemSensor.addSensorListener(new SensorListener() {
+        itemSensor = new Sensor(this, shape);
+        itemSensor.addSensorListener(createSensorListeners());
+    }
+    @Override
+    public void removeSensor() {
+        if (itemSensor != null) {
+            itemSensor.removeAllSensorListeners();
+            itemSensor.destroy();
+            itemSensor = null;
+            return;
+        }
+        System.err.println("Warning: removeSensor() called on an item with no sensor!");
+    }
+
+    private SensorListener createSensorListeners() {
+        return new SensorListener() {
             @Override
             public void beginContact(SensorEvent e) {
                 if (e.getContactBody() instanceof PlayerWalker) {
-                    if (!Game.gameWorld.getPlayer().isHealthFull()) use();
+                    if (!Game.gameWorld.getPlayer().isHealthFull()) {
+                        use();
+                    } else {
+                        pickUp(GameWorld.playerInventory);
+                    }
                 }
             }
 
             @Override
-            public void endContact(SensorEvent e) {}
-        });
+            public void endContact(SensorEvent e) {
+            }
+        };
     }
-
 }

@@ -73,11 +73,13 @@ class Controls {
                                 if (mob.getWalkerType() == Walkers.WORM) mob.die();
                             }
                         } else if (keyPressed == KeyEvent.VK_5) {
+                            player.makePlayerGhostly();
                         } else if (keyPressed == KeyEvent.VK_6) {
+                            player.makePlayerSolid();
                         } else if (keyPressed == KeyEvent.VK_7) {
                         } else if (keyPressed == KeyEvent.VK_8) {
                         } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
-                            if (isOnSurface()) {
+                            if (isOnSurface() && !player.isGhostly()) {
                                 player.jump(10);
                             }
                         }

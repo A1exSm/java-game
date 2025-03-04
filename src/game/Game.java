@@ -2,6 +2,7 @@ package game;
 
 // Imports
 import city.cs.engine.Body;
+import city.cs.engine.EngineerView;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.utils.GameFrame;
@@ -17,14 +18,19 @@ public class Game {
     private static GameView gameView;
     private static GameFrame frame;
     private static boolean debugOn;
-    private boolean isPaused = false;
+    private boolean isPaused;
     public static GameTime gameTime;
 
     // Constructor
-    public Game() {
+    public Game(Boolean debugOn) {
         gameWorld = new GameWorld(this);
         gameView = new GameView(gameWorld, 1200, 630);
-        frame = new GameFrame("GamePlayground", gameView);
+        if(debugOn) {
+            frame = new GameFrame("EngineerView", new EngineerView(gameWorld, 1200, 630));
+            Game.debugOn();
+        } else {
+            frame = new GameFrame("GamePlayground", gameView);
+        }
         new GameMenu(frame, gameWorld);
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
@@ -94,6 +100,7 @@ public class Game {
 
 
     public static void main(String[] args) {
-        new Game();
+
+        new Game(false);
     }
 }

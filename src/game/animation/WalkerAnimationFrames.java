@@ -74,8 +74,8 @@ public class WalkerAnimationFrames extends AnimationFrames {
             }
             case WIZARD ->  {
                 parentFolder = "WizardPNG";
-                Y_OFFSET = 1;
-                X_OFFSET = 0;
+                Y_OFFSET = 1.1f;
+                X_OFFSET = 0.25f;
             }
             case WORM -> {
                 parentFolder = "WormPNG";

@@ -242,7 +242,7 @@ public class PolygonEditor extends JPanel
      */
     public static void main(String[] args) {
         String fileName = "data/PlayerPNG/idle/tile000.png";
-        float boxHeight = 4.0f;
+        float boxHeight = 18.0f;
         int firstCoordIndex = 0;
         if (args.length > 0) {
             try {
