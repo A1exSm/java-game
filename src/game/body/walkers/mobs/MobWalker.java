@@ -117,7 +117,6 @@ public class MobWalker extends WalkerFrame {
     public void takeDamage(int damage) {
         System.out.println(getName() + " taking damage: " + healthPoints + " - " + damage);
         healthPoints -= damage;
-        toggleOnHit();
         if (healthPoints <= 0) {
             beginDeath();
         }

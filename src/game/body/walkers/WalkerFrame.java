@@ -66,13 +66,15 @@ public class WalkerFrame extends Walker {
     }
 
     public void toggleOnHit() {
-        hit = true;
-        state = State.HIT;
-        javax.swing.Timer hitTimer = new javax.swing.Timer(300, e -> {
-            toggleOffHit();
-        });
-        hitTimer.setRepeats(false);
-        hitTimer.start();
+        if (!dead) {
+            hit = true;
+            state = State.HIT;
+            javax.swing.Timer hitTimer = new javax.swing.Timer(300, e -> {
+                toggleOffHit();
+            });
+            hitTimer.setRepeats(false);
+            hitTimer.start();
+        }
     }
 
     public void toggleOffHit() {

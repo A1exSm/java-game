@@ -6,6 +6,7 @@ import city.cs.engine.Shape;
 import game.Game;
 import game.GameWorld;
 import game.body.walkers.PlayerWalker;
+import game.enums.items.ItemBehaviour;
 import game.enums.items.ItemSize;
 import game.enums.items.Items;
 import org.jbox2d.common.Vec2;
@@ -31,15 +32,21 @@ public class HealthVial extends ItemBody implements ItemFrame {
      * @param position the position the item is set in the game world.
      */
     public HealthVial(ItemSize size, Vec2 position) {
-        super(new PolygonShape(-0.175f,0.9f, -0.579f,-0.9f, 0.565f,-0.99f, 0.165f,0.99f), Items.VIAL, size, position);
+        super(new PolygonShape(-0.175f,0.9f, -0.579f,-0.9f, 0.565f,-0.99f, 0.165f,0.99f), Items.VIAL, size, position, ItemBehaviour.CONSUMABLE);
         addSensor(new BoxShape(1,1));
         setItem(size);
     }
     // Methods
     @Override
+    public void consume() {
+        use();
+    }
+    @Override
     public void use() {
-        Game.gameWorld.getPlayer().addHealthPoints(potionStrength);
-        this.destroyItem();
+        if (!Game.gameWorld.getPlayer().isHealthFull()) {
+            Game.gameWorld.getPlayer().addHealthPoints(potionStrength);
+            this.destroyItem();
+        }
     }
 
     @Override
@@ -53,7 +60,6 @@ public class HealthVial extends ItemBody implements ItemFrame {
         setInInventory(true);
         inventory.addItem(this);
         hide();
-        System.out.println(inventory.getSize());
     }
 
     @Override

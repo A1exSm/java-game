@@ -43,7 +43,7 @@ public class Game {
 //        });
     }
     // Static | Debug Methods
-    protected static void debugOn() {
+    public static void debugOn() {
         gameView.setGridResolution(!debugOn ? 1 : 0);
         for (Body body : gameWorld.getDynamicBodies()) {
             body.setAlwaysOutline(!debugOn);

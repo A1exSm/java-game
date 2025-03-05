@@ -61,17 +61,13 @@ class Controls {
                             player.startWalking(7);
                             // Hotswap keys (for quick assignment to test things)
                         } else if (keyPressed == KeyEvent.VK_1) {
-                            Game.debugOn();
+                            GameWorld.useInventoryItem(0);
                         } else if (keyPressed == KeyEvent.VK_2) {
-                            for (MobWalker mob : GameWorld.getMobs()) {
-                                mob.toggleOnHit();
-                            }
+                            GameWorld.useInventoryItem(1);
                         } else if (keyPressed == KeyEvent.VK_3) {
-                            GameWorld.getMobs().forEach(MobWalker::toggleOnAttack);
+                            GameWorld.useInventoryItem(2);
                         } else if (keyPressed == KeyEvent.VK_4) {
-                            for (MobWalker mob : GameWorld.getMobs()) {
-                                if (mob.getWalkerType() == Walkers.WORM) mob.die();
-                            }
+                            GameWorld.useInventoryItem(3);
                         } else if (keyPressed == KeyEvent.VK_5) {
                             player.makePlayerGhostly();
                         } else if (keyPressed == KeyEvent.VK_6) {

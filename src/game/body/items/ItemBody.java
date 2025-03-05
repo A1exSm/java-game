@@ -4,6 +4,7 @@ package game.body.items;
 import city.cs.engine.*;
 import game.Game;
 import game.GameWorld;
+import game.enums.items.ItemBehaviour;
 import game.enums.items.ItemSize;
 import game.enums.items.Items;
 import org.jbox2d.common.Vec2;
@@ -16,7 +17,8 @@ import org.jbox2d.common.Vec2;
 public class ItemBody extends DynamicBody {
     // Fields
     private final Items itemType;
-    private boolean onSurface = false;
+    public final ItemBehaviour behaviour; // can be public since it is final
+//    private boolean onSurface = false;
     private static int itemCount = -1;
     private boolean destroyed = false;
     private final ItemSize itemSize;
@@ -28,21 +30,24 @@ public class ItemBody extends DynamicBody {
      * @param itemType the item type of the ItemBody enums, allows for potential static references of future item classes with only the ItemBody accessible.
      * @param position the position the item is set in the game world.
      */
-    public ItemBody(Shape shape, Items itemType, ItemSize itemSize, Vec2 position) {
+    public ItemBody(Shape shape, Items itemType, ItemSize itemSize, Vec2 position, ItemBehaviour behaviour) {
         super(Game.gameWorld);
         this.itemType = itemType;
-        chooseImage();
+        setImage();
         itemCount++;
         this.itemSize = itemSize;
         setName(itemType.name()+itemCount);
         addFixtures(shape);
         setPosition(position);
         setGravityScale(0);
+        this.behaviour = behaviour;
     }
     // Methods
+    public void consume() {}
+
     /**
      * Returns the item type of the item body.
-     * @return the item type of the item body.
+     * @return Items (itemType)
      */
     public Items getItemType() {
         return itemType;
@@ -56,13 +61,29 @@ public class ItemBody extends DynamicBody {
         new GhostlyFixture(this, shape);
     }
 
-    private void chooseImage() {
-        switch (itemType) {
-            case VIAL -> addImage(new BodyImage("data/Items/Vials/Small Vial.gif", 2));
-            case TONIC -> addImage(new BodyImage("data/Items/tonic.png", 2));
-            case JAR -> addImage(new BodyImage("data/Items/jar.png", 2));
-        }
+    private void setImage() {
+        addImage(new BodyImage(getImagePath(), 2));
     }
+    /**
+     * Returns the image path of the item body.
+     * @return String.
+     */
+    public String getImagePath() {
+        switch (itemType) {
+            case VIAL -> {
+                return "data/Items/Vials/Small Vial.gif";
+            }
+            case TONIC -> {
+                return "data/Items/tonic.png";
+            }
+            case JAR -> {
+                return "data/Items/jar.png";
+            }
+        }
+        System.err.println("Error: ItemType not found! returning empty jar image");
+        return "data/Items/emptyJar.gif";
+    }
+
     /**
      * Returns the boolean true, if the item is destroyed, and false if not.
      * @return boolean

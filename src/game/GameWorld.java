@@ -22,7 +22,7 @@ public class GameWorld extends World {
     private static Game game;
     private final PlayerWalker player;
     private static final ArrayList<MobWalker> mobs = new ArrayList<>();
-    public static final Inventory playerInventory = new Inventory(8);
+    public static final Inventory playerInventory = new Inventory(4);
 
     // Constructor
     public GameWorld(Game game) {
@@ -60,7 +60,7 @@ public class GameWorld extends World {
         new Trampoline(this, new Vec2(-20+offset, 1));
         initWizards();
         for (MobWalker mob : mobs) {
-            if (mob.getWalkerType() == Walkers.WIZARD) {
+            if (mob instanceof WizardWalker) {
                 mob.setBehaviour(WalkerBehaviour.PASSIVE);
             }
         }
@@ -124,5 +124,9 @@ public class GameWorld extends World {
         }
         System.err.println("WizardWalker with name: "+ name + " not found! Returning null.");
         return null;
+    }
+
+    public static void useInventoryItem(int index) {
+        playerInventory.use(index);
     }
 }

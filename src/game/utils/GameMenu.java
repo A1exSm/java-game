@@ -5,6 +5,8 @@ import game.GameWorld;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
 // Class
 public class GameMenu extends MenuBar {
     // Fields
@@ -12,8 +14,9 @@ public class GameMenu extends MenuBar {
     private final GameWorld gameWorld;
     private Menu settings;
     private MenuItem pause;
-    private MenuItem restart;
+//    private MenuItem restart;
     private MenuItem exit;
+    private MenuItem DebugToggle;
     // Constructor
     public GameMenu(JFrame frame, GameWorld gameWorld) {
         super();
@@ -23,18 +26,20 @@ public class GameMenu extends MenuBar {
     }
     // Methods
     private void addSettings() {
-        Menu settings = new Menu("Settings");
+        settings = new Menu("Settings");
         gameMenu.add(settings);
-        createSettingsItems(settings);
+        createSettingsItems();
     }
 
-    private void createSettingsItems(Menu settings) {
-        pause = new MenuItem("Pause", new MenuShortcut(KeyEvent.VK_P, false));
+    private void createSettingsItems() {
+        pause = new MenuItem("Pause", new MenuShortcut(KeyEvent.VK_P, false)); // changes modifier to CTRL
 //        restart = new MenuItem("Restart Game", new MenuShortcut(KeyEvent.VK_R, false));
         exit = new MenuItem("Exit", new MenuShortcut(KeyEvent.VK_E, false));
+        DebugToggle = new MenuItem("Debug Toggle", new MenuShortcut(KeyEvent.VK_D, false));
         settings.add(pause);
 //        settings.add(restart);
         settings.add(exit);
+        settings.add(DebugToggle);
         addSettingsActionListeners();
     }
 
@@ -60,6 +65,14 @@ public class GameMenu extends MenuBar {
         exit.addActionListener(i->{
             if (i.getActionCommand().equals("exit")) {
                 Game.exit();
+            }
+        });
+
+        // Debug Toggle
+        DebugToggle.setActionCommand("debug");
+        DebugToggle.addActionListener(i->{
+            if (i.getActionCommand().equals("debug")) {
+                Game.debugOn();
             }
         });
     }

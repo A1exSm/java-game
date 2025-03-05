@@ -36,6 +36,12 @@ public class MobStepListener implements MobStepListenerFrame {
         // movement handling
         if (mob.getHit() || mob.isDead()) { // don't want the mob to move if it is hit or dead
             mob.stopWalking();
+            mob.setLinearVelocity(new Vec2(0, mob.getLinearVelocity().y));
+            /*
+             for some reason mobs were still moving, So I call serLinearVelocity to fix it.
+             Same issue with all walkers, it would seem stopWalking() does not counteract the applied velocity
+             Had this issue since the start with all walker types, might be worth creating my own stop walking method which sets the velocity to 0 and calls the original stop walking inside it.
+            */
         } else {
             handleMobMovement(mobPos);
         }
