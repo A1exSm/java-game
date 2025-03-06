@@ -1,6 +1,7 @@
 package game.utils;
 // Imports
 import city.cs.engine.Body;
+import game.Game;
 import game.body.items.HealthPotion;
 import game.core.GameWorld;
 import game.body.walkers.PlayerWalker;
@@ -76,6 +77,7 @@ public class Controls {
                             HealthPotion trial = new HealthPotion(ItemSize.LARGE);
                             trial.pickUp(GameWorld.playerInventory);
                         } else if (keyPressed == KeyEvent.VK_8) {
+                            Game.debugOn();
                         } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
                             if (isOnSurface() && !player.isGhostly()) {
                                 player.jump(10);

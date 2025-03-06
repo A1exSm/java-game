@@ -62,8 +62,8 @@ public class GameWorld extends World {
 
     // Store
     private void initWizards() {
-        new WizardWalker(this, new Vec2(80,2));
-        new WizardWalker(this, new Vec2(110, 2));
+        new WizardWalker(this, new Vec2(70,2));
+        new WizardWalker(this, new Vec2(127, 8.9f));
         new WizardWalker(this, new Vec2(-30,2));
         new WizardWalker(this, new Vec2(-80,2));
         new WizardWalker(this, new Vec2(-110,2));

@@ -16,6 +16,9 @@ import game.enums.State;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 // Class
 public class MobWalker extends WalkerFrame {
     // Fields
@@ -26,10 +29,20 @@ public class MobWalker extends WalkerFrame {
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
     private WalkerBehaviour behaviour;
+    private static final HashMap<ItemSize, int[]> dropRates = new HashMap<>();
 
-    {
-        mobCount++;
+    static {
+        dropRates.put(ItemSize.SMALL, new int[]{
+            17, 45, 12, 78, 91, 99, 97, 49, 56, 21, 35, 50, 41, 64, 26, 23, 7, 24, 29, 42, 71, 98, 59, 62, 77, 30, 96, 72, 85, 92, 75, 28, 93, 18, 47, 38, 61, 34, 9, 4, 31, 86, 13, 73, 20, 2, 15, 76, 3, 48
+        });
+        dropRates.put(ItemSize.MEDIUM, new int[]{
+                9, 71, 86, 75, 29, 98, 72, 41, 28, 34, 76, 96, 2, 18, 30, 59, 73, 64, 78, 3, 42, 20, 4, 92, 99
+        });
+        dropRates.put(ItemSize.LARGE, new int[] {
+                28, 41, 42, 3, 96, 34, 73, 59, 92, 76
+        });
     }
+
 
     // Constructor
     public MobWalker(GameWorld gameWorld, BoxShape boxShape, Vec2 origin, Walkers mobType) {
@@ -52,6 +65,7 @@ public class MobWalker extends WalkerFrame {
 
             }
         }
+        mobCount++;
         initName();
         collisions();
         startWalking(2);
@@ -62,6 +76,17 @@ public class MobWalker extends WalkerFrame {
     // Methods
     protected void initName() {
         setName(getWalkerType().name().toLowerCase() + mobCount);
+    }
+    private void dropLoot() {
+        int randInt = (int) (Math.random() * 100);
+        for (ItemSize size : dropRates.keySet()) {
+            for (int i : dropRates.get(size)) {
+                if (randInt == i) {
+                    new HealthPotion(size, new Vec2(getPosition().x, getPosition().y-(HALF_Y/1.7f)));
+                    return;
+                }
+            }
+        }
     }
 
 
@@ -106,7 +131,7 @@ public class MobWalker extends WalkerFrame {
     @Override
     public void die() {
         mobStepListener.remove();
-        new HealthPotion(ItemSize.SMALL, new Vec2(getPosition().x, getPosition().y-(HALF_Y/1.7f))); // -HALF_Y/1.7f to make the item appear slightly buried in the ground under the mob
+        dropLoot();
         destroy();
     }
 

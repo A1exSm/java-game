@@ -1,11 +1,14 @@
 package game.body.walkers.steplisteners;
 // Imports
 
+import city.cs.engine.Body;
 import city.cs.engine.StepEvent;
+import game.body.staticstructs.Ground;
 import game.core.GameWorld;
 import game.animation.WalkerAnimationStepListener;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
+import game.enums.State;
 import org.jbox2d.common.Vec2;
 
 // Class
@@ -13,13 +16,14 @@ public class MobStepListener implements MobStepListenerFrame {
     // Fields
     protected final MobWalker mob;
     protected final WalkerAnimationStepListener animationsListener;
-    protected static final float CHASE_RADIUS_X = 30.0f;
-    protected static final float CHASE_RADIUS_Y = 10.0f;
+    protected static final float PATROL_RADIUS_X = 30.0f;
+    protected static final float PATROL_RADIUS_Y = 10.0f;
     protected static final float ANIMATION_RADIUS = 40.0f;
     protected static final float VIEW_RADIUS_X = 20.0f;
-    protected static final float VIEW_RADIUS_Y = 3.0f;
     protected static final float WALK_SPEED = 2.0f;
     protected final GameWorld gameWorld;
+    private Boolean isOnPlatform = false;
+    private Ground.Platform currentPlatform;
     // Constructor
     public MobStepListener(MobWalker mob, GameWorld gameWorld) {
         this.mob = mob;
@@ -57,7 +61,7 @@ public class MobStepListener implements MobStepListenerFrame {
 
     @Override
     public boolean isPlayerInRange(Vec2 pos) {
-        return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, VIEW_RADIUS_Y) && !gameWorld.getPlayer().isDead();
+        return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, mob.HALF_Y*2) && !gameWorld.getPlayer().isDead();
     }
 
     @Override
@@ -69,12 +73,31 @@ public class MobStepListener implements MobStepListenerFrame {
                 mob.startWalking(-WALK_SPEED);
             }
         }
-        if (pos.x >= (mob.ORIGIN_X) + CHASE_RADIUS_X) {
-            mob.startWalking(-WALK_SPEED);
-            mob.setDirection(Direction.LEFT);
-        } else if (pos.x <= (mob.ORIGIN_X) - CHASE_RADIUS_X) {
-            mob.startWalking(WALK_SPEED);
-            mob.setDirection(Direction.RIGHT);
+        isOnPlatform = false;
+//        for (Body body : mob.getBodiesInContact()) {
+//            if (body instanceof Ground.Platform) {
+//                isOnPlatform = true;
+//                currentPlatform = (Ground.Platform) body;
+//                if (pos.x >= (currentPlatform.getOriginPos().x + currentPlatform.getHalfDimensions().x) - 0.5f) {
+//                    mob.startWalking(-WALK_SPEED);
+//                    mob.setDirection(Direction.LEFT);
+//                    break;
+//                } else if (pos.x <= (currentPlatform.getOriginPos().x - currentPlatform.getHalfDimensions().x) + 0.5f) {
+//                    mob.startWalking(WALK_SPEED);
+//                    mob.setDirection(Direction.RIGHT);
+//                    break;
+//                }
+//                break;
+//            }
+//        }
+        if (!isOnPlatform) { // isOnPlatform will not always equal false once platform logic is added, I won't add this until I have made all platform types.
+            if (pos.x >= (mob.ORIGIN_X) + PATROL_RADIUS_X) {
+                mob.startWalking(-WALK_SPEED);
+                mob.setDirection(Direction.LEFT);
+            } else if (pos.x <= (mob.ORIGIN_X) - PATROL_RADIUS_X) {
+                mob.startWalking(WALK_SPEED);
+                mob.setDirection(Direction.RIGHT);
+            }
         }
     }
 

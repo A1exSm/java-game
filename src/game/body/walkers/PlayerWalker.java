@@ -25,7 +25,7 @@ public class PlayerWalker extends WalkerFrame {
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
     public boolean destroyed = false;
-    private int damage = 200;
+    private int damage = 350;
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
         super(gameWorld, new BoxShape(0.2f,1.6F), new Vec2(0,3), Walkers.PLAYER);

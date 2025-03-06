@@ -35,6 +35,7 @@ public class Ground extends StaticBody {
     public static class Platform extends Ground {
         public Platform(GameWorld gameWorld, Vec2 originPos) {
             super(gameWorld, new Vec2(5, 0.5f), originPos);
+            setName("Platform"+count);
         }
     }
 }
