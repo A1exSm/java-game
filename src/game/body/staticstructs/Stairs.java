@@ -3,7 +3,7 @@ package game.body.staticstructs;
 import city.cs.engine.BoxShape;
 import city.cs.engine.SolidFixture;
 import city.cs.engine.StaticBody;
-import game.GameWorld;
+import game.core.GameWorld;
 import org.jbox2d.common.Vec2;
 // Class
 class Stairs extends StaticBody {

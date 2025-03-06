@@ -1,7 +1,7 @@
 package game.animation;
 // Imports
 import city.cs.engine.AttachedImage;
-import game.GameWorld;
+import game.core.GameWorld;
 import game.body.walkers.WalkerFrame;
 import game.enums.Direction;
 import game.enums.State;

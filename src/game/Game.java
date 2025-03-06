@@ -5,10 +5,8 @@ import city.cs.engine.Body;
 import city.cs.engine.EngineerView;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
-import game.utils.GameFrame;
-import game.utils.GameMenu;
-import game.utils.GameTime;
-import game.utils.GameView;
+import game.core.*;
+import game.utils.Controls;
 import org.jbox2d.common.Vec2;
 
 // Class

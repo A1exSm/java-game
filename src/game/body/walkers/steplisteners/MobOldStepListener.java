@@ -5,7 +5,7 @@ import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
-import game.GameWorld;
+import game.core.GameWorld;
 import game.enums.State;
 import org.jbox2d.common.Vec2;
 

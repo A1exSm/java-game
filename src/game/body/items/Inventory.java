@@ -1,9 +1,9 @@
 package game.body.items;
 // Imports
-
+import game.Game;
 import game.enums.items.ItemBehaviour;
-import game.enums.items.Items;
-import javax.swing.*;
+import org.jbox2d.common.Vec2;
+
 import java.util.ArrayList;
 
 // Class
@@ -25,25 +25,24 @@ public class Inventory {
         }
     }
     // Methods
-    public void addItem(ItemBody item) {
+    public boolean addItem(ItemFrame item) {
         for (InventoryItem inventoryItem : storage) {
-            if (inventoryItem == null) {continue;}
+            if (inventoryItem == null) {continue;} // skip null values
             if (inventoryItem.name().equals(item.getName())) {
-                System.err.println("Item already in inventory! Cannot add item");
-                return;
+                return false;
             }
         }
         for (int i = 0; i < CAPACITY; i++) {
             if (storage.get(i) == null) {
-                storage.set(i, new InventoryItem(item, item.getItemType(), item.getItemSize(),item.behaviour, item.getName()));
-                return;
+                storage.set(i, new InventoryItem(item, item.behaviour, item.getName()));
+                return true;
 
             }
         }
-        System.err.println("Inventory is full! Cannot add item");
+        return false;
     }
 
-    public void removeItem(ItemBody item) {
+    public void removeItem(ItemFrame item) {
         for (int i = 0; i < CAPACITY; i++) {
             if (storage.get(i) != null) {
                 if (storage.get(i).name().equals(item.getName())) {
@@ -54,20 +53,10 @@ public class Inventory {
         }
     }
 
-    public HealthVial getHealthVial(String name) {
-        for (InventoryItem inventoryItem : storage) {
-            if (inventoryItem.itemType() == Items.VIAL) {
-                if (inventoryItem.item().getName().equals(name)) {
-                    return (HealthVial) inventoryItem.item();
-                }
-            }
-        }
-        System.err.println("Item not found in inventory! Returning null");
-        return null;
-    }
     public int getCapacity() {
         return CAPACITY;
     }
+
     public int getSize() {
         int count = 0;
         for (InventoryItem inventoryItem : storage) {
@@ -87,9 +76,9 @@ public class Inventory {
         // adding buffer zone
         for (int i = 0; i < buffer; i++) {path.add(null);}
         // adding icons
-        for (int i = 0; i < storage.size(); i++) {
-            if (storage.get(i) != null) {
-                path.add(storage.get(i).item().getImagePath());
+        for (InventoryItem inventoryItem : storage) {
+            if (inventoryItem != null) {
+                path.add(inventoryItem.item().getImagePath());
             } else {
                 path.add(null);
             }
@@ -97,30 +86,21 @@ public class Inventory {
         return path;
     }
 
-    /**
-     * Returns the inventory names for all inventoryItems with a buffer zone.
-     * @param buffer the buffer zone of null values before names are added.
-     * @return inventory names for all inventoryItems.
-     */
-    public ArrayList<String> getInventoryNames(int buffer) {
-        ArrayList<String> inventoryNames = new ArrayList<>();
-        // adding buffer zone
-        for (int i = 0; i < buffer-1; i++) {inventoryNames.add(null);}
-        // adding names
-        for (InventoryItem item : storage) {
-            if (item != null) {
-                inventoryNames.add(item.name());
-            } else {
-                inventoryNames.add(null);
-            }
+    public void drop(int index) {
+        if (storage.get(index) != null) {
+            Vec2 playerPos = Game.gameWorld.getPlayer().getPosition();
+            Vec2 dropPos = new Vec2(playerPos.x, playerPos.y -  (Game.gameWorld.getPlayer().HALF_Y/1.7f));
+            storage.get(index).item().drop(dropPos);
+            storage.set(index, null);
         }
-        return inventoryNames;
     }
 
     public void use(int index) {
         if (storage.get(index) != null) {
             if(storage.get(index).behaviour() == ItemBehaviour.CONSUMABLE) {
                 storage.get(index).item().consume();
+            } else {
+                storage.get(index).item().use();
             }
         }
     }

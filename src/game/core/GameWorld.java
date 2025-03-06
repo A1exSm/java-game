@@ -1,7 +1,7 @@
-package game;
+package game.core;
 // Imports
+import game.Game;
 import game.body.items.Inventory;
-import game.body.items.InventoryItem;
 import game.body.staticstructs.Ground;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
@@ -10,7 +10,6 @@ import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
 import game.body.walkers.mobs.WormWalker;
 import game.enums.State;
-import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
@@ -59,11 +58,6 @@ public class GameWorld extends World {
         new Ground.Platform(this, new Vec2(27+offset, 7));
         new Trampoline(this, new Vec2(-20+offset, 1));
         initWizards();
-        for (MobWalker mob : mobs) {
-            if (mob instanceof WizardWalker) {
-                mob.setBehaviour(WalkerBehaviour.PASSIVE);
-            }
-        }
     }
 
     // Store
@@ -128,5 +122,9 @@ public class GameWorld extends World {
 
     public static void useInventoryItem(int index) {
         playerInventory.use(index);
+    }
+
+    public static void dropInventoryItem(int index) {
+        playerInventory.drop(index);
     }
 }

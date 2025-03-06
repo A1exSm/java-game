@@ -2,7 +2,7 @@ package game.body.staticstructs;
 // Imports
 import city.cs.engine.BoxShape;
 import city.cs.engine.StaticBody;
-import game.GameWorld;
+import game.core.GameWorld;
 import org.jbox2d.common.Vec2;
 // Class
 class ExtraneousFunctions {

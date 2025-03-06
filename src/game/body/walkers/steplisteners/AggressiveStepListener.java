@@ -1,6 +1,6 @@
 package game.body.walkers.steplisteners;
 // Imports
-import game.GameWorld;
+import game.core.GameWorld;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
 import game.enums.State;
@@ -13,7 +13,7 @@ public class AggressiveStepListener extends MobStepListener implements MobStepLi
     // Constructor
     public AggressiveStepListener(MobWalker mob, GameWorld gameWorld, float chaseDistance) {
         super(mob, gameWorld);
-        this.CHASE_DISTANCE = chaseDistance;
+        this.CHASE_DISTANCE = chaseDistance; // the distance at which the mob chases until (how close not how far), then attacks after reaching.
     }
     // Methods
     @Override
@@ -38,7 +38,7 @@ public class AggressiveStepListener extends MobStepListener implements MobStepLi
         mob.setDirection(isPlayerLeft ? Direction.LEFT : Direction.RIGHT);
         if (isPlayerLeft) {
             float dist = (PlayerX + gameWorld.getPlayer().HALF_X) - (mobX - mob.HALF_X);
-            return (dist > -CHASE_DISTANCE ? 0 : -5);
+            return (dist >  -CHASE_DISTANCE ? 0 : -5);
         } else {
             float dist = (PlayerX - gameWorld.getPlayer().HALF_X) - (mobX + mob.HALF_X);
             return (dist < CHASE_DISTANCE ? 0 : 5);

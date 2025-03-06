@@ -1,6 +1,6 @@
 package game.body.walkers.mobs;
 // Imports
-import game.body.items.HealthVial;
+import game.body.items.HealthPotion;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.steplisteners.AggressiveStepListener;
 import game.body.walkers.steplisteners.MobStepListener;
@@ -8,7 +8,7 @@ import game.body.walkers.steplisteners.PassiveStepListener;
 import game.body.walkers.steplisteners.PassthroughListener;
 import game.enums.Direction;
 import city.cs.engine.*;
-import game.GameWorld;
+import game.core.GameWorld;
 import game.body.walkers.WalkerFrame;
 import game.enums.WalkerBehaviour;
 import game.enums.items.ItemSize;
@@ -106,7 +106,7 @@ public class MobWalker extends WalkerFrame {
     @Override
     public void die() {
         mobStepListener.remove();
-        new HealthVial(ItemSize.SMALL, new Vec2(getPosition().x, getPosition().y-(HALF_Y/1.7f))); // -HALF_Y/1.7f to make the item appear slightly buried in the ground under the mob
+        new HealthPotion(ItemSize.SMALL, new Vec2(getPosition().x, getPosition().y-(HALF_Y/1.7f))); // -HALF_Y/1.7f to make the item appear slightly buried in the ground under the mob
         destroy();
     }
 

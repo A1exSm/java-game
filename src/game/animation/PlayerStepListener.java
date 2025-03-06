@@ -6,14 +6,14 @@ import game.body.walkers.PlayerWalker;
 import game.enums.State;
 import org.jbox2d.common.Vec2;
 import java.util.HashMap; // I hope this is allowed :)
-import game.GameWorld;
+import game.core.GameWorld;
 // importing my enums as static constants for ease of use.
 import javax.swing.*;
 
 import static game.enums.State.*;
 import static game.enums.Direction.*;
 // Class
-public class PlayerAnimationStepListener implements StepListener {
+public class PlayerStepListener implements StepListener {
     // Fields
     private FrameHandler currentAnimation;
     private javax.swing.Timer timer;
@@ -23,7 +23,7 @@ public class PlayerAnimationStepListener implements StepListener {
     private final GameWorld world;
     private final HashMap<State, FrameHandler> animations = new HashMap<>();
     // Constructor
-    public PlayerAnimationStepListener(GameWorld world, PlayerWalker player) {
+    public PlayerStepListener(GameWorld world, PlayerWalker player) {
         this.player = player;
         this.world = world;
         world.addStepListener(this);
@@ -88,7 +88,10 @@ public class PlayerAnimationStepListener implements StepListener {
     private void checkTimer(Timer timer) {
         if (timerCount == currentAnimation.getNumFrames()) { // although PlayerAnimation.incrementFrame ensures we don't go out of index there, we need to also do that on this side, might be worth making a function which handles both...
             if (currentAnimation == animations.get(ATTACK1)) world.togglePlayerAttack();
-            if (currentAnimation == animations.get(DEATH)) player.die();
+            if (currentAnimation == animations.get(DEATH)) {
+                player.die();
+                return;
+            }
             timerCount = 0;
             timer.restart(); // timer needs to restart so game.animation doesn't "stall" - where we have to wait for one game.animation to finish for the next to start
         }
@@ -122,5 +125,11 @@ public class PlayerAnimationStepListener implements StepListener {
         });
         timer.setRepeats(true);
         timer.start();
+    }
+
+    public void remove() {
+        this.timer.stop();
+        this.timer = null;
+        world.removeStepListener(this);
     }
 }

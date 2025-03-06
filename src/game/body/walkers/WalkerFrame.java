@@ -1,7 +1,7 @@
 package game.body.walkers;
 // Imports
 import city.cs.engine.*;
-import game.GameWorld;
+import game.core.GameWorld;
 import game.enums.Direction;
 import game.enums.State;
 import game.enums.Walkers;

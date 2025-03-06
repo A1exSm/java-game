@@ -1,4 +1,4 @@
-package game.body;
+package game.body.projectiles;
 // Imports
 
 import city.cs.engine.BodyImage;

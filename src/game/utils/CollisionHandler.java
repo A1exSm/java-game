@@ -1,4 +1,4 @@
-package game;// Imports
+package game.utils;// Imports
 
 import city.cs.engine.CollisionEvent;
 import city.cs.engine.CollisionListener;

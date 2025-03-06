@@ -1,4 +1,4 @@
-package game.utils;
+package game.core;
 // Imports
 import city.cs.engine.EngineerView;
 

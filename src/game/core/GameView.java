@@ -1,8 +1,9 @@
-package game.utils;
+package game.core;
 // Imports
 import city.cs.engine.UserView;
 import game.Game;
-import game.GameWorld;
+import game.utils.InventoryButton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -46,11 +47,18 @@ public class GameView extends UserView {
     }
 
     private void checkForGameOver(Graphics2D graphics) {
+        if (gameWorld.getPlayer().isDead()) {
+            inventoryButtons.forEach(InventoryButton::disableInteract);
+        }
         if (gameOver) {
             graphics.setColor(Color.RED);
             graphics.setFont(new  Font("Niagara Solid", Font.BOLD, 50));
             graphics.drawString("GAME OVER", 520, 250);
-            gameWorld.togglePause();
+            /*
+            I used to stop the world here.
+            BUT I felt that it would be cool if the world and mobs kept doing their things.
+            Its like the world is not centred around the player concept, things keep going even if the player is dead.
+            */
         }
     }
 
@@ -102,7 +110,7 @@ public class GameView extends UserView {
                 graphics.fill3DRect(slotLocations.get(i)[0], slotLocations.get(i)[1], slotLocations.get(i)[2], slotLocations.get(i)[3], slotRaisedList[i]);
                 if (path.get(i) != null) {
                     ImageIcon icon = new ImageIcon(path.get(i));
-                    Image scaledImage = icon.getImage().getScaledInstance(slotLocations.get(i)[2] - 30, slotLocations.get(i)[3] - 20, Image.SCALE_FAST); // scale fast is the best for this case since SCALE_SMOOTH is too slow and causes issues :(
+                    Image scaledImage = icon.getImage().getScaledInstance(slotLocations.get(i)[2]-20, slotLocations.get(i)[3]-20, Image.SCALE_FAST); // scale fast is the best for this case since SCALE_SMOOTH is too slow and causes issues :(
                     inventoryButtons.get(i-2).addIcon(new ImageIcon(scaledImage));
                 } else {
                     inventoryButtons.get(i-2).removeIcon();

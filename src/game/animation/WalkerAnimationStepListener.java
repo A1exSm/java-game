@@ -1,12 +1,10 @@
 package game.animation;
 // Imports
 
-import game.GameWorld;
-import game.body.walkers.WalkerFrame;
+import game.core.GameWorld;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.State;
 
-import java.awt.*;
 import java.util.HashMap;
 
 import static game.enums.State.*;

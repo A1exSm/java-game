@@ -1,4 +1,4 @@
-package game.utils;
+package game.core;
 // Class
 public class GameTime {
     // Fields

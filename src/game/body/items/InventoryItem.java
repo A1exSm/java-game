@@ -1,13 +1,14 @@
 package game.body.items;
 
 import game.enums.items.ItemBehaviour;
-import game.enums.items.ItemSize;
-import game.enums.items.Items;
 
-public record InventoryItem(ItemBody item, Items itemType, ItemSize itemSize, ItemBehaviour behaviour, String name) {
-    // Fields
-
-    //Constructor
-
-    //Methods
+public record InventoryItem(ItemFrame item, ItemBehaviour behaviour, String name) {
+    /*
+    Question | Why am I using a Record?
+    Answer | 1:
+    The original choice was to use a HashMap, however, hashmaps are not ordered, and I needed to keep the position of items in an inventory.
+    The next choice was to use a record, which is a class that is immutable and has a fixed number of fields. This was a much more secure Data type.
+    Answer | 2:
+    I have never used Records, thus I wanted to learn about them. What's a better way to learn than to use them in a project?
+     */
 }

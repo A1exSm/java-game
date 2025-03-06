@@ -2,12 +2,10 @@ package game.body.walkers.steplisteners;
 // Imports
 
 import city.cs.engine.StepEvent;
-import city.cs.engine.StepListener;
-import game.GameWorld;
+import game.core.GameWorld;
 import game.animation.WalkerAnimationStepListener;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
-import game.enums.State;
 import org.jbox2d.common.Vec2;
 
 // Class

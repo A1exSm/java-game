@@ -1,18 +1,18 @@
-package game;
+package game.utils;
 // Imports
 import city.cs.engine.Body;
+import game.body.items.HealthPotion;
+import game.core.GameWorld;
 import game.body.walkers.PlayerWalker;
-import city.cs.engine.CollisionListener;
-import game.body.walkers.mobs.MobWalker;
-import game.enums.Walkers;
-import game.utils.GameView;
+import game.core.GameView;
+import game.enums.items.ItemSize;
 import org.jbox2d.common.Vec2;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 // Class
-class Controls {
+public class Controls {
     // Fields
     private final GameView view;
     private final PlayerWalker player;
@@ -20,7 +20,7 @@ class Controls {
     private int keyPressed;
     private int keyReleased;
     // Constructor
-    protected Controls(GameWorld world, PlayerWalker player, GameView view) {
+    public Controls(GameWorld world, PlayerWalker player, GameView view) {
         this.view = view;
         this.player = player;
         this.world = world;
@@ -73,6 +73,8 @@ class Controls {
                         } else if (keyPressed == KeyEvent.VK_6) {
                             player.makePlayerSolid();
                         } else if (keyPressed == KeyEvent.VK_7) {
+                            HealthPotion trial = new HealthPotion(ItemSize.LARGE);
+                            trial.pickUp(GameWorld.playerInventory);
                         } else if (keyPressed == KeyEvent.VK_8) {
                         } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
                             if (isOnSurface() && !player.isGhostly()) {

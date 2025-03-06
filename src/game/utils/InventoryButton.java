@@ -1,10 +1,15 @@
 package game.utils;
 // Imports
 
-import game.GameWorld;
+import game.core.GameWorld;
+import game.core.GameView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 // Class
@@ -14,6 +19,8 @@ public class InventoryButton extends JButton {
     private final int buttonIndex;
     private Timer rePaintTimer;
     private static final ArrayList<int[]> buttonPositions = new ArrayList<>(){};
+    private MouseListener mouseListener;
+    private ActionListener actionListener;
     static {
         buttonPositions.add(new int[]{(1200-200)+10, (610-200)+10, (200-25)/2, (200-25)/2});
         buttonPositions.add(new int[]{(1200-200)+(200+5)/2, (610-200)+10, (200-25)/2, (200-25)/2});
@@ -31,12 +38,34 @@ public class InventoryButton extends JButton {
         setFocusable(false); // prevents button from taking keyboard focus (we can move while interacting with menu)
         setButtonBounds();
         setBorderPainted(false);
-        addActionListener();
+        initListeners();
     }
-    // Methods
+    // Methods | Public
     private void setButtonBounds() {
         setBounds(buttonPositions.get(buttonIndex)[0], buttonPositions.get(buttonIndex)[1], buttonPositions.get(buttonIndex)[2], buttonPositions.get(buttonIndex)[3]);
     }
+
+    private void initListeners() {
+        // MouseListener
+        mouseListener = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    GameWorld.dropInventoryItem(buttonIndex);
+                }
+            }
+        };
+        addMouseListener(mouseListener);
+        // ActionListener
+        actionListener = e -> GameWorld.useInventoryItem(buttonIndex);
+        addActionListener(actionListener);
+    }
+
+    private void removeListeners() {
+        removeMouseListener(mouseListener);
+        removeActionListener(actionListener);
+    }
+
     public void addIcon(ImageIcon icon) {
         if (this.icon==null) {
             this.icon = icon;
@@ -44,11 +73,11 @@ public class InventoryButton extends JButton {
             if (rePaintTimer != null) {
                 rePaintTimer.stop();
             }
-            rePaintTimer = new Timer(200, e -> {
-                repaint();
-            });
+            rePaintTimer = new Timer(200, e -> repaint());
             rePaintTimer.start();
         }
+
+
     }
     public void removeIcon() {
         if (this.icon!=null) {
@@ -58,9 +87,8 @@ public class InventoryButton extends JButton {
         }
     }
 
-    private void addActionListener() {
-        addActionListener(e -> {
-           GameWorld.useInventoryItem(buttonIndex);
-        });
+    public void disableInteract() {
+        removeListeners();
     }
+
 }

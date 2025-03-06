@@ -1,7 +1,7 @@
 package game.body.walkers.steplisteners;
 // Imports
 
-import game.GameWorld;
+import game.core.GameWorld;
 import game.body.walkers.mobs.MobWalker;
 import org.jbox2d.common.Vec2;
 

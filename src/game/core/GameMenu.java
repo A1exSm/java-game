@@ -1,11 +1,10 @@
-package game.utils;
+package game.core;
 // Imports
 import game.Game;
-import game.GameWorld;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 // Class
 public class GameMenu extends MenuBar {

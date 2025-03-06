@@ -1,4 +1,4 @@
-package game;
+package game.utils;
 // Class
 public class BoolTimer {
     // Fields

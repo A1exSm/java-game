@@ -2,9 +2,8 @@ package game.body.walkers.mobs;
 // Imports
 
 import city.cs.engine.BoxShape;
-import city.cs.engine.PolygonShape;
-import game.GameWorld;
-import game.body.Projectile;
+import game.core.GameWorld;
+import game.body.projectiles.Projectile;
 import game.body.walkers.PlayerWalker;
 import game.enums.Direction;
 import game.enums.State;

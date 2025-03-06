@@ -4,7 +4,6 @@ package game.body.walkers.steplisteners;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.Game;
-import game.GameWorld;
 import game.body.walkers.mobs.MobWalker;
 
 // Class
