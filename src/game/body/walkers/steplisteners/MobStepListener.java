@@ -23,7 +23,7 @@ public class MobStepListener implements MobStepListenerFrame {
     protected static final float WALK_SPEED = 2.0f;
     protected final GameWorld gameWorld;
     private Boolean isOnPlatform = false;
-    private Ground.Platform currentPlatform;
+    private Ground currentPlatform;
     // Constructor
     public MobStepListener(MobWalker mob, GameWorld gameWorld) {
         this.mob = mob;
@@ -45,6 +45,9 @@ public class MobStepListener implements MobStepListenerFrame {
              Had this issue since the start with all walker types, might be worth creating my own stop walking method which sets the velocity to 0 and calls the original stop walking inside it.
             */
         } else {
+            if(!isOnPlatform) {
+                isOnPlatform = getPlatform();
+            }
             handleMobMovement(mobPos);
         }
         // animation handling
@@ -54,18 +57,22 @@ public class MobStepListener implements MobStepListenerFrame {
     }
 
     @Override
-    public void postStep(StepEvent stepEvent) {}
+    public void postStep(StepEvent stepEvent) {
+    }
 
     @Override
     public void handleMobMovement(Vec2 pos) {}
 
     @Override
     public boolean isPlayerInRange(Vec2 pos) {
-        return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, mob.HALF_Y*2) && !gameWorld.getPlayer().isDead();
+        return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, mob.HALF_Y) && !gameWorld.getPlayer().isDead();
     }
 
     @Override
     public void patrolArea(Vec2 pos) {
+        if (mob.getState() != State.IDLE) {
+            mob.setState(State.IDLE);
+        }
         if (mob.getLinearVelocity().x < 1 && mob.getLinearVelocity().y > -1) {
             if (mob.getDirection() == Direction.RIGHT) {
                 mob.startWalking(WALK_SPEED);
@@ -73,31 +80,32 @@ public class MobStepListener implements MobStepListenerFrame {
                 mob.startWalking(-WALK_SPEED);
             }
         }
-        isOnPlatform = false;
-//        for (Body body : mob.getBodiesInContact()) {
-//            if (body instanceof Ground.Platform) {
-//                isOnPlatform = true;
-//                currentPlatform = (Ground.Platform) body;
-//                if (pos.x >= (currentPlatform.getOriginPos().x + currentPlatform.getHalfDimensions().x) - 0.5f) {
-//                    mob.startWalking(-WALK_SPEED);
-//                    mob.setDirection(Direction.LEFT);
-//                    break;
-//                } else if (pos.x <= (currentPlatform.getOriginPos().x - currentPlatform.getHalfDimensions().x) + 0.5f) {
-//                    mob.startWalking(WALK_SPEED);
-//                    mob.setDirection(Direction.RIGHT);
-//                    break;
-//                }
-//                break;
-//            }
-//        }
-        if (!isOnPlatform) { // isOnPlatform will not always equal false once platform logic is added, I won't add this until I have made all platform types.
-            if (pos.x >= (mob.ORIGIN_X) + PATROL_RADIUS_X) {
-                mob.startWalking(-WALK_SPEED);
-                mob.setDirection(Direction.LEFT);
-            } else if (pos.x <= (mob.ORIGIN_X) - PATROL_RADIUS_X) {
-                mob.startWalking(WALK_SPEED);
-                mob.setDirection(Direction.RIGHT);
+        if (!isOnPlatform) {
+            checkBounds(pos, PATROL_RADIUS_X, mob.ORIGIN_X);
+        } else {
+            checkBounds(pos, currentPlatform.getHalfDimensions().x- (mob.HALF_X + 1), currentPlatform.getOriginPos().x);
+        }
+    }
+
+    private boolean getPlatform() {
+        if (!isOnPlatform) {
+            for (Body body : mob.getBodiesInContact()) {
+                if (body instanceof Ground) {
+                    currentPlatform = (Ground) body;
+                    return true;
+                }
             }
+        }
+        return false;
+    }
+
+    private void checkBounds(Vec2 pos, float patrol_radius_x, float originPos) {
+        if (pos.x >= (originPos) + patrol_radius_x) {
+            mob.startWalking(-WALK_SPEED);
+            mob.setDirection(Direction.LEFT);
+        } else if (pos.x <= (originPos) - patrol_radius_x) {
+            mob.startWalking(WALK_SPEED);
+            mob.setDirection(Direction.RIGHT);
         }
     }
 

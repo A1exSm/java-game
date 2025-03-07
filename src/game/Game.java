@@ -46,9 +46,9 @@ public class Game {
         for (Body body : gameWorld.getDynamicBodies()) {
             body.setAlwaysOutline(!debugOn);
         }
-//        for (Body game.body : getStaticBodies()) {
-//            game.body.setAlwaysOutline(!debugOn);
-//        }
+        for (Body body : gameWorld.getStaticBodies()) {
+            body.setAlwaysOutline(!debugOn);
+        }
         debugOn = !debugOn;
     }
 

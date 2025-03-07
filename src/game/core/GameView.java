@@ -38,6 +38,13 @@ public class GameView extends UserView {
         checkForGameOver(g);
         drawHealthBar(g);
         inventoryTest(g);
+        checkPlayerStatus(g);
+    }
+
+    private void checkPlayerStatus(Graphics2D g) {
+        if (gameWorld.getPlayer().getHit() || gameWorld.getPlayer().isDead()) {
+            hurt(g);
+        }
     }
 
     private void populateButtons() {
@@ -60,6 +67,16 @@ public class GameView extends UserView {
             Its like the world is not centred around the player concept, things keep going even if the player is dead.
             */
         }
+    }
+
+    private void hurt(Graphics2D graphics) {
+        Point centerOfScreen = new Point(getWidth() / 2, getHeight() / 2);
+        float r = getWidth() / 2.0f; // radius of the gradient
+        float[] fractions = {0.6f, 1.0f}; // this was kinda trial and error, seems to be the right distribution
+        Color[] colors = {new Color(0, 0, 0, 0), new Color(100, 0, 0, 150)}; // all zero + 0 alpha is transparent, which moves from a fraction of 0.6 to 1,.0f of red.
+        RadialGradientPaint vignette = new RadialGradientPaint(centerOfScreen, r, fractions, colors);
+        graphics.setPaint(vignette);
+        graphics.fillRect(0, 0, getWidth(), getHeight());
     }
 
     private void drawGameTime(Graphics2D graphics) {
