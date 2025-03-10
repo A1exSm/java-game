@@ -58,11 +58,16 @@ public class MobWalker extends WalkerFrame {
                 HALF_Y = WormWalker.HALF_Y;
                 behaviour = WormWalker.DEFAULT_BEHAVIOUR;
             }
+            case HUNTRESS -> {
+                HALF_X = HuntressWalker.HALF_X;
+                HALF_Y = HuntressWalker.HALF_Y;
+                behaviour = HuntressWalker.DEFAULT_BEHAVIOUR;
+            }
             default -> {
                 HALF_X = 0.0f;
                 HALF_Y = 0.0f;
                 behaviour = WalkerBehaviour.PASSIVE;
-
+                System.err.println("Error: Invalid mob type, defaulting.");
             }
         }
         mobCount++;
@@ -155,6 +160,7 @@ public class MobWalker extends WalkerFrame {
         switch (getWalkerType()) {
             case WIZARD -> {return WizardWalker.SUPPORTED_STATES;}
             case WORM -> {return WormWalker.SUPPORTED_STATES;}
+            case HUNTRESS ->  {return HuntressWalker.SUPPORTED_STATES;}
             default -> {return null;}
         }
     }
@@ -174,6 +180,7 @@ public class MobWalker extends WalkerFrame {
         switch (getWalkerType()) {
             case WIZARD -> {return WizardWalker.CHASE_DISTANCE;}
             case WORM -> {return WormWalker.CHASE_DISTANCE;}
+            case HUNTRESS -> {return HuntressWalker.CHASE_DISTANCE;}
             default -> {
                 System.err.println("Invalid mob type, defaulting to 3.0f");
                 return 3.0f;

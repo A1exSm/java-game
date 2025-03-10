@@ -38,6 +38,17 @@ public class WalkerAnimationFrames extends AnimationFrames {
         WALKER_MAP.get(WORM).put(HIT, 3);
         WALKER_MAP.get(WORM).put(IDLE, 9);
         WALKER_MAP.get(WORM).put(RUN, 9);
+        // Huntress
+        WALKER_MAP.get(HUNTRESS).put(ATTACK1, 5);
+        WALKER_MAP.get(HUNTRESS).put(ATTACK2, 5);
+        WALKER_MAP.get(HUNTRESS).put(ATTACK3, 7);
+        WALKER_MAP.get(HUNTRESS).put(DEATH, 8);
+        WALKER_MAP.get(HUNTRESS).put(FALL, 2);
+        WALKER_MAP.get(HUNTRESS).put(HIT, 3);
+        WALKER_MAP.get(HUNTRESS).put(IDLE, 8);
+        WALKER_MAP.get(HUNTRESS).put(JUMP, 2);
+        WALKER_MAP.get(HUNTRESS).put(RUN, 8);
+
 
     }
     // Constructor
@@ -82,6 +93,11 @@ public class WalkerAnimationFrames extends AnimationFrames {
                 Y_OFFSET = 0;
                 X_OFFSET = -2;
 
+            }
+            case HUNTRESS -> {
+                parentFolder = "HuntressPNG";
+                Y_OFFSET = 0.5f;
+                X_OFFSET = 0;
             }
             default -> {
                 System.err.println("Unhandled walker type: " + walkerType);

@@ -105,7 +105,7 @@ public class WalkerFrame extends Walker {
             getFixtureList().forEach(Fixture::destroy);
             solidFixtures.forEach(this::constructGhostlyFixture); // since they must be ghostly in Ghostly form
             ghostlyFixtures.forEach(this::constructGhostlyFixture);
-            Sensor ghostSensor = new Sensor(this, SHAPE); // sensor to use for detect stuff in the future (since collisions don't occur)
+            new Sensor(this, SHAPE); // sensor to use for detect stuff in the future (since collisions don't occur)
             setGravityScale(0);
             isGhostly = true;
             return;

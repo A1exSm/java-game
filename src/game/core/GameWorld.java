@@ -5,6 +5,7 @@ import game.body.items.Inventory;
 import game.body.staticstructs.Ground;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
+import game.body.walkers.mobs.HuntressWalker;
 import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
@@ -105,7 +106,8 @@ public class GameWorld extends World {
         new WizardWalker(this, new Vec2(-80,2));
         new WizardWalker(this, new Vec2(-110,2));
         new WormWalker(this, new Vec2(20,2));
-        new WormWalker(this, new Vec2(-25,222));
+//        new WormWalker(this, new Vec2(-25,222));
+        new HuntressWalker(this, new Vec2(-25, 222));
     }
 
 

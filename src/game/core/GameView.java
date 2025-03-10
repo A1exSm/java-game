@@ -16,6 +16,8 @@ public class GameView extends UserView {
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
     private boolean gameOver = false;
     private final GameWorld gameWorld;
+    private JLabel statusBar = new JLabel(" ");
+    public JPanel notificationPanel = new JPanel();
     // Constructor
     public GameView(GameWorld gameWorld, int width, int height) {
         super(gameWorld, width, height);
@@ -25,7 +27,19 @@ public class GameView extends UserView {
         this.gameWorld = gameWorld;
         this.setLayout(null);
         populateButtons();
+        statusBar.setBorder(BorderFactory.createEtchedBorder());
+        add(statusBar, BorderLayout.SOUTH);
+        statusBar.setText("Starting new game...");
+        setComponentZOrder(statusBar, 0);
+        statusBar.setBounds(5, 50, 30, 40);
+        statusBar.setText("hey");
+        notificationPanel.setBackground(new Color(50, 50, 50));
+        notificationPanel.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
+        add(notificationPanel, BorderLayout.NORTH);
+        setComponentZOrder(notificationPanel, 1);
+        notificationPanel.setBounds(5, 50, 30, 40);
     }
+
     // Methods
     @Override
     protected void paintBackground(Graphics2D g) {
@@ -127,8 +141,9 @@ public class GameView extends UserView {
                 graphics.fill3DRect(slotLocations.get(i)[0], slotLocations.get(i)[1], slotLocations.get(i)[2], slotLocations.get(i)[3], slotRaisedList[i]);
                 if (path.get(i) != null) {
                     ImageIcon icon = new ImageIcon(path.get(i));
-                    Image scaledImage = icon.getImage().getScaledInstance(slotLocations.get(i)[2]-20, slotLocations.get(i)[3]-20, Image.SCALE_FAST); // scale fast is the best for this case since SCALE_SMOOTH is too slow and causes issues :(
-                    inventoryButtons.get(i-2).addIcon(new ImageIcon(scaledImage));
+                    int[] scaledDimensions = getScaledDimensions(icon.getIconWidth(), icon.getIconHeight(), slotLocations.get(i)[2]-20, slotLocations.get(i)[3]-20);
+                    icon.setImage(icon.getImage().getScaledInstance(scaledDimensions[0], scaledDimensions[1], 1));
+                    inventoryButtons.get(i-2).addIcon(icon);
                 } else {
                     inventoryButtons.get(i-2).removeIcon();
                 }
@@ -137,9 +152,9 @@ public class GameView extends UserView {
         graphics.setColor(temp);
     }
 
-    private int[] getScaledDimensions(int width, int height, int maxWidth, int maxHeight) { // googled the formula to scale images, implemented the code
-        int scaleWidth = (int) maxWidth / width;
-        int scaleHeight = (int) maxHeight / height;
+    private int[] getScaledDimensions(int width, int height, int maxWidth, int maxHeight) { // This is my tailored version of get scaled instance
+        int scaleWidth = maxWidth / width;
+        int scaleHeight = maxHeight / height;
         int scaleFactor = Math.min(scaleWidth, scaleHeight);
         int newWidth = width * scaleFactor;
         int newHeight = height * scaleFactor;
@@ -148,18 +163,18 @@ public class GameView extends UserView {
 
 
     private ArrayList<int[]> getSlotLocations() {
-        int width = 200;
-        int height = 200;
+        int width = 400;
+        int height = 100;
         int x = this.getWidth() - width; // 1200 - x
         int y = this.getHeight() - height; // 610 - y
         ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
         slotLocations.add(new int[]{x, y, width, height});
         // All the extra numbers here are to create offsets, these offsets make bezels. Bezels are cool.
-        slotLocations.add(new int[]{x+5, y+5, width-10, height-10});
-        slotLocations.add(new int[]{x+10, y+10, (width-25)/2, (height-25)/2});
-        slotLocations.add(new int[]{x+(width+5)/2, y+10, (width-25)/2, (height-25)/2});
-        slotLocations.add(new int[]{x+10, y+(height+5)/2, (width-25)/2, (height-25)/2});
-        slotLocations.add(new int[]{x+(width+5)/2, y+(height+5)/2, (width-25)/2, (height-25)/2});
+        slotLocations.add(new int[]{x + 2, y + 5, width-10, height-10});
+        slotLocations.add(new int[]{10 + x, y + 10, (width-25)/5, height-20});
+        slotLocations.add(new int[]{10 + x + (width+5)/5, y+10, (width-25)/5, height-20});
+        slotLocations.add(new int[]{10 + x + ((width+5)/5)*2, y+10, (width-25)/5, height-20});
+        slotLocations.add(new int[]{10 + x + ((width+5)/5)*3, y+10, (width-25)/5, height-20});
         return slotLocations;
     }
 

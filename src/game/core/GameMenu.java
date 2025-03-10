@@ -1,6 +1,7 @@
 package game.core;
 // Imports
 import game.Game;
+import game.core.menu.GameJMenuBar;
 import org.jbox2d.common.Vec2;
 
 import javax.swing.*;
@@ -12,14 +13,14 @@ public class GameMenu extends MenuBar {
     // Fields
     private final MenuBar gameMenu = new MenuBar();
     private final GameWorld gameWorld;
-    private Menu settings;
     // Constructor
     public GameMenu(JFrame frame, GameWorld gameWorld) {
         super();
         this.gameWorld = gameWorld;
         addSettings();
         addPlayerItems();
-        frame.setMenuBar(gameMenu); // not gonna change it now, but I should have used setJMenuBar instead of setMenuBar. I will change this after Milestone 1.
+        frame.setJMenuBar(new GameJMenuBar());
+//        frame.setMenuBar(gameMenu); // not gonna change it now, but I should have used setJMenuBar instead of setMenuBar. I will change this after Milestone 1.
 //        JMenuBar menuBar = new JMenuBar();
 //        JMenu file = new JMenu("File");
 //        frame.setJMenuBar(menuBar);
@@ -30,9 +31,9 @@ public class GameMenu extends MenuBar {
     }
     // Methods
     private void addSettings() {
-        settings = new Menu("Settings");
+        Menu settings = new Menu("Settings");
         gameMenu.add(settings);
-        createSettingsItems();
+        createSettingsItems(settings);
     }
 
     private void addPlayerItems() {
@@ -77,7 +78,7 @@ public class GameMenu extends MenuBar {
         });
     }
 
-    private void createSettingsItems() {
+    private void createSettingsItems(Menu settings) {
         MenuItem pause = new MenuItem("Pause", new MenuShortcut(KeyEvent.VK_P, false)); // changes modifier to CTRL
         MenuItem exit = new MenuItem("Exit", new MenuShortcut(KeyEvent.VK_E, false));
         MenuItem DebugToggle = new MenuItem("Debug Toggle", new MenuShortcut(KeyEvent.VK_D, false));

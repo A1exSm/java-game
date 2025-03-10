@@ -22,10 +22,10 @@ public class InventoryButton extends JButton {
     private MouseListener mouseListener;
     private ActionListener actionListener;
     static {
-        buttonPositions.add(new int[]{(1200-200)+10, (610-200)+10, (200-25)/2, (200-25)/2});
-        buttonPositions.add(new int[]{(1200-200)+(200+5)/2, (610-200)+10, (200-25)/2, (200-25)/2});
-        buttonPositions.add(new int[]{(1200-200)+10, (610-200)+(200+5)/2, (200-25)/2, (200-25)/2});
-        buttonPositions.add(new int[]{(1200-200)+(200+5)/2, (610-200)+(200+5)/2, (200-25)/2, (200-25)/2});
+        buttonPositions.add(new int[]{ 810, 520, 75, 80});
+        buttonPositions.add(new int[]{ 891, 520, 75, 80});
+        buttonPositions.add(new int[]{ 972, 520, 75, 80});
+        buttonPositions.add(new int[]{ 1053, 520, 75, 80});
     }
     // Constructor
     public InventoryButton(GameView view, int buttonIndex) {

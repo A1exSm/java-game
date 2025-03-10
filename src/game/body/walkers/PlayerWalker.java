@@ -6,12 +6,13 @@ import game.core.GameWorld;
 import game.animation.PlayerStepListener;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
+import game.enums.State;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
 
 // Class
-public class PlayerWalker extends WalkerFrame {
+public final class PlayerWalker extends WalkerFrame {
     // Fields
     public final float HALF_X = 1;
     public final float HALF_Y = 2; // not using Vec2 since objects' contents can be changed when final
@@ -22,6 +23,10 @@ public class PlayerWalker extends WalkerFrame {
     private final ArrayList<MobWalker> inRightSensor = new ArrayList<>();
     private final ArrayList<MobWalker> inLeftSensor = new ArrayList<>();
     private final PlayerStepListener stepListener;
+    public static final State[] SUPPORTED_STATES = new State[]{
+            State.ATTACK1, State.ATTACK2, State.DEATH, State.FALL,
+            State.HIT, State.IDLE, State.JUMP, State.RUN
+    };
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
     public boolean destroyed = false;

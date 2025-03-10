@@ -13,7 +13,7 @@ import org.jbox2d.common.Vec2;
 public class Game {
     // Fields
     public static GameWorld gameWorld; // allow for game to restart
-    private static GameView gameView;
+    public static GameView gameView; // used for notifications, for now, thus will be public
     private static GameFrame frame;
     private static boolean debugOn;
     private boolean isPaused;

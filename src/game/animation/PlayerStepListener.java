@@ -32,7 +32,7 @@ public class PlayerStepListener implements StepListener {
     }
     // Constructor Methods
     private void hashMapSetup() {
-        for (State state : State.values()) {
+        for (State state : PlayerWalker.SUPPORTED_STATES) {
             animations.put(state, new FrameHandler(player, state));
         }
     }

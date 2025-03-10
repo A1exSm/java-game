@@ -8,5 +8,6 @@ public enum State {
     HIT,
     ATTACK1,
     ATTACK2,
+    ATTACK3,
     DEATH
 }

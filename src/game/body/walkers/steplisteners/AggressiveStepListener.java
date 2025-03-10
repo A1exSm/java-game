@@ -7,7 +7,7 @@ import game.enums.State;
 import org.jbox2d.common.Vec2;
 
 // Class
-public class AggressiveStepListener extends MobStepListener implements MobStepListenerFrame {
+public class AggressiveStepListener extends MobStepListener {
     // Fields
     protected final float CHASE_DISTANCE;
     // Constructor
