@@ -1,4 +1,4 @@
-package game.core.menu;
+package game.utils.menu;
 // Imports
 
 import javax.swing.*;

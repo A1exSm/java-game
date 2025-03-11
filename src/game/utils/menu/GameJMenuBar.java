@@ -1,8 +1,7 @@
-package game.core.menu;
+package game.utils.menu;
 // Imports
 
 import game.Game;
-import game.core.GameView;
 import org.jbox2d.common.Vec2;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -29,6 +28,7 @@ public class GameJMenuBar extends JMenuBar {
             return;
         }
         JMenu menu = new JMenu(name);
+        menu.setIcon(new ImageIcon("data/HuntressPNG/Spear.png"));
         add(menu);
     }
 

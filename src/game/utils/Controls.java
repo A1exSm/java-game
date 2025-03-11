@@ -27,8 +27,20 @@ public class Controls {
         this.world = world;
         addKeyboardInputs();
         addMouseInputs();
+        setupKey();
     }
     // Methods
+    public void setupKey() {
+        Game.gameView.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    view.menuPanel.open();
+                }
+            }
+        });
+    }
+
     private void addMouseInputs() {
         view.addMouseListener(new MouseListener() {
             @Override

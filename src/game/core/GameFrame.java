@@ -1,6 +1,7 @@
 package game.core;
 // Imports
 import city.cs.engine.EngineerView;
+import game.utils.menu.GameJMenuBar;
 
 import javax.swing.*;
 // Class
@@ -23,6 +24,7 @@ public class GameFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
         setResizable(false);
+        setJMenuBar(new GameJMenuBar());
         setVisible(true);
         pack();
     }

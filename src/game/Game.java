@@ -29,7 +29,6 @@ public class Game {
         } else {
             frame = new GameFrame("GamePlayground", gameView);
         }
-        new GameMenu(frame, gameWorld);
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
 //        gameView.setUI(new PanelUI() {
@@ -93,6 +92,15 @@ public class Game {
             public void postStep(StepEvent event) {
             }
         });
+    }
+
+    public static int[] getScaledDimensions(int width, int height, int maxWidth, int maxHeight) { // This is my tailored version of get scaled instance
+        int scaleWidth = maxWidth / width;
+        int scaleHeight = maxHeight / height;
+        int scaleFactor = Math.max(1, Math.min(scaleWidth, scaleHeight));
+        int newWidth = width * scaleFactor;
+        int newHeight = height * scaleFactor;
+        return new int[]{newWidth, newHeight};
     }
 
 

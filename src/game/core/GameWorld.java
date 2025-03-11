@@ -11,6 +11,7 @@ import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
 import game.body.walkers.mobs.WormWalker;
 import game.enums.State;
+import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
@@ -25,6 +26,7 @@ public class GameWorld extends World {
     private final PlayerWalker player;
     private static final ArrayList<MobWalker> mobs = new ArrayList<>();
     public static final Inventory playerInventory = new Inventory(4);
+    private boolean toggleMobsPassive = false;
 
     // Constructor
     public GameWorld(Game game) {
@@ -58,7 +60,9 @@ public class GameWorld extends World {
         new Ground.Platform(this, new Vec2(20+offset, 4));
         new Ground.Platform(this, new Vec2(27+offset, 7));
         new Trampoline(this, new Vec2(-20+offset, 1));
-        initWizards();
+        initMobs();
+        toggleMobsPassive();
+
     }
     private void areaOne() {
         ArrayList<Body> areaOne= new ArrayList<>();
@@ -98,7 +102,7 @@ public class GameWorld extends World {
     }
 
     // Store
-    private void initWizards() {
+    private void initMobs() {
         new WizardWalker(this, new Vec2(-25, 202));
         new WizardWalker(this, new Vec2(70,2));
         new WizardWalker(this, new Vec2(127, 8.9f));
@@ -122,6 +126,14 @@ public class GameWorld extends World {
 
     public void togglePause() {
         game.togglePause();
+    }
+
+    public static void useInventoryItem(int index) {
+        playerInventory.use(index);
+    }
+
+    public static void dropInventoryItem(int index) {
+        playerInventory.drop(index);
     }
 
     //Mobology
@@ -161,11 +173,11 @@ public class GameWorld extends World {
         return null;
     }
 
-    public static void useInventoryItem(int index) {
-        playerInventory.use(index);
+    public void toggleMobsPassive() { // only meant to be called during setup
+        toggleMobsPassive = !toggleMobsPassive;
+        for (MobWalker mob : mobs) {
+            mob.setBehaviour(WalkerBehaviour.PASSIVE);
+        }
     }
 
-    public static void dropInventoryItem(int index) {
-        playerInventory.drop(index);
-    }
 }

@@ -1,7 +1,6 @@
 package game.core;
 // Imports
 import game.Game;
-import game.core.menu.GameJMenuBar;
 import org.jbox2d.common.Vec2;
 
 import javax.swing.*;
@@ -19,13 +18,12 @@ public class GameMenu extends MenuBar {
         this.gameWorld = gameWorld;
         addSettings();
         addPlayerItems();
-        frame.setJMenuBar(new GameJMenuBar());
-//        frame.setMenuBar(gameMenu); // not gonna change it now, but I should have used setJMenuBar instead of setMenuBar. I will change this after Milestone 1.
-//        JMenuBar menuBar = new JMenuBar();
-//        JMenu file = new JMenu("File");
-//        frame.setJMenuBar(menuBar);
-//        file.setText("File");
-//        file.add(new JMenuItem("Exit"));
+        frame.setMenuBar(gameMenu);
+        JMenuBar menuBar = new JMenuBar();
+        JMenu file = new JMenu("File");
+        frame.setJMenuBar(menuBar);
+        file.setText("File");
+        file.add(new JMenuItem("Exit"));
 
 
     }

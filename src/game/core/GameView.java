@@ -3,6 +3,7 @@ package game.core;
 import city.cs.engine.UserView;
 import game.Game;
 import game.utils.InventoryButton;
+import game.utils.menu.MenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +17,9 @@ public class GameView extends UserView {
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
     private boolean gameOver = false;
     private final GameWorld gameWorld;
-    private JLabel statusBar = new JLabel(" ");
-    public JPanel notificationPanel = new JPanel();
+    public final MenuPanel menuPanel = new MenuPanel(this);
+//    private JLabel statusBar = new JLabel(" ");
+//    public JPanel notificationPanel = new JPanel();
     // Constructor
     public GameView(GameWorld gameWorld, int width, int height) {
         super(gameWorld, width, height);
@@ -27,17 +29,19 @@ public class GameView extends UserView {
         this.gameWorld = gameWorld;
         this.setLayout(null);
         populateButtons();
-        statusBar.setBorder(BorderFactory.createEtchedBorder());
-        add(statusBar, BorderLayout.SOUTH);
-        statusBar.setText("Starting new game...");
-        setComponentZOrder(statusBar, 0);
-        statusBar.setBounds(5, 50, 30, 40);
-        statusBar.setText("hey");
-        notificationPanel.setBackground(new Color(50, 50, 50));
-        notificationPanel.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
-        add(notificationPanel, BorderLayout.NORTH);
-        setComponentZOrder(notificationPanel, 1);
-        notificationPanel.setBounds(5, 50, 30, 40);
+        add(menuPanel);
+        setComponentZOrder(menuPanel, 0);
+//        statusBar.setBorder(BorderFactory.createEtchedBorder());
+//        add(statusBar, BorderLayout.SOUTH);
+//        statusBar.setText("Starting new game...");
+//        setComponentZOrder(statusBar, 0);
+//        statusBar.setBounds(5, 50, 30, 40);
+//        statusBar.setText("hey");
+//        notificationPanel.setBackground(new Color(50, 50, 50));
+//        notificationPanel.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
+//        add(notificationPanel, BorderLayout.NORTH);
+//        setComponentZOrder(notificationPanel, 1);
+//        notificationPanel.setBounds(5, 50, 30, 40);
     }
 
     // Methods
@@ -53,6 +57,7 @@ public class GameView extends UserView {
         drawHealthBar(g);
         inventoryTest(g);
         checkPlayerStatus(g);
+        openMenu(g);
     }
 
     private void checkPlayerStatus(Graphics2D g) {
@@ -141,7 +146,7 @@ public class GameView extends UserView {
                 graphics.fill3DRect(slotLocations.get(i)[0], slotLocations.get(i)[1], slotLocations.get(i)[2], slotLocations.get(i)[3], slotRaisedList[i]);
                 if (path.get(i) != null) {
                     ImageIcon icon = new ImageIcon(path.get(i));
-                    int[] scaledDimensions = getScaledDimensions(icon.getIconWidth(), icon.getIconHeight(), slotLocations.get(i)[2]-20, slotLocations.get(i)[3]-20);
+                    int[] scaledDimensions = Game.getScaledDimensions(icon.getIconWidth(), icon.getIconHeight(), slotLocations.get(i)[2]-20, slotLocations.get(i)[3]-20);
                     icon.setImage(icon.getImage().getScaledInstance(scaledDimensions[0], scaledDimensions[1], 1));
                     inventoryButtons.get(i-2).addIcon(icon);
                 } else {
@@ -152,29 +157,16 @@ public class GameView extends UserView {
         graphics.setColor(temp);
     }
 
-    private int[] getScaledDimensions(int width, int height, int maxWidth, int maxHeight) { // This is my tailored version of get scaled instance
-        int scaleWidth = maxWidth / width;
-        int scaleHeight = maxHeight / height;
-        int scaleFactor = Math.min(scaleWidth, scaleHeight);
-        int newWidth = width * scaleFactor;
-        int newHeight = height * scaleFactor;
-        return new int[]{newWidth, newHeight};
-    }
 
 
     private ArrayList<int[]> getSlotLocations() {
-        int width = 400;
-        int height = 100;
-        int x = this.getWidth() - width; // 1200 - x
-        int y = this.getHeight() - height; // 610 - y
         ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
-        slotLocations.add(new int[]{x, y, width, height});
-        // All the extra numbers here are to create offsets, these offsets make bezels. Bezels are cool.
-        slotLocations.add(new int[]{x + 2, y + 5, width-10, height-10});
-        slotLocations.add(new int[]{10 + x, y + 10, (width-25)/5, height-20});
-        slotLocations.add(new int[]{10 + x + (width+5)/5, y+10, (width-25)/5, height-20});
-        slotLocations.add(new int[]{10 + x + ((width+5)/5)*2, y+10, (width-25)/5, height-20});
-        slotLocations.add(new int[]{10 + x + ((width+5)/5)*3, y+10, (width-25)/5, height-20});
+        slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
+        slotLocations.add(new int[]{ 802, 538, 395, 90}); //        slotLocations.add(new int[]{x + 2, y + 35, width-10, height-10});
+        slotLocations.add(new int[]{ 810, 543, 80, 80}); //       slotLocations.add(new int[]{10 + x, y + 40, (width-20)/5, height-20});
+        slotLocations.add(new int[]{ 894, 543, 80, 80}); //        slotLocations.add(new int[]{13 + x + (width+5)/5, y+40, (width-20)/5, height-20});
+        slotLocations.add(new int[]{ 978, 543, 80, 80}); //        slotLocations.add(new int[]{16 + x + ((width+5)/5)*2, y+40, (width-20)/5, height-20});
+        slotLocations.add(new int[]{ 1062, 543, 80, 80}); //        slotLocations.add(new int[]{19 + x + ((width+5)/5)*3, y+40, (width-20)/5, height-20});
         return slotLocations;
     }
 
@@ -216,6 +208,14 @@ public class GameView extends UserView {
             }
         }
     }
+    private void openMenu(Graphics2D graphics) {
+        if (menuPanel.isOpen()) {
+            Image img = new ImageIcon("data/Display_assets/GUI/Appear/open.gif").getImage();
+            graphics.drawImage(img, 0, 0, this);
+        }
+    }
+
+
 
     public void gameOver() {
         gameOver = true;
