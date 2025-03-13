@@ -2,6 +2,7 @@ package game.core;
 // Imports
 import city.cs.engine.EngineerView;
 import game.utils.menu.GameJMenuBar;
+import game.utils.menu.MenuPanel;
 
 import javax.swing.*;
 // Class

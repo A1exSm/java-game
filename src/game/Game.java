@@ -67,6 +67,7 @@ public class Game {
         if (isPaused && !gameWorld.getPlayer().isDead()) {
             isPaused = false;
             gameTime.toggleTimer();
+            gameView.resumeInterface();
             gameWorld.start();
         }
         else if (!isPaused) {
@@ -75,6 +76,7 @@ public class Game {
             gameWorld.getPlayer().setLinearVelocity(new Vec2(0, gameWorld.getPlayer().getLinearVelocity().y)); // 2
             isPaused = true;
             gameTime.toggleTimer();
+            gameView.pauseInterface();
             gameWorld.stop();
         }
     }

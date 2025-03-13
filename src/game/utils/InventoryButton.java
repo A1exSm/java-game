@@ -19,8 +19,7 @@ public class InventoryButton extends JButton {
     private final int buttonIndex;
     private Timer rePaintTimer;
     private static final ArrayList<int[]> buttonPositions = new ArrayList<>(){};
-    private MouseListener mouseListener;
-    private ActionListener actionListener;
+
     static {
         buttonPositions.add(new int[]{ 810, 543, 75, 75});
         buttonPositions.add(new int[]{ 894, 543, 75, 75});
@@ -31,7 +30,7 @@ public class InventoryButton extends JButton {
     public InventoryButton(GameView view, int buttonIndex) {
         super();
         view.add(this);
-        view.setComponentZOrder(this, 0);
+        view.setComponentZOrder(this, 1);
         this.buttonIndex = buttonIndex;
         setRolloverEnabled(false); // stops the button from changing colour when hovered over
         setBackground(new Color(94, 43, 48));
@@ -47,7 +46,7 @@ public class InventoryButton extends JButton {
 
     private void initListeners() {
         // MouseListener
-        mouseListener = new MouseAdapter() {
+        MouseListener mouseListener = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
@@ -57,14 +56,9 @@ public class InventoryButton extends JButton {
         };
         addMouseListener(mouseListener);
         // ActionListener
-        actionListener = e -> GameWorld.useInventoryItem(buttonIndex);
-        addActionListener(actionListener);
+        addActionListener(e -> GameWorld.useInventoryItem(buttonIndex));
     }
 
-    private void removeListeners() {
-        removeMouseListener(mouseListener);
-        removeActionListener(actionListener);
-    }
 
     public void addIcon(ImageIcon icon) {
         if (this.icon==null) {
@@ -88,7 +82,10 @@ public class InventoryButton extends JButton {
     }
 
     public void disableInteract() {
-        removeListeners();
+        setEnabled(false);
+    }
+    public void enableInteract() {
+        setEnabled(true);
     }
 
 }

@@ -18,7 +18,7 @@ public class GameView extends UserView {
     private boolean gameOver = false;
     private final GameWorld gameWorld;
     public final MenuPanel menuPanel = new MenuPanel(this);
-//    private JLabel statusBar = new JLabel(" ");
+    private JLabel statusBar = new JLabel(" ");
 //    public JPanel notificationPanel = new JPanel();
     // Constructor
     public GameView(GameWorld gameWorld, int width, int height) {
@@ -30,18 +30,6 @@ public class GameView extends UserView {
         this.setLayout(null);
         populateButtons();
         add(menuPanel);
-        setComponentZOrder(menuPanel, 0);
-//        statusBar.setBorder(BorderFactory.createEtchedBorder());
-//        add(statusBar, BorderLayout.SOUTH);
-//        statusBar.setText("Starting new game...");
-//        setComponentZOrder(statusBar, 0);
-//        statusBar.setBounds(5, 50, 30, 40);
-//        statusBar.setText("hey");
-//        notificationPanel.setBackground(new Color(50, 50, 50));
-//        notificationPanel.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 100)));
-//        add(notificationPanel, BorderLayout.NORTH);
-//        setComponentZOrder(notificationPanel, 1);
-//        notificationPanel.setBounds(5, 50, 30, 40);
     }
 
     // Methods
@@ -57,7 +45,6 @@ public class GameView extends UserView {
         drawHealthBar(g);
         inventoryTest(g);
         checkPlayerStatus(g);
-        openMenu(g);
     }
 
     private void checkPlayerStatus(Graphics2D g) {
@@ -71,10 +58,17 @@ public class GameView extends UserView {
             inventoryButtons.add(new InventoryButton(this, i));
         }
     }
+    public void pauseInterface() {
+        inventoryButtons.forEach(InventoryButton::disableInteract);
+    }
+
+    public void resumeInterface() {
+        inventoryButtons.forEach(InventoryButton::enableInteract);
+    }
 
     private void checkForGameOver(Graphics2D graphics) {
         if (gameWorld.getPlayer().isDead()) {
-            inventoryButtons.forEach(InventoryButton::disableInteract);
+            pauseInterface();
         }
         if (gameOver) {
             graphics.setColor(Color.RED);
@@ -206,12 +200,6 @@ public class GameView extends UserView {
                     return new Color(140, 30, 30);
                 }
             }
-        }
-    }
-    private void openMenu(Graphics2D graphics) {
-        if (menuPanel.isOpen()) {
-            Image img = new ImageIcon("data/Display_assets/GUI/Appear/open.gif").getImage();
-            graphics.drawImage(img, 0, 0, this);
         }
     }
 

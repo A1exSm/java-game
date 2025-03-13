@@ -61,7 +61,7 @@ public class GameWorld extends World {
         new Ground.Platform(this, new Vec2(27+offset, 7));
         new Trampoline(this, new Vec2(-20+offset, 1));
         initMobs();
-        toggleMobsPassive();
+//        toggleMobsPassive();
 
     }
     private void areaOne() {
