@@ -53,9 +53,11 @@ public class GameJMenuBar extends JMenuBar {
         // Creating File Menu
         newMenu("File");
         newMenuItem("File", "Exit");
+        newMenuItem("File", "Pause");
         // Setting Mnemonics
         setMenuMnemonic("File", KeyEvent.VK_F);
         setMenuItemMnemonic("File", "Exit", KeyEvent.VK_E);
+        setMenuItemMnemonic("File", "Pause", KeyEvent.VK_P);
         // Action Listeners
         addFileListeners(menuItems.get("File").toArray(JMenuItem[]::new)); // convert ArrayList to a new Array of type JMenuItem
     }
@@ -63,11 +65,9 @@ public class GameJMenuBar extends JMenuBar {
     private void addSettings() {
         // Creating Settings Menu
         newMenu("Settings");
-        newMenuItem("Settings", "Pause");
         newMenuItem("Settings", "Toggle Debug");
         // Setting Mnemonics
         setMenuMnemonic("Settings", KeyEvent.VK_S);
-        setMenuItemMnemonic("Settings", "Pause", KeyEvent.VK_P);
         setMenuItemMnemonic("Settings", "Toggle Debug", KeyEvent.VK_D);
         // Action Listeners
         addSettingsListeners(menuItems.get("Settings").toArray(JMenuItem[]::new));
@@ -102,17 +102,18 @@ public class GameJMenuBar extends JMenuBar {
                 }
             }
         });
+
+        items[1].addActionListener(e -> {
+            if (e.getActionCommand().equals("Pause")) {
+                if (Game.gameWorld.isRunning()) items[1].setText("Pause");
+                else items[1].setText("Resume");
+                Game.gameView.menuPanel.toggleMenu();
+            }
+        });
     }
 
     private void addSettingsListeners(JMenuItem[] items) {
         items[0].addActionListener(e -> {
-            if (e.getActionCommand().equals("Pause")) {
-                if (Game.gameWorld.isRunning()) items[0].setText("Pause");
-                else items[0].setText("Resume");
-                Game.gameWorld.togglePause();
-            }
-        });
-        items[1].addActionListener(e -> {
             if (e.getActionCommand().equals("Toggle Debug")) {
                 Game.debugOn();
             }

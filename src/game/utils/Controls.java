@@ -35,7 +35,7 @@ public class Controls {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    view.menuPanel.toggleInventory();
+                    view.menuPanel.toggleMenu();
                 }
             }
         });

@@ -51,7 +51,7 @@ public class MobStepListener implements MobStepListenerFrame {
             handleMobMovement(mobPos);
         }
         // animation handling
-        if (nearViewX(mobPos.x, ANIMATION_RADIUS)) {
+        if (nearViewX(mobPos.x, ANIMATION_RADIUS) && gameWorld.isRunning()) {
             animationsListener.step();
         }
     }

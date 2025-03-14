@@ -67,9 +67,11 @@ public class WalkerAnimationStepListener {
     private void setTimer(int delay) {
         timerCount = 1;
         animationTimer = new javax.swing.Timer(delay, e ->{
-            timerCount++;
-            currentHandler.incrementFrame(walker.getDirection());
-            checkTimer();
+            if (gameWorld.isRunning()) { // ensures animation pauses when game pauses
+                timerCount++;
+                currentHandler.incrementFrame(walker.getDirection());
+                checkTimer();
+            }
         });
         animationTimer.setRepeats(true);
         animationTimer.start();

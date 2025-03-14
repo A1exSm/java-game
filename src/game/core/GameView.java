@@ -14,6 +14,7 @@ public class GameView extends UserView {
     // Fields
     private final Image background = new ImageIcon("data/sky.png").getImage();
     public static final Font STATUS_FONT = new Font("Monospaced", Font.PLAIN, 20);
+    public static final Font DISPLAY_FONT = new  Font("Niagara Solid", Font.BOLD, 50);
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
     private boolean gameOver = false;
     private final GameWorld gameWorld;
@@ -29,7 +30,11 @@ public class GameView extends UserView {
         this.gameWorld = gameWorld;
         this.setLayout(null);
         populateButtons();
-        add(menuPanel);
+        for(Component component : this.getComponents()) {
+            if (component instanceof InventoryButton) {
+                this.setComponentZOrder(component, getComponentCount()-1);
+            }
+        }
     }
 
     // Methods
@@ -72,7 +77,7 @@ public class GameView extends UserView {
         }
         if (gameOver) {
             graphics.setColor(Color.RED);
-            graphics.setFont(new  Font("Niagara Solid", Font.BOLD, 50));
+            graphics.setFont(DISPLAY_FONT);
             graphics.drawString("GAME OVER", 520, 250);
             /*
             I used to stop the world here.
