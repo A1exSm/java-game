@@ -35,7 +35,7 @@ public class Controls {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    view.menuPanel.toggleMenu();
+                    view.JMenuPanel.toggleMenu();
                 }
             }
         });
@@ -82,12 +82,11 @@ public class Controls {
                         } else if (keyPressed == KeyEvent.VK_4) {
                             GameWorld.useInventoryItem(3);
                         } else if (keyPressed == KeyEvent.VK_5) {
-                            player.makePlayerGhostly();
+                            Game.pauseMusic();
                         } else if (keyPressed == KeyEvent.VK_6) {
-                            player.makePlayerSolid();
+                            Game.resumeMusic();
                         } else if (keyPressed == KeyEvent.VK_7) {
-                            HealthPotion trial = new HealthPotion(ItemSize.LARGE);
-                            trial.pickUp(GameWorld.playerInventory);
+
                         } else if (keyPressed == KeyEvent.VK_8) {
                             Game.debugOn();
                         } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {

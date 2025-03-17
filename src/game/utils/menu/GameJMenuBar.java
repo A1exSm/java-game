@@ -4,7 +4,6 @@ package game.utils.menu;
 import game.Game;
 import org.jbox2d.common.Vec2;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,12 +93,7 @@ public class GameJMenuBar extends JMenuBar {
         items[0].addActionListener(e -> {
             if (e.getActionCommand().equals("Exit")) {
                 if (Game.gameWorld.isRunning()) {Game.gameWorld.togglePause();}
-                int answer = JOptionPane.showConfirmDialog(Game.gameView, "Are you sure you want to quit?", "Quit", JOptionPane.YES_NO_OPTION);
-                if (answer == JOptionPane.YES_OPTION) {
-                    Game.exit();
-                } else {
-                    Game.gameWorld.togglePause();
-                }
+                if (!Game.exit()) {Game.gameWorld.togglePause();}
             }
         });
 
@@ -107,7 +101,7 @@ public class GameJMenuBar extends JMenuBar {
             if (e.getActionCommand().equals("Pause")) {
                 if (Game.gameWorld.isRunning()) items[1].setText("Pause");
                 else items[1].setText("Resume");
-                Game.gameView.menuPanel.toggleMenu();
+                Game.gameView.JMenuPanel.toggleMenu();
             }
         });
     }

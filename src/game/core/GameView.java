@@ -3,7 +3,7 @@ package game.core;
 import city.cs.engine.UserView;
 import game.Game;
 import game.utils.InventoryButton;
-import game.utils.menu.MenuPanel;
+import game.utils.menu.JMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +18,7 @@ public class GameView extends UserView {
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
     private boolean gameOver = false;
     private final GameWorld gameWorld;
-    public final MenuPanel menuPanel = new MenuPanel(this);
+    public final JMenuPanel JMenuPanel = new JMenuPanel(this);
     private JLabel statusBar = new JLabel(" ");
 //    public JPanel notificationPanel = new JPanel();
     // Constructor

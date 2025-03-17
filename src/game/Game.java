@@ -1,13 +1,15 @@
 package game;
 
 // Imports
-import city.cs.engine.Body;
-import city.cs.engine.EngineerView;
-import city.cs.engine.StepEvent;
-import city.cs.engine.StepListener;
+import city.cs.engine.*;
 import game.core.*;
 import game.utils.Controls;
 import org.jbox2d.common.Vec2;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.*;
+import java.io.IOException;
 
 // Class
 public class Game {
@@ -18,6 +20,8 @@ public class Game {
     private static boolean debugOn;
     private boolean isPaused;
     public static GameTime gameTime;
+    private static GameSound gameMusic;
+    private static double volume = 1.0;
 
     // Constructor
     public Game(Boolean debugOn) {
@@ -31,13 +35,7 @@ public class Game {
         }
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
-//        gameView.setUI(new PanelUI() {
-//            @Override
-//            public void installUI(JComponent c) {
-//                super.installUI(c);
-//                c.add(new PopupMenu().show(, 0,0));
-//            }
-//        });
+        gameMusicInit();
     }
     // Static | Debug Methods
     public static void debugOn() {
@@ -52,9 +50,16 @@ public class Game {
     }
 
     // Static | Exit Method
-    public static void exit() {
-        frame.dispose();
-        System.exit(0);
+    public static boolean exit() {
+        int answer = JOptionPane.showConfirmDialog(Game.gameView, "Are you sure you want to quit?", "Quit", JOptionPane.YES_NO_OPTION);
+        if (answer == JOptionPane.YES_OPTION) {
+            frame.dispose();
+            System.exit(0);
+            return true;
+        }
+        return false;
+
+
     }
 
     // Static | frame dimensions
@@ -95,6 +100,49 @@ public class Game {
             }
         });
     }
+    // Game Music
+    private void gameMusicInit() {
+        try {
+            gameMusic = new GameSound("data/Audio/Music/time_for_adventure.wav", true);
+        } catch (UnsupportedAudioFileException e) {
+            System.out.println("Audio file format not supported: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Error reading the file: " + e.getMessage());
+        } catch (LineUnavailableException e) {
+            System.out.println("Audio line unavailable: " + e.getMessage());
+        }
+    }
+
+    public static void pauseMusic() {
+        if (!gameMusic.isPaused) {
+            gameMusic.pause();
+            gameMusic.isPaused = true;
+        }
+    }
+    public static void resumeMusic() {
+        if (gameMusic.isPaused) {
+            gameMusic.resume();
+            gameMusic.isPaused = false;
+        }
+    }
+
+    public static void setVolume(double volume) {
+        Game.volume = volume;
+        updateVolume();
+    }
+
+    private static void updateVolume() {
+        if (Game.volume <= 0) {
+            pauseMusic();
+        } else {
+            gameMusic.setVolume(Game.volume);
+            resumeMusic(); // since it checks if it is paused anyways no need for repeated logic
+        }
+    }
+
+    public static double getVolume() {
+        return Game.volume;
+    }
 
     public static int[] getScaledDimensions(int width, int height, int maxWidth, int maxHeight) { // This is my tailored version of get scaled instance
         int scaleWidth = maxWidth / width;
@@ -104,6 +152,7 @@ public class Game {
         int newHeight = height * scaleFactor;
         return new int[]{newWidth, newHeight};
     }
+
 
 
 
