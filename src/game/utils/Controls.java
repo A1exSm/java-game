@@ -31,11 +31,23 @@ public class Controls {
     }
     // Methods
     public void setupKey() {
-        Game.gameView.addKeyListener(new KeyAdapter() {
+        view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     view.JMenuPanel.toggleMenu();
+                } else if (e.getKeyCode() == KeyEvent.VK_1) {
+                    GameWorld.useInventoryItem(0);
+                } else if (e.getKeyCode() == KeyEvent.VK_2) {
+                    GameWorld.useInventoryItem(1);
+                } else if (e.getKeyCode() == KeyEvent.VK_3) {
+                    GameWorld.useInventoryItem(2);
+                } else if (e.getKeyCode() == KeyEvent.VK_4) {
+                    GameWorld.useInventoryItem(3);
+                } else if (e.getKeyCode() == KeyEvent.VK_5) {
+                    Game.pauseMusic();
+                } else if (e.getKeyCode() == KeyEvent.VK_6) {
+                    Game.resumeMusic();
                 }
             }
         });
@@ -73,26 +85,8 @@ public class Controls {
                         } else if (keyPressed == KeyEvent.VK_D) {
                             player.startWalking(7);
                             // Hotswap keys (for quick assignment to test things)
-                        } else if (keyPressed == KeyEvent.VK_1) {
-                            GameWorld.useInventoryItem(0);
-                        } else if (keyPressed == KeyEvent.VK_2) {
-                            GameWorld.useInventoryItem(1);
-                        } else if (keyPressed == KeyEvent.VK_3) {
-                            GameWorld.useInventoryItem(2);
-                        } else if (keyPressed == KeyEvent.VK_4) {
-                            GameWorld.useInventoryItem(3);
-                        } else if (keyPressed == KeyEvent.VK_5) {
-                            Game.pauseMusic();
-                        } else if (keyPressed == KeyEvent.VK_6) {
-                            Game.resumeMusic();
-                        } else if (keyPressed == KeyEvent.VK_7) {
-
-                        } else if (keyPressed == KeyEvent.VK_8) {
-                            Game.debugOn();
                         } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
-                            if (isOnSurface() && !player.isGhostly()) {
-                                player.jump(10);
-                            }
+                            player.startJump();
                         }
                     }
                 }
@@ -112,12 +106,4 @@ public class Controls {
         });
     }
 
-    private boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
-        for (Body body : player.getBodiesInContact()) {
-            if (body.getPosition().y < player.getPosition().y-2) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

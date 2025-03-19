@@ -14,7 +14,7 @@ class MenuJSlider extends JSlider {
         parent.add(this);
         JMenuPanel.boundErrorHandler(this, bounds);
         setBackground(new Color(115, 102, 73));
-        setFocusable(true);
+        setFocusable(false);
     }
     // Methods
 }

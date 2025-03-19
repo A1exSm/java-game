@@ -35,7 +35,7 @@ public class Game {
         }
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
-        gameMusicInit();
+        gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", true);
     }
     // Static | Debug Methods
     public static void debugOn() {
@@ -93,7 +93,7 @@ public class Game {
             public void preStep(StepEvent event) {
 //                view.setCentre(new Vec2(player.getPosition().x, player.getPosition().y+10)); // +10 so that the view does not show the void under the ground
                 gameView.setCentre(gameWorld.getPlayer().getPosition());
-                if(gameWorld.getPlayer().destroyed) gameView.gameOver();
+                if(gameWorld.getPlayer().destroyed) {gameView.gameOver();}
             }
             @Override
             public void postStep(StepEvent event) {
@@ -101,17 +101,6 @@ public class Game {
         });
     }
     // Game Music
-    private void gameMusicInit() {
-        try {
-            gameMusic = new GameSound("data/Audio/Music/time_for_adventure.wav", true);
-        } catch (UnsupportedAudioFileException e) {
-            System.out.println("Audio file format not supported: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Error reading the file: " + e.getMessage());
-        } catch (LineUnavailableException e) {
-            System.out.println("Audio line unavailable: " + e.getMessage());
-        }
-    }
 
     public static void pauseMusic() {
         if (!gameMusic.isPaused) {

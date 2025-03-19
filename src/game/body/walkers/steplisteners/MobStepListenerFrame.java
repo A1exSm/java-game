@@ -14,7 +14,7 @@ public interface MobStepListenerFrame extends StepListener {
 
     void handleMobMovement(Vec2 pos);
 
-    boolean isPlayerInRange(Vec2 pos);
+    boolean isPlayerInRange(Vec2 pos, boolean playerBehind);
 
     void patrolArea(Vec2 pos);
 

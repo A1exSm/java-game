@@ -17,6 +17,7 @@ class MenuSliderSurface extends JPanel {
     protected MenuSliderSurface(JComponent parent, int[] bounds) {
         parent.add(this);
         setLayout(null);
+        setFocusable(false);
         JMenuPanel.boundErrorHandler(this, bounds);
         int sliderWidth = (int) (0.75f * bounds[2]);
         int buttonWidth = bounds[2] - sliderWidth;

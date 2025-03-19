@@ -2,6 +2,7 @@ package game.body.walkers;
 // Imports
 
 import city.cs.engine.*;
+import game.core.GameSound;
 import game.core.GameWorld;
 import game.animation.PlayerStepListener;
 import game.body.walkers.mobs.MobWalker;
@@ -30,7 +31,7 @@ public final class PlayerWalker extends WalkerFrame {
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
     public boolean destroyed = false;
-    private int damage = 350;
+    private final int damage = 350;
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
         super(gameWorld, new BoxShape(0.2f,1.6F), new Vec2(0,3), Walkers.PLAYER);
@@ -118,6 +119,7 @@ public final class PlayerWalker extends WalkerFrame {
     }
 
     public void hurtMob() {
+        soundFX.attack1(this);
         ArrayList<MobWalker> temp;
         if (getDirection() == Direction.RIGHT) temp = new ArrayList<>(inRightSensor);
         else temp = new ArrayList<>(inLeftSensor);
@@ -136,6 +138,8 @@ public final class PlayerWalker extends WalkerFrame {
         healthPoints -= damage;
         toggleOnHit();
         if (healthPoints <= 0) {
+            setLinearVelocity(new Vec2(0, 0));
+            stopWalking();
             beginDeath();
         }
     }
@@ -165,5 +169,21 @@ public final class PlayerWalker extends WalkerFrame {
         if (getDirection() == Direction.LEFT) addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f)).flipHorizontal();
         else addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f));
         destroyed = true;
+    }
+    // Methods | Public | Movement @Override
+    public void startJump() {
+        if (isOnSurface() && !isGhostly()) {
+            jump(10);
+            soundFX.jump();
+        }
+    }
+    // Methods | Private | Movement
+    private boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
+        for (Body body : getBodiesInContact()) {
+            if (body.getPosition().y < getPosition().y-2) {
+                return true;
+            }
+        }
+        return false;
     }
 }

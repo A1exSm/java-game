@@ -64,14 +64,17 @@ public class MobStepListener implements MobStepListenerFrame {
     public void handleMobMovement(Vec2 pos) {}
 
     @Override
-    public boolean isPlayerInRange(Vec2 pos) {
-        return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, mob.HALF_Y) && !gameWorld.getPlayer().isDead();
+    public boolean isPlayerInRange(Vec2 pos, boolean playerBehind) {
+        if (playerBehind) {return nearViewX(pos.x, VIEW_RADIUS_X/2) && nearViewY(pos.y, mob.HALF_Y) && !gameWorld.getPlayer().isDead();}
+        else {return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, mob.HALF_Y) && !gameWorld.getPlayer().isDead();}
     }
 
     @Override
     public void patrolArea(Vec2 pos) {
         if (mob.getState() != State.IDLE) {
             mob.setState(State.IDLE);
+            if (mob.getDirection().equals(Direction.RIGHT)) {mob.startWalking(WALK_SPEED);}
+            else {mob.startWalking(-WALK_SPEED);}
         }
         if (mob.getLinearVelocity().x < 1 && mob.getLinearVelocity().y > -1) {
             if (mob.getDirection() == Direction.RIGHT) {

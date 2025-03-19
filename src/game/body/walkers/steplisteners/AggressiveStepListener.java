@@ -18,12 +18,12 @@ public class AggressiveStepListener extends MobStepListener {
     // Methods
     @Override
     public void handleMobMovement(Vec2 pos) {
-        if (isPlayerInRange(pos)) {
+        if (isPlayerInRange(pos, false)) {
             float playerDirectionX = getPlayerDirectionX(pos.x);
             if (playerDirectionX == 0) {
                 mob.stopWalking();
                 mob.attack(gameWorld.getPlayer());
-            } else {
+            } else if (playerDirectionX == -5 || playerDirectionX == 5) {
                 mob.setState(State.RUN);
                 mob.startWalking(playerDirectionX);
             }
@@ -35,6 +35,11 @@ public class AggressiveStepListener extends MobStepListener {
     public int getPlayerDirectionX(float mobX) {
         float PlayerX = gameWorld.getPlayer().getPosition().x;
         boolean isPlayerLeft = PlayerX < mobX;
+        if ((isPlayerLeft && mob.getDirection() != Direction.LEFT ) || (!isPlayerLeft &&  mob.getDirection() != Direction.RIGHT)) {
+            if (!isPlayerInRange(mob.getPosition(), true)) {
+                return -1;
+            }
+        }
         mob.setDirection(isPlayerLeft ? Direction.LEFT : Direction.RIGHT);
         if (isPlayerLeft) {
             float dist = (PlayerX + gameWorld.getPlayer().HALF_X) - (mobX - mob.HALF_X);
