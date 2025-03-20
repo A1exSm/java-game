@@ -28,15 +28,10 @@ public class WormWalker extends MobWalker { // worm does not have additional fix
     }
     // Methods
     @Override
-    public void attack(PlayerWalker player) {
+    public void attack() {
         if (!getCooldown() && !getHit()) {
             toggleActionCoolDown();
             toggleOnAttack();
-//            javax.swing.Timer attackTimer = new javax.swing.Timer(1200, e -> {
-//                shootProjectile();
-//            });
-//            attackTimer.setRepeats(false);
-//            attackTimer.start();
         }
     }
 
@@ -49,5 +44,6 @@ public class WormWalker extends MobWalker { // worm does not have additional fix
         }
         spawnLocation.y += (HALF_Y - 0.5f);
         new Projectile(this, getDirection(), 60 ,spawnLocation);
+        soundFX.attack1();
     }
 }

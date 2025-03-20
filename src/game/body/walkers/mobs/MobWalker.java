@@ -1,5 +1,6 @@
 package game.body.walkers.mobs;
 // Imports
+import game.Game;
 import game.body.items.HealthPotion;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.steplisteners.AggressiveStepListener;
@@ -124,11 +125,16 @@ public class MobWalker extends WalkerFrame {
     }
 
 
-    public void attack(PlayerWalker player) {
+    public void attack() {
         if (!getCooldown() && !getHit()) {
             toggleActionCoolDown();
             toggleOnAttack();
-            player.takeDamage(125, this);
+        }
+    }
+
+    public void damagePlayer() {
+        if (getAttacking()) {
+            Game.gameWorld.getPlayer().takeDamage(125, this);
         }
     }
 

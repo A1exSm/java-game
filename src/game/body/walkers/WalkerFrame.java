@@ -1,18 +1,22 @@
 package game.body.walkers;
 // Imports
 import city.cs.engine.*;
-import game.core.GameSound;
 import game.core.GameWorld;
 import game.enums.Direction;
 import game.enums.State;
 import game.enums.Walkers;
 import game.utils.sound.SoundFX;
 import org.jbox2d.common.Vec2;
-
 import java.util.ArrayList;
-
+/**
+ * An Abstract class used for all walkers in the game.
+ * The WalkerFrame class is a class which extends the {@link Walker} class and is used to create the base for all walkers in the game.
+ * All Walkers in the game will extend this class and will have the same basic functionality at their core, such as the ability to attack, take damage, die, etc.
+ * This class is abstract and cannot be instantiated as it is only used as a base class for all walkers in the game.
+ * @see game.body.walkers.mobs.MobWalker, game.body.walkers.PlayerWalker
+*/
 // Class
-public class WalkerFrame extends Walker {
+public abstract class WalkerFrame extends Walker {
     // Fields
     public final float ORIGIN_X;
     public final float ORIGIN_Y;
@@ -44,6 +48,7 @@ public class WalkerFrame extends Walker {
         soundFX = new SoundFX(walkerType);
     }
     // Methods
+
     public void constructSolidFixture(Shape shape) {
         if (!solidFixtures.contains(shape)) {
             solidFixtures.add(shape);
@@ -65,6 +70,7 @@ public class WalkerFrame extends Walker {
     }
 
     public void toggleOffAttack() {
+        soundFX.stopFX(State.ATTACK1);
         attacking = false;
         state = State.IDLE;
     }
@@ -102,6 +108,9 @@ public class WalkerFrame extends Walker {
 
     // Destruction Functions
     public void die() {
+        for (State state : State.values()) {
+            soundFX.stopFX(state);
+        }
         destroy();
     }
 

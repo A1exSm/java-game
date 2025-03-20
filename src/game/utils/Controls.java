@@ -44,10 +44,6 @@ public class Controls {
                     GameWorld.useInventoryItem(2);
                 } else if (e.getKeyCode() == KeyEvent.VK_4) {
                     GameWorld.useInventoryItem(3);
-                } else if (e.getKeyCode() == KeyEvent.VK_5) {
-                    Game.pauseMusic();
-                } else if (e.getKeyCode() == KeyEvent.VK_6) {
-                    Game.resumeMusic();
                 }
             }
         });
@@ -86,7 +82,7 @@ public class Controls {
                             player.startWalking(7);
                             // Hotswap keys (for quick assignment to test things)
                         } else if (keyPressed == KeyEvent.VK_SPACE || keyPressed == KeyEvent.VK_W) {
-                            player.startJump();
+                            player.jump(0);
                         }
                     }
                 }

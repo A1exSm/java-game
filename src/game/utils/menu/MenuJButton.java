@@ -1,13 +1,17 @@
 package game.utils.menu;
 // Imports
 
+import game.core.GameSound;
 import game.core.GameView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 // Class
 class MenuJButton extends JButton {
+    // Fields
+    private static final GameSound buttonSound = GameSound.createSound("data/Audio/UI/confirm_style_2_001.wav", 1000);
     // Constructor
     protected MenuJButton(JPanel parent, String text, int[] bounds, boolean addChangeListener) {
         super(text);
@@ -22,6 +26,9 @@ class MenuJButton extends JButton {
                     setBackground(new Color(115, 102, 73));
                     setForeground(Color.WHITE);
 
+                }
+                if (getModel().isPressed()) {
+                    buttonSound.play();
                 }
             });
         }

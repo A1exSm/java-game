@@ -4,6 +4,7 @@ package game.animation;
 import game.core.GameWorld;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.State;
+import game.enums.Walkers;
 
 import java.util.HashMap;
 
@@ -41,7 +42,12 @@ public class WalkerAnimationStepListener {
         if (currentHandler == null || currentHandler != animations.get(state)) {
             currentHandler = animations.get(state);
             currentHandler.resetFrame();
-            if (currentHandler == animations.get(ATTACK1)) invokeAttackTimer();
+            if (currentHandler == animations.get(ATTACK1)) {
+                invokeAttackTimer();
+                if (walker.getWalkerType() != Walkers.WORM) {
+                    walker.soundFX.attack1();
+                }
+            }
             else if (currentHandler == animations.get(DEATH)) {invokeDeathTimer();}
             else toggleTimer();
         }
@@ -57,8 +63,8 @@ public class WalkerAnimationStepListener {
 
     private void checkTimer() {
         if (timerCount == currentHandler.getNumFrames()) {
-            if (currentHandler == animations.get(ATTACK1)) walker.toggleOffAttack();
-            if (currentHandler == animations.get(DEATH)) walker.die();
+            if (currentHandler == animations.get(ATTACK1)) {walker.toggleOffAttack();}
+            if (currentHandler == animations.get(DEATH)) {walker.die();}
             timerCount = 1;
             animationTimer.restart();
         }

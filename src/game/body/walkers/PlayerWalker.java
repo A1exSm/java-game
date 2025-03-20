@@ -2,7 +2,6 @@ package game.body.walkers;
 // Imports
 
 import city.cs.engine.*;
-import game.core.GameSound;
 import game.core.GameWorld;
 import game.animation.PlayerStepListener;
 import game.body.walkers.mobs.MobWalker;
@@ -171,14 +170,25 @@ public final class PlayerWalker extends WalkerFrame {
         destroyed = true;
     }
     // Methods | Public | Movement @Override
-    public void startJump() {
+    @Override
+    public void jump(float speed) {
         if (isOnSurface() && !isGhostly()) {
-            jump(10);
+            super.jump(10);
             soundFX.jump();
         }
     }
+    @Override
+    public void startWalking(float speed) {
+        super.startWalking(speed);
+        soundFX.run();
+    }
+    @Override
+    public void stopWalking() {
+        super.stopWalking();
+        soundFX.stopFX(State.RUN);
+    }
     // Methods | Private | Movement
-    private boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
+    public boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
         for (Body body : getBodiesInContact()) {
             if (body.getPosition().y < getPosition().y-2) {
                 return true;

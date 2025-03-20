@@ -20,8 +20,7 @@ public class Game {
     private static boolean debugOn;
     private boolean isPaused;
     public static GameTime gameTime;
-    private static GameSound gameMusic;
-    private static double volume = 1.0;
+    private static final GameSound gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", true);
 
     // Constructor
     public Game(Boolean debugOn) {
@@ -35,7 +34,6 @@ public class Game {
         }
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
-        gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", true);
     }
     // Static | Debug Methods
     public static void debugOn() {
@@ -60,6 +58,10 @@ public class Game {
         return false;
 
 
+    }
+    // Public | Music
+    public static GameSound getGameMusic() {
+        return gameMusic;
     }
 
     // Static | frame dimensions
@@ -99,38 +101,6 @@ public class Game {
             public void postStep(StepEvent event) {
             }
         });
-    }
-    // Game Music
-
-    public static void pauseMusic() {
-        if (!gameMusic.isPaused) {
-            gameMusic.pause();
-            gameMusic.isPaused = true;
-        }
-    }
-    public static void resumeMusic() {
-        if (gameMusic.isPaused) {
-            gameMusic.resume();
-            gameMusic.isPaused = false;
-        }
-    }
-
-    public static void setVolume(double volume) {
-        Game.volume = volume;
-        updateVolume();
-    }
-
-    private static void updateVolume() {
-        if (Game.volume <= 0) {
-            pauseMusic();
-        } else {
-            gameMusic.setVolume(Game.volume);
-            resumeMusic(); // since it checks if it is paused anyways no need for repeated logic
-        }
-    }
-
-    public static double getVolume() {
-        return Game.volume;
     }
 
     public static int[] getScaledDimensions(int width, int height, int maxWidth, int maxHeight) { // This is my tailored version of get scaled instance

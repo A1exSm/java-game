@@ -2,6 +2,7 @@ package game.utils.menu;
 // Imports
 
 import game.Game;
+import game.core.GameSound;
 import game.core.GameView;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -17,6 +18,7 @@ public class JMenuPanel extends JPanel {
     private boolean open = false;
     private Timer timer;
     JLabel backGround = new JLabel();
+    private final GameSound openSound = GameSound.createSound("data/Audio/UI/open.wav", 667);
 
     static {
         X = (1200-WIDTH)/2;
@@ -43,7 +45,8 @@ public class JMenuPanel extends JPanel {
   private void addButtons() {
         MenuJButton cont = new MenuJButton(this,"Continue", new int[] {81, 50, 156, 62}, true);
         MenuJButton quit = new MenuJButton(this,"Quit", new int[] {81, 144, 156, 62}, true);
-        MenuSliderSurface slider = new MenuSliderSurface(this, new int[] {302, 50, 313, 62});
+        MenuSliderSurface gameMusicSlider = new MenuSliderSurface(this, new int[] {302, 50, 313, 62}, Game.getGameMusic(), null);
+        MenuSliderSurface gameSoundSlider = new MenuSliderSurface(this, new int[] {302, 144, 313, 62}, null, "Mobs");
         cont.addActionListener(e -> toggleMenu());
         quit.addActionListener(e -> Game.exit());
   }
@@ -65,6 +68,7 @@ public class JMenuPanel extends JPanel {
 
     public void toggleMenu() {
         if (!timer.isRunning()) { // means it cant be spammed
+            openSound.play();
             if (!open) {
                 open = true;
                 backGround.setVisible(true);
@@ -89,10 +93,12 @@ public class JMenuPanel extends JPanel {
             if (open) {
                 backGround.setIcon(new ImageIcon("data/Display_assets/GUI/Appearance/open.png"));
                 addButtons();
+                openSound.stop();
                 setVisible(true);
             } else {
                 backGround.setVisible(false);
                 backGround.setIcon(new ImageIcon());
+                openSound.stop();
                 Game.gameWorld.togglePause();
             }
         });
