@@ -4,7 +4,7 @@ import city.cs.engine.UserView;
 import game.Game;
 import game.utils.InventoryButton;
 import game.utils.menu.JMenuPanel;
-
+import org.jbox2d.common.Vec2;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,15 +12,17 @@ import java.util.ArrayList;
 // Class
 public class GameView extends UserView {
     // Fields
-    private final Image background = new ImageIcon("data/sky.png").getImage();
+    private final Image sky = new ImageIcon("data/Magic_Cliffs/PNG/sky2.png").getImage();
+    private final Image sea = new ImageIcon("data/Magic_Cliffs/PNG/sea3.png").getImage();
+    private final Image clouds = new ImageIcon("data/Magic_Cliffs/PNG/clouds.png").getImage();
+    private int cloudsOffset = 0;
     public static final Font STATUS_FONT = new Font("Monospaced", Font.PLAIN, 20);
     public static final Font DISPLAY_FONT = new  Font("Niagara Solid", Font.BOLD, 50);
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
     private boolean gameOver = false;
     private final GameWorld gameWorld;
     public final JMenuPanel JMenuPanel = new JMenuPanel(this);
-    private JLabel statusBar = new JLabel(" ");
-//    public JPanel notificationPanel = new JPanel();
+    private boolean drawReactiveClouds = false;
     // Constructor
     public GameView(GameWorld gameWorld, int width, int height) {
         super(gameWorld, width, height);
@@ -37,10 +39,58 @@ public class GameView extends UserView {
         }
     }
 
-    // Methods
+    // Methods | Background | @Override
     @Override
     protected void paintBackground(Graphics2D g) {
-        g.drawImage(background, 0, 0, this);
+        // vars
+        Vec2 playerPos = Game.gameWorld.getPlayer().getPosition();
+        int playerX = (int) worldToView(playerPos).getX();
+        int yPos = (int) worldToView(new Vec2(0, 0)).getY();
+        int xPos = (int) worldToView(new Vec2(0, 0)).getX() - 1053;
+        // method calls
+        drawSky(g, yPos);
+        if (drawReactiveClouds) {
+            drawReactiveClouds(g, playerX, xPos, yPos);
+        } else {
+            drawClouds(g, playerX, xPos, yPos);
+        }
+        drawSea(g, yPos);
+    }
+    // Methods | Background | Private
+    private void drawSky(Graphics2D graphics, int yPos) {
+        int SKY_HEIGHT = 1080;
+        int SKY_WIDTH = 112;
+        for (int i = -SKY_WIDTH; i < 1200; i+= SKY_WIDTH) {
+            graphics.drawImage(sky, i, yPos - SKY_HEIGHT, this);
+        }
+    }
+
+    private void drawReactiveClouds(Graphics2D graphics, int playerX, int xPos, int yPos) {
+        if (playerX > xPos + cloudsOffset + 1053) {
+            cloudsOffset += 1053;
+            System.out.println("offset increased");
+        } else if (playerX < xPos + cloudsOffset - 1053) {
+            cloudsOffset -= 1053;
+            System.out.println("offset decreased");
+        }
+        for (int i = xPos - 2106 + cloudsOffset; i < xPos + 2106 + cloudsOffset; i+= 544) {
+            graphics.drawImage(clouds, i, yPos - clouds.getHeight(this), this);
+        }
+    }
+
+    private void drawClouds(Graphics2D graphics, int playerX, int xPos, int yPos) {
+        for (int i = xPos-5000; i < xPos + 5000; i+= 544)  {
+            if (i < playerX + 2106 && i > playerX - 2106) {
+                graphics.drawImage(clouds, i, yPos - clouds.getHeight(this), this);
+            }
+        }
+    }
+
+    private void drawSea(Graphics2D graphics, int yPos) {
+        int seaWidth = 112;
+        for (int i = -seaWidth; i < 1200; i+= seaWidth) {
+            graphics.drawImage(sea, i, yPos, this);
+        }
     }
 
     @Override
@@ -208,9 +258,12 @@ public class GameView extends UserView {
         }
     }
 
-
-
     public void gameOver() {
         gameOver = true;
+    }
+
+    // Methods | Public | Toggle
+    public void toggleReactiveClouds(boolean value) {
+        drawReactiveClouds = value;
     }
 }
