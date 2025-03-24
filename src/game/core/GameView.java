@@ -10,8 +10,13 @@ import java.awt.*;
 import java.util.ArrayList;
 
 // Class
+/**
+ * The `GameView` class extends {@link UserView} and provides custom rendering for the game.
+ * It handles the background, foreground, and various UI elements such as the health bar and inventory.
+ */
 public class GameView extends UserView {
     // Fields
+    private static final ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
     private final Image sky = new ImageIcon("data/Magic_Cliffs/PNG/sky2.png").getImage();
     private final Image sea = new ImageIcon("data/Magic_Cliffs/PNG/sea3.png").getImage();
     private final Image clouds = new ImageIcon("data/Magic_Cliffs/PNG/clouds.png").getImage();
@@ -21,25 +26,46 @@ public class GameView extends UserView {
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
     private boolean gameOver = false;
     private final GameWorld gameWorld;
-    public final JMenuPanel JMenuPanel = new JMenuPanel(this);
+    public final JMenuPanel jMenuPanel = new JMenuPanel(this);
     private boolean drawReactiveClouds = false;
+
+    static {
+        slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
+        slotLocations.add(new int[]{ 802, 538, 395, 90}); //        slotLocations.add(new int[]{x + 2, y + 35, width-10, height-10});
+        slotLocations.add(new int[]{ 810, 543, 80, 80}); //       slotLocations.add(new int[]{10 + x, y + 40, (width-20)/5, height-20});
+        slotLocations.add(new int[]{ 894, 543, 80, 80}); //        slotLocations.add(new int[]{13 + x + (width+5)/5, y+40, (width-20)/5, height-20});
+        slotLocations.add(new int[]{ 978, 543, 80, 80}); //        slotLocations.add(new int[]{16 + x + ((width+5)/5)*2, y+40, (width-20)/5, height-20});
+        slotLocations.add(new int[]{ 1062, 543, 80, 80}); //        slotLocations.add(new int[]{19 + x + ((width+5)/5)*3, y+40, (width-20)/5, height-20});
+    }
     // Constructor
+    /**
+     * Constructs a `GameView` with the specified game world, width, and height.
+     *
+     * @param gameWorld the game world to be displayed
+     * @param width the width of the view
+     * @param height the height of the view
+     */
     public GameView(GameWorld gameWorld, int width, int height) {
         super(gameWorld, width, height);
         requestFocus();
         setFocusable(true);
         Game.gameTime = new GameTime();
         this.gameWorld = gameWorld;
-        this.setLayout(null);
+        this.setLayout(null); // dont want a layout manager
         populateButtons();
         for(Component component : this.getComponents()) {
             if (component instanceof InventoryButton) {
-                this.setComponentZOrder(component, getComponentCount()-1);
+                this.setComponentZOrder(component, getComponentCount()-1); // manually correcting z-order after all components are added during init
             }
         }
     }
 
     // Methods | Background | @Override
+    /**
+     * Paints the background of the game view.
+     *
+     * @param g the graphics context
+     */
     @Override
     protected void paintBackground(Graphics2D g) {
         // vars
@@ -57,6 +83,12 @@ public class GameView extends UserView {
         drawSea(g, yPos);
     }
     // Methods | Background | Private
+    /**
+     * Draws the sky background.
+     *
+     * @param graphics the graphics context
+     * @param yPos the y position to start drawing
+     */
     private void drawSky(Graphics2D graphics, int yPos) {
         int SKY_HEIGHT = 1080;
         int SKY_WIDTH = 112;
@@ -64,7 +96,16 @@ public class GameView extends UserView {
             graphics.drawImage(sky, i, yPos - SKY_HEIGHT, this);
         }
     }
-
+    /**
+     * Draws reactive clouds based on the player's position.
+     * The clouds will appear to be in the gameWorld, despite being drawn in the view.
+     * Clouds are drawn using a parallax effect with the sky.
+     *
+     * @param graphics the graphics context
+     * @param playerX the x position of the player
+     * @param xPos the x position to start drawing
+     * @param yPos the y position to start drawing
+     */
     private void drawReactiveClouds(Graphics2D graphics, int playerX, int xPos, int yPos) {
         if (playerX > xPos + cloudsOffset + 1053) {
             cloudsOffset += 1053;
@@ -77,7 +118,16 @@ public class GameView extends UserView {
             graphics.drawImage(clouds, i, yPos - clouds.getHeight(this), this);
         }
     }
-
+    /**
+     * Draws clouds only within a distance of the player.
+     * These clouds also use a parallax effect with the sky.
+     * The clouds will appear to be in the gameWorld, despite being drawn in the view.
+     *
+     * @param graphics the graphics context
+     * @param playerX the x position of the player
+     * @param xPos the x position to start drawing
+     * @param yPos the y position to start drawing
+     */
     private void drawClouds(Graphics2D graphics, int playerX, int xPos, int yPos) {
         for (int i = xPos-5000; i < xPos + 5000; i+= 544)  {
             if (i < playerX + 2106 && i > playerX - 2106) {
@@ -85,42 +135,69 @@ public class GameView extends UserView {
             }
         }
     }
-
+    /**
+     * Draws the sea background.
+     *
+     * @param graphics the graphics context
+     * @param yPos the y position to start drawing
+     */
     private void drawSea(Graphics2D graphics, int yPos) {
         int seaWidth = 112;
         for (int i = -seaWidth; i < 1200; i+= seaWidth) {
             graphics.drawImage(sea, i, yPos, this);
         }
     }
-
+    /**
+     * Paints the foreground of the game view.
+     *
+     * @param g the graphics context
+     */
     @Override
     protected void paintForeground(Graphics2D g) {
         drawGameTime(g);
         checkForGameOver(g);
         drawHealthBar(g);
-        inventoryTest(g);
+        drawInventory(g);
         checkPlayerStatus(g);
     }
-
+    /**
+     * Checks the player's status.
+     * If the player is hit or dead, a vignette effect is applied.
+     *
+     * @param g the graphics context
+     */
     private void checkPlayerStatus(Graphics2D g) {
         if (gameWorld.getPlayer().getHit() || gameWorld.getPlayer().isDead()) {
             hurt(g);
         }
     }
-
+    /**
+     * Populates the inventory buttons.
+     */
     private void populateButtons() {
         for (int i = 0; i < 4; i++) {
             inventoryButtons.add(new InventoryButton(this, i));
         }
     }
+    /**
+     * Pauses the interface by disabling interaction with inventory buttons using consumers.
+     */
     public void pauseInterface() {
         inventoryButtons.forEach(InventoryButton::disableInteract);
     }
-
+    /**
+     * Resumes the interface by enabling interaction with inventory buttons using consumers.
+     */
     public void resumeInterface() {
         inventoryButtons.forEach(InventoryButton::enableInteract);
     }
-
+    /**
+     * Checks if Player.isDead and if gameOver is true.<br>
+     * If the player is dead, the interface is paused, preventing item use.<br>
+     * If the game is over, a message is displayed.
+     *
+     * @param graphics the graphics context
+     */
     private void checkForGameOver(Graphics2D graphics) {
         if (gameWorld.getPlayer().isDead()) {
             pauseInterface();
@@ -136,7 +213,11 @@ public class GameView extends UserView {
             */
         }
     }
-
+    /**
+     * Applies a visual effect (vignette) to indicate the player is hurt.
+     *
+     * @param graphics the graphics context
+     */
     private void hurt(Graphics2D graphics) {
         Point centerOfScreen = new Point(getWidth() / 2, getHeight() / 2);
         float r = getWidth() / 2.0f; // radius of the gradient
@@ -146,7 +227,11 @@ public class GameView extends UserView {
         graphics.setPaint(vignette);
         graphics.fillRect(0, 0, getWidth(), getHeight());
     }
-
+    /**
+     * Draws the game time on the screen.
+     *
+     * @param graphics the graphics context
+     */
     private void drawGameTime(Graphics2D graphics) {
         graphics.setFont(STATUS_FONT);
         if (Game.gameTime.getTime() == 0) {
@@ -157,11 +242,15 @@ public class GameView extends UserView {
             graphics.drawString(String.format("Timer: %02d" + ":%02d", Game.gameTime.getTimeMinutes(), Game.gameTime.getTimeSeconds()), 5, 20);
         }
     }
-
+    /**
+     * Draws the health bar on the screen.
+     *
+     * @param graphics the graphics context
+     */
     private void drawHealthBar(Graphics2D graphics) {
         // Health bar dimensions and position
         int xPos = (int)Game.getFrameDimensions().x - 490;
-        int healthBarWidth = 480;
+        int healthBarWidth = 490;
         int healthBarHeight = 35;
         int borderThickness = 3;
         // Calculate health percentage
@@ -178,21 +267,23 @@ public class GameView extends UserView {
         graphics.drawImage(new ImageIcon("data/Display_assets/health_bar/tile000.png").getImage(), xPos, 10, healthBarWidth, healthBarHeight, this);
 
     }
-
-    private void inventoryTest(Graphics2D graphics) {
+    /**
+     * Draws the inventory on the screen.
+     *
+     * @param graphics the graphics context
+     */
+    private void drawInventory(Graphics2D graphics) {
         Color temp = graphics.getColor();
-        ArrayList<int[]> slotLocations = getSlotLocations();
-        boolean[] slotRaisedList = getSlotRaisedList();
         ArrayList<String> path = GameWorld.playerInventory.getInventoryPath(2); // since there are -2 slots in slotLocations
         for (int i = 0; i < slotLocations.size(); i++) {
             if (i == 0) {
                 graphics.setColor(new Color(109, 93, 45));
             } else if (i == 1) {
                 graphics.setColor(new Color(138, 115, 53));
-                graphics.fill3DRect(slotLocations.get(i)[0], slotLocations.get(i)[1], slotLocations.get(i)[2], slotLocations.get(i)[3], slotRaisedList[i]);
+                graphics.fill3DRect(slotLocations.get(i)[0], slotLocations.get(i)[1], slotLocations.get(i)[2], slotLocations.get(i)[3], true);
                 graphics.setColor(new Color(94, 43, 48));
             } else {
-                graphics.fill3DRect(slotLocations.get(i)[0], slotLocations.get(i)[1], slotLocations.get(i)[2], slotLocations.get(i)[3], slotRaisedList[i]);
+                graphics.fill3DRect(slotLocations.get(i)[0], slotLocations.get(i)[1], slotLocations.get(i)[2], slotLocations.get(i)[3], false);
                 if (path.get(i) != null) {
                     ImageIcon icon = new ImageIcon(path.get(i));
                     int[] scaledDimensions = Game.getScaledDimensions(icon.getIconWidth(), icon.getIconHeight(), slotLocations.get(i)[2]-20, slotLocations.get(i)[3]-20);
@@ -205,25 +296,12 @@ public class GameView extends UserView {
         }
         graphics.setColor(temp);
     }
-
-
-
-    private ArrayList<int[]> getSlotLocations() {
-        ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
-        slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
-        slotLocations.add(new int[]{ 802, 538, 395, 90}); //        slotLocations.add(new int[]{x + 2, y + 35, width-10, height-10});
-        slotLocations.add(new int[]{ 810, 543, 80, 80}); //       slotLocations.add(new int[]{10 + x, y + 40, (width-20)/5, height-20});
-        slotLocations.add(new int[]{ 894, 543, 80, 80}); //        slotLocations.add(new int[]{13 + x + (width+5)/5, y+40, (width-20)/5, height-20});
-        slotLocations.add(new int[]{ 978, 543, 80, 80}); //        slotLocations.add(new int[]{16 + x + ((width+5)/5)*2, y+40, (width-20)/5, height-20});
-        slotLocations.add(new int[]{ 1062, 543, 80, 80}); //        slotLocations.add(new int[]{19 + x + ((width+5)/5)*3, y+40, (width-20)/5, height-20});
-        return slotLocations;
-    }
-
-    private boolean[] getSlotRaisedList() {
-        return new boolean[]{true,true,false,false,false,false};
-    }
-
-
+    /**
+     * Gets the colour based on the health percentage.
+     *
+     * @param healthPercentage the health percentage
+     * @return the colour as a string
+     */
     private String getColour(double healthPercentage) {
         if (healthPercentage <= 0.3) {
             return "RED";
@@ -233,7 +311,13 @@ public class GameView extends UserView {
             return "GREEN";
         }
     }
-
+    /**
+     * Gets the RGB values for the specified colour and bar number.
+     *
+     * @param colour the colour as a string
+     * @param barNum the bar number
+     * @return the colour as a Colour object
+     */
     private Color getRGBValues(String colour, int barNum) {
         if (barNum == 1) {
             switch (colour) {
@@ -257,12 +341,19 @@ public class GameView extends UserView {
             }
         }
     }
-
+    /**
+     * Sets the game over state to true.
+     */
     public void gameOver() {
         gameOver = true;
     }
 
     // Methods | Public | Toggle
+    /**
+     * Toggles the reactive clouds feature.
+     *
+     * @param value true to enable reactive clouds, false to disable
+     */
     public void toggleReactiveClouds(boolean value) {
         drawReactiveClouds = value;
     }

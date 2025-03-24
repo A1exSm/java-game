@@ -2,60 +2,123 @@ package game.core;
 // Imports
 
 import city.cs.engine.SoundClip;
-import game.Game;
+import game.enums.SoundGroups;
 import javax.swing.Timer;
-
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
-import java.util.ArrayList;
 
 // Class
+
+/**
+ * A class that extending SoundClip and is used to handle the game sounds. <br>
+ * Has additional features such as volume control, global volume control, and delayed playing.
+ */
 public class GameSound extends SoundClip {
     // Fields
-    private static ArrayList<GameSound> sounds = new ArrayList<>();
+    /**
+     * A static double field used to hold the global volume of the game sounds.<br>
+     * Allows for the global volume to be set in {@link #setGlobal(double)}.
+     * @see #setGlobal(double)
+     */
     private static double globalVolume = 0.10;
+
+    /**
+     * A double field used to hold the local volume of the sound.<br>
+     * Allows for individual volume to be set using {@link #setVolume(double)}.
+     * @see #setVolume(double)
+     */
     private double localVolume;
-    public boolean isPaused = false;
+
+
+    /**
+     * A boolean field used to hold the state of sound playing.<br>
+     * Allows for the sound to be toggled between playing and stopped using {@link #play()} and {@link #stop()}.
+     * @see #play()
+     * @see #stop()
+     */
     private boolean isPlaying = false;
+
+    /**
+     * A String field used to holding the local path to the sound file from the root directory.<br>
+     */
     private String path;
-    private final boolean loops;
+
+    /**
+     * A Timer field used to hold the elapsed time of the sound playing.<br>
+     * Allows for the sound to be stopped after a certain duration using {@link #stop()}.
+     * {@link Timer#start()} is called in {@link #play()}.
+     * {@link Timer#stop()} is called in {@link #stop()}.
+     * @see Timer
+     */
     private final Timer elapsedTimer;
     // Constructor
-    private GameSound(String path, boolean loops) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+    /**
+     * Constructor for looping sounds.
+     * @param path Path to the sound file.
+     * @param loops Whether the sound should loop.
+     * @param group The sound group to add the sound to.
+     * @throws UnsupportedAudioFileException If the audio file format is not supported.
+     * @throws LineUnavailableException If the audio line is unavailable.
+     * @throws IOException If an I/O error occurs.
+     */
+    private GameSound(String path, SoundGroups group, boolean loops) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         super(path);
-        this.loops = loops;
         if (loops) {
             loop();
             isPlaying = true;
         }
         elapsedTimer = null;
-        setup(path);
+        setup(path, group);
     }
-    private GameSound(String path, int duration) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
+
+    /**
+     * Constructor for sounds with a specific duration.
+     * @param path Path to the sound file.
+     * @param duration Duration of the sound in milliseconds.
+     * @param group The sound group to add the sound to.
+     * @throws UnsupportedAudioFileException If the audio file format is not supported.
+     * @throws LineUnavailableException If the audio line is unavailable.
+     * @throws IOException If an I/O error occurs.
+     */
+    private GameSound(String path, SoundGroups group, int duration) throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         super(path);
-        this.loops = false;
         elapsedTimer = new Timer(duration, e -> {
             stop();
             isPlaying = false;
         });
         elapsedTimer.setRepeats(false);
-        setup(path);
+        setup(path, group);
     }
     // Methods | Private | Setup
-    private void setup(String path) {
+    /**
+     * Sets up the sound instance.
+     * @param path Path to the sound file.
+     * @param group used to call {@link SoundGroups#addSound(GameSound)}.
+     */
+    private void setup(String path, SoundGroups group) {
         this.path = path;
-        sounds.add(this);
+        group.addSound(this);
         setVolume(GameSound.getGlobalVolume());
     }
+
     // Methods | Static | Private
-    private static GameSound errorHandle(String path, boolean loops, int duration, boolean switcher) {
+    /**
+     * Handles errors during sound creation.
+     * @param path Path to the sound file.
+     * @param group The sound group to add the sound to.
+     * @param loops Whether the sound should loop.
+     * @param duration Duration of the sound in milliseconds.
+     * @param switcher Switch to determine which constructor to use.
+     * @return A new GameSound instance or null if an error occurs.
+     */
+    private static GameSound errorHandle(String path, SoundGroups group, boolean loops, int duration, boolean switcher) {
         GameSound sound;
         try {
             if (switcher) {
-                sound = new GameSound(path, loops);
+                sound = new GameSound(path, group, loops);
             } else {
-                sound = new GameSound(path, duration);
+                sound = new GameSound(path, group, duration);
             }
         } catch (UnsupportedAudioFileException e) {
             System.err.println("Audio file format not supported: " + e.getMessage());
@@ -71,14 +134,31 @@ public class GameSound extends SoundClip {
     }
 
     // Methods | Static | Public
-    public static GameSound createSound(String path, boolean loops) {
-        return errorHandle(path, loops, -1, true);
+    /**
+     * Creates a new looping sound.
+     * @param path Path to the sound file.
+     * @param group The sound group to add the sound to.
+     * @return A new GameSound instance.
+     */
+    public static GameSound createSound(String path, SoundGroups group, boolean loops) {
+        return errorHandle(path, group, loops, -1, true);
+    }
+    /**
+     * Creates a new sound with a specific duration.
+     * @param path Path to the sound file.
+     * @param group The sound group to add the sound to.
+     * @param duration Duration of the sound in milliseconds.
+     * @return A new GameSound instance.
+     */
+    public static GameSound createSound(String path, SoundGroups group, int duration) {
+        return errorHandle(path, group, false, duration, false);
     }
 
-    public static GameSound createSound(String path, int duration) {
-        return errorHandle(path, false, duration, false);
-    }
-
+    /**
+     * Plays a sound after a specified delay.
+     * @param sound The GameSound instance to play.
+     * @param delayMs Delay in milliseconds before playing the sound.
+     */
     public static void playOnDelay(GameSound sound, int delayMs) {
         javax.swing.Timer timer = new javax.swing.Timer(delayMs, e ->{
             sound.play();
@@ -87,6 +167,9 @@ public class GameSound extends SoundClip {
         timer.start();
     }
     // Methods | Public | @Override
+    /**
+     * Plays the sound if it is not already playing.
+     */
     @Override
     public void play() {
         if (isPlaying) {
@@ -97,6 +180,10 @@ public class GameSound extends SoundClip {
         elapsedTimer.start();
         isPlaying = true;
     }
+
+    /**
+     * Stops the sound if it is playing.
+     */
     @Override
     public void stop() {
         if (isPlaying) {
@@ -107,22 +194,13 @@ public class GameSound extends SoundClip {
             isPlaying = false;
         }
     }
-    @Override
-    public void pause() {
-        if(!isPaused) {
-            super.pause();
-            isPaused = true;
-        }
-    }
 
-    @Override
-    public void resume() {
-        if (isPaused) {
-            super.resume();
-            isPaused = false;
-        }
-    }
-
+    /**
+     * Sets the volume of the sound.<br>
+     * If the volume is set to 0, which triggers an IllegalArgumentException, the volume is set to 0.0001.<br>
+     * There is nothing to catch an IllegalArgumentException of a volume set too high, as the volume is restricted by the volume slider in {@link game.utils.menu.JMenuPanel}.
+     * @param volume (double) The volume level to set.
+     */
     @Override
     public void setVolume(double volume) {
         localVolume = volume;
@@ -133,20 +211,39 @@ public class GameSound extends SoundClip {
         }
     }
     // Methods | Static | Public | Setters
+    /**
+     * Sets the global volume for all sounds.
+     * @param volume The global volume level to set.
+     */
     public static void setGlobal(double volume) {
         globalVolume = volume;
-        for (GameSound sound : sounds) {
-            sound.setVolume(volume);
+        for (SoundGroups group : SoundGroups.values()) {
+            for (GameSound sound : group.getSounds()) {
+                sound.setVolume(volume);
+            }
         }
     }
     // Methods | Public | Getters
+    /**
+     * Returns true if the sound is currently playing.
+     * @return true if the sound is playing, false otherwise.
+     */
     public boolean isPlaying() {
         return isPlaying;
     }
+
+    /**
+     * Gets the global volume level.
+     * @return (double) The global volume level.
+     */
     public static double getGlobalVolume() {
         return globalVolume;
     }
 
+    /**
+     * Gets the local volume level of this sound instance.
+     * @return (double) The local volume level.
+     */
     public double getVolume() {
         return localVolume;
     }

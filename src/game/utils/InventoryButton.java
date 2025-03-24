@@ -13,6 +13,10 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 // Class
+/**
+ * The InventoryButton class represents a button in the game's inventory UI.
+ * It extends {@link JButton} and provides additional functionality specific to its purpose.
+ */
 public class InventoryButton extends JButton {
     // Fields
     private ImageIcon icon;
@@ -27,6 +31,12 @@ public class InventoryButton extends JButton {
         buttonPositions.add(new int[]{ 1062, 543, 75, 75});
     }
     // Constructor
+    /**
+     * Constructs an InventoryButton with the specified GameView and button index.
+     *
+     * @param view the GameView to which this button will be added
+     * @param buttonIndex the index of this button in the inventory
+     */
     public InventoryButton(GameView view, int buttonIndex) {
         super();
         view.add(this);
@@ -40,10 +50,15 @@ public class InventoryButton extends JButton {
         initListeners();
     }
     // Methods | Public
+    /**
+     * Sets the bounds of the button based on its index in a buttonPositions array.
+     */
     private void setButtonBounds() {
         setBounds(buttonPositions.get(buttonIndex)[0], buttonPositions.get(buttonIndex)[1], buttonPositions.get(buttonIndex)[2], buttonPositions.get(buttonIndex)[3]);
     }
-
+    /**
+     * Initializes the mouse and action listeners for the button.
+     */
     private void initListeners() {
         // MouseListener
         MouseListener mouseListener = new MouseAdapter() {
@@ -59,7 +74,12 @@ public class InventoryButton extends JButton {
         addActionListener(e -> GameWorld.useInventoryItem(buttonIndex));
     }
 
-
+    /**
+     * Adds an icon to the button and starts a repaint timer.<br>
+     * The repaint timer enables GIFs to be updated and displayed correctly.
+     *
+     * @param icon the ImageIcon to be added to the button
+     */
     public void addIcon(ImageIcon icon) {
         if (this.icon==null) {
             this.icon = icon;
@@ -70,9 +90,10 @@ public class InventoryButton extends JButton {
             rePaintTimer = new Timer(200, e -> repaint());
             rePaintTimer.start();
         }
-
-
     }
+    /**
+     * Removes the icon from the button and stops the repaint timer.
+     */
     public void removeIcon() {
         if (this.icon!=null) {
             this.icon = null;
@@ -80,10 +101,15 @@ public class InventoryButton extends JButton {
             rePaintTimer.stop();
         }
     }
-
+    /**
+     * Disables interaction with the button.
+     */
     public void disableInteract() {
         setEnabled(false);
     }
+    /**
+     * Enables interaction with the button.
+     */
     public void enableInteract() {
         setEnabled(true);
     }

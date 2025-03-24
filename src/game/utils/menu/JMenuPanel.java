@@ -4,11 +4,16 @@ package game.utils.menu;
 import game.Game;
 import game.core.GameSound;
 import game.core.GameView;
+import game.enums.SoundGroups;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 
 // Class
+/**
+ * The JMenuPanel class extends {@link JPanel} to create a custom menu panel for the game.<br>
+ * It includes buttons for Continue and Quit, sliders for game music and sound, and a background image.
+ */
 public class JMenuPanel extends JPanel {
     // Fields
     private static final int  WIDTH = 700;
@@ -18,7 +23,7 @@ public class JMenuPanel extends JPanel {
     private boolean open = false;
     private Timer timer;
     JLabel backGround = new JLabel();
-    private final GameSound openSound = GameSound.createSound("data/Audio/UI/open.wav", 667);
+    private final GameSound openSound = GameSound.createSound("data/Audio/UI/open.wav", SoundGroups.UI, 667);
 
     static {
         X = (1200-WIDTH)/2;
@@ -26,6 +31,12 @@ public class JMenuPanel extends JPanel {
 
     }
     // Constructor
+    /**
+     * Constructor for {@link JMenuPanel}.
+     * Initializes the panel with a specified GameView, sets layout, background, bounds, and border.
+     * Adds the panel and background to the GameView and sets their Z-order.
+     * @param gameView The GameView to which this panel will be added.
+     */
     public JMenuPanel(GameView gameView) {
         super();
         setLayout(null); // don't want to use a layout manager
@@ -41,16 +52,21 @@ public class JMenuPanel extends JPanel {
         setVisible(false);
     }
     // Methods
-
+    /**
+     * Adds buttons for Continue and Quit, and sliders for game music and sound to the panel.
+     * Sets action listeners for the buttons.
+     */
   private void addButtons() {
         MenuJButton cont = new MenuJButton(this,"Continue", new int[] {81, 50, 156, 62}, true);
         MenuJButton quit = new MenuJButton(this,"Quit", new int[] {81, 144, 156, 62}, true);
         MenuSliderSurface gameMusicSlider = new MenuSliderSurface(this, new int[] {302, 50, 313, 62}, Game.getGameMusic(), null);
-        MenuSliderSurface gameSoundSlider = new MenuSliderSurface(this, new int[] {302, 144, 313, 62}, null, "Mobs");
+        MenuSliderSurface gameSoundSlider = new MenuSliderSurface(this, new int[] {302, 144, 313, 62}, null, SoundGroups.MOBS);
         cont.addActionListener(e -> toggleMenu());
         quit.addActionListener(e -> Game.exit());
   }
-
+    /**
+     * Removes all buttons from the panel.
+     */
   private void removeButtons() {
         for (Component comp : getComponents()) {
             if (comp instanceof MenuJButton) {
@@ -58,14 +74,19 @@ public class JMenuPanel extends JPanel {
             }
         }
     }
-
+    /**
+     * Creates the background for the panel and adds it to the GameView.
+     * @param gameView The GameView to which the background will be added.
+     */
     private void createBackground(GameView gameView) {
         gameView.add(backGround);
 //        backGround.setIcon(new ImageIcon("data/Display_assets/GUI/Appear/open.png"));
         backGround.setBounds(10, -57,1000, 630);
     }
-
-
+    /**
+     * Toggles the visibility of the menu.
+     * Plays the open sound, sets the background image, and pauses/resumes the game.
+     */
     public void toggleMenu() {
         if (!timer.isRunning()) { // means it cant be spammed
             openSound.play();
@@ -87,7 +108,10 @@ public class JMenuPanel extends JPanel {
         }
     }
 
-
+    /**
+     * Sets up the timer for the menu.
+     * The timer controls the visibility and background image of the menu.
+     */
     private void setupTimer() {
         timer = new Timer(2300, e -> {
             if (open) {
@@ -105,11 +129,19 @@ public class JMenuPanel extends JPanel {
         timer.setRepeats(false);
     }
     // Getters
-
+    /**
+     * Checks if the menu is open.
+     * @return {@code true} if the menu is open, {@code false} otherwise.
+     */
     public boolean isOpen() {
         return open;
     }
-
+    /**
+     * Handles errors when setting bounds for a component.
+     * If the bounds array does not have 4 elements, sets default bounds.
+     * @param component The component to set bounds for.
+     * @param bounds The bounds array.
+     */
     protected static void boundErrorHandler(JComponent component, int[] bounds) {
         try {
             component.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);

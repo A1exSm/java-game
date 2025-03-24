@@ -5,7 +5,7 @@ import city.cs.engine.Body;
 import city.cs.engine.StepEvent;
 import game.body.staticstructs.Ground;
 import game.core.GameWorld;
-import game.animation.WalkerAnimationStepListener;
+import game.animation.MobAnimationStepListener;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
 import game.enums.State;
@@ -15,7 +15,7 @@ import org.jbox2d.common.Vec2;
 public class MobStepListener implements MobStepListenerFrame {
     // Fields
     protected final MobWalker mob;
-    protected final WalkerAnimationStepListener animationsListener;
+    protected final MobAnimationStepListener animationsListener;
     protected static final float PATROL_RADIUS_X = 30.0f;
     protected static final float PATROL_RADIUS_Y = 10.0f;
     protected static final float ANIMATION_RADIUS = 40.0f;
@@ -28,7 +28,7 @@ public class MobStepListener implements MobStepListenerFrame {
     public MobStepListener(MobWalker mob, GameWorld gameWorld) {
         this.mob = mob;
         this.gameWorld = gameWorld;
-        animationsListener = new WalkerAnimationStepListener(mob);
+        animationsListener = new MobAnimationStepListener(mob);
         gameWorld.addStepListener(this);
     }
     // Methods

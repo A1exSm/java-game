@@ -15,11 +15,14 @@ import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
-
 import java.awt.*;
 import java.util.ArrayList;
 
 // Class
+/**
+ * The `GameWorld` class extends `World` and represents the game world.
+ * It handles the initialisation of the player, mobs, bodies, and various game elements.
+ */
 public class GameWorld extends World {
     // Fields
     private static Game game;
@@ -29,6 +32,11 @@ public class GameWorld extends World {
     private boolean toggleMobsPassive = false;
 
     // Constructor
+    /**
+     * Constructs a `GameWorld` with the specified game.
+     *
+     * @param game the game instance
+     */
     public GameWorld(Game game) {
         super();
         GameWorld.game = game;
@@ -40,20 +48,33 @@ public class GameWorld extends World {
     }
 
     // Population methods
-    private void groundImg2() {
-        for (float i = -500+6.6f; i < 500; i+=12) {
+    /**
+     * Creates instances of {@link Ground} below the typical ground level.<br><br>
+     * Each instance has an image of the ground that has an offset
+     * which causes the image to be placed inline with ground level.<br><br>
+     * this method is typically only called by {@link #populate()}.
+     *
+     * @param start the starting x-coordinate
+     * @param end the ending x-coordinate
+     */
+    private void groundImg2(int start, int end) {
+        for (float i = start+6.6f; i < end; i+=12) {
             Ground temp = new Ground(this, new Vec2(6, 2.5f), new Vec2(i, -7.5f));
             temp.addImage(new BodyImage("data/ground_tiles/tile_0x2.png",5f)).setOffset(new Vec2(0, 5f));
         }
     }
-
+    /**
+     * Populates the game world with various bodies.
+     */
     private void populate() {
-        groundImg2();
+        groundImg2(-500, 500);
         new Ground(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
         playGround();
         areaOne();
     }
-
+    /**
+     * Populates the playground area with ground and platforms, generally used to test new features.
+     */
     private void playGround() {
         float offset = 100f;
         new Ground(this, new Vec2(2, 2f), new Vec2(-5+offset, 2f));
@@ -64,6 +85,13 @@ public class GameWorld extends World {
 //        toggleMobsPassive();
 
     }
+
+    /**
+     * Populates the area one with various bodies.<br><br>
+     * AreaOne is another testing area, like {@link #playGround()}, albeit more complex.<br>
+     * For example, sheer walls cannot be scaled, as they have low friction values.
+     *
+     */
     private void areaOne() {
         ArrayList<Body> areaOne= new ArrayList<>();
         Ground temp1 = new Ground(this, new Vec2(20,2.0f), new Vec2(-25.0f, 200f));
@@ -93,15 +121,26 @@ public class GameWorld extends World {
         player.setPosition(new Vec2(-28.0f, 212.0f));
         player.setPosition(new Vec2(0, 2));
     }
-
-    private Ground sheerWall(Vec2 pos, float height) {
+    /**
+     * Creates a sheer wall at the specified position with the given height.<br><br>
+     * Sheer walls have protrusions ({@link SolidFixture SolidFixtures}) with a low friction value;
+     * which prevents scaling.
+     *
+     * @param pos the position of the sheer wall
+     * @param halfHeight half the height of the sheer wall
+     * @return the created {@link Ground} object
+     */
+    private Ground sheerWall(Vec2 pos, float halfHeight) {
         Ground temp3 = new Ground(this, new Vec2(1,4.0f), pos);
-        SolidFixture temp3Fixture = new SolidFixture(temp3, new BoxShape(1.1f,  height));
+        SolidFixture temp3Fixture = new SolidFixture(temp3, new BoxShape(1.1f,  halfHeight));
         temp3Fixture.setFriction(0.00005f);
         return temp3;
     }
 
     // Store
+    /**
+     * Initializes the mobs in the game world.
+     */
     private void initMobs() {
         new WizardWalker(this, new Vec2(-25, 202));
         new WizardWalker(this, new Vec2(70,2));
@@ -116,27 +155,51 @@ public class GameWorld extends World {
 
 
     // External Getters & Setters
+    /**
+     * Toggles the player's attack state.
+     */
     public void togglePlayerAttack() {
         player.toggleOffAttack();
     }
-
+    /**
+     * Gets the player walker instance.
+     *
+     * @return the player walker
+     */
     public PlayerWalker getPlayer() {
         return player;
     }
-
+    /**
+     * Toggles the game's pause state.<br><br>
+     * Since {@link Game#togglePause()} is not static, it can be accessed through 'Game.gameWorld.togglePause()'.
+     */
     public void togglePause() {
         game.togglePause();
     }
-
+    /**
+     * Uses an item from the player's inventory at the specified index.<br>
+     * index corresponds to the item's visual position in the inventory. starting from the left.
+     *
+     * @param index the index of the item to use
+     */
     public static void useInventoryItem(int index) {
         playerInventory.use(index);
     }
-
+    /**
+     * Drops an {@link game.body.items.InventoryItem InventoryItem} from the player's inventory at the specified index.
+     *
+     * @param index the index of the item to drop
+     */
     public static void dropInventoryItem(int index) {
         playerInventory.drop(index);
     }
 
     //Mobology
+    /**
+     * Gets the list of alive {@link MobWalker MobWalkers}.
+     *
+     * @return the list of alive Mobs
+     */
     public static ArrayList<MobWalker> getMobs() {
         ArrayList<MobWalker> aliveMobs = new ArrayList<>();
         for (MobWalker mob : mobs) {
@@ -148,11 +211,21 @@ public class GameWorld extends World {
     public static void addMob(MobWalker mob) {
         mobs.add(mob);
     }
-
+    /**
+     * Removes a mob from the game world.<br>
+     * Possibly deprecated, as mobs are ignored by {@link #getMobs()} when they die.
+     *
+     * @param mob the mob to remove
+     */
     public static void removeMob(MobWalker mob) {
         mobs.remove(mob);
     }
-
+    /**
+     * Finds a {@link WormWalker} by name.
+     *
+     * @param name the name of the {@link WormWalker}
+     * @return the {@link WormWalker} with the specified name, or null if not found
+     */
     public static WormWalker nameToWorm(String name) {
         for (MobWalker mob : mobs) {
             if (mob.getWalkerType().equals(Walkers.WORM) && mob.getName().equals(name)) { // ensures correct type & name
@@ -162,7 +235,12 @@ public class GameWorld extends World {
         System.err.println("WormWalker with name: "+ name + " not found! Returning null.");
         return null;
     }
-
+    /**
+     * Finds a {@link WizardWalker} by name.
+     *
+     * @param name the name of the {@link WizardWalker}
+     * @return the {@link WizardWalker} with the specified name, or null if not found
+     */
     public static WizardWalker nameToWizard(String name) {
         for (MobWalker mob : mobs) {
             if (mob.getWalkerType().equals(Walkers.WIZARD) && mob.getName().equals(name)) { // ensures correct type & name
@@ -172,7 +250,9 @@ public class GameWorld extends World {
         System.err.println("WizardWalker with name: "+ name + " not found! Returning null.");
         return null;
     }
-
+    /**
+     * Toggles the state of all mobs to passive.
+     */
     public void toggleMobsPassive() { // only meant to be called during setup
         toggleMobsPassive = !toggleMobsPassive;
         for (MobWalker mob : mobs) {

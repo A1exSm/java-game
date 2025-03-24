@@ -8,11 +8,12 @@ import game.body.walkers.PlayerWalker;
 import game.core.GameView;
 import game.enums.items.ItemSize;
 import org.jbox2d.common.Vec2;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+
+import java.awt.event.*;
 // Class
+/**
+ * Controls class handles the main keyboard and mouse inputs for the game.
+ */
 public class Controls {
     // Fields
     private final GameView view;
@@ -21,6 +22,14 @@ public class Controls {
     private int keyPressed;
     private int keyReleased;
     // Constructor
+    /**
+     * Constructor for Controls.<br>
+     * Initialises required Listeners and fields.
+     *
+     * @param world the game world
+     * @param player the player character
+     * @param view the game view
+     */
     public Controls(GameWorld world, PlayerWalker player, GameView view) {
         this.view = view;
         this.player = player;
@@ -30,12 +39,16 @@ public class Controls {
         setupKey();
     }
     // Methods
+    /**
+     * Setup for non-movement key bindings.<br>
+     * Sets up key bindings for inventory and menu controls.
+     */
     public void setupKey() {
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    view.JMenuPanel.toggleMenu();
+                    view.jMenuPanel.toggleMenu();
                 } else if (e.getKeyCode() == KeyEvent.VK_1) {
                     GameWorld.useInventoryItem(0);
                 } else if (e.getKeyCode() == KeyEvent.VK_2) {
@@ -48,11 +61,11 @@ public class Controls {
             }
         });
     }
-
+    /**
+     * Mouse input listener for attacking.
+     */
     private void addMouseInputs() {
-        view.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {}
+        view.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (world.isRunning()) {
@@ -61,14 +74,11 @@ public class Controls {
                     }
                 }
             }
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-            @Override
-            public void mouseExited(MouseEvent e) {}
         });
     }
+    /**
+     * Adds keyboard input listeners to the game view for movement controls.
+     */
     private void addKeyboardInputs() {
         view.addKeyListener(new KeyAdapter() {
             @Override
@@ -101,5 +111,4 @@ public class Controls {
             }
         });
     }
-
 }
