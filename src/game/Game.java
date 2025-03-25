@@ -87,6 +87,7 @@ public class Game {
         }
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
+        debugOn();
     }
     // Static | Debug Methods
     /**
@@ -174,7 +175,8 @@ public class Game {
             @Override
             public void preStep(StepEvent event) {
 //                view.setCentre(new Vec2(player.getPosition().x, player.getPosition().y+10)); // +10 so that the view does not show the void under the ground
-                gameView.setCentre(gameWorld.getPlayer().getPosition());
+                Vec2 playerPos = gameWorld.getPlayer().getPosition();
+                gameView.setCentre(new Vec2(playerPos.x, playerPos.y + 2));
                 if(gameWorld.getPlayer().destroyed) {gameView.gameOver();}
             }
             @Override

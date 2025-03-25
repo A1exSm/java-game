@@ -58,6 +58,7 @@ public class GameView extends UserView {
                 this.setComponentZOrder(component, getComponentCount()-1); // manually correcting z-order after all components are added during init
             }
         }
+        setZoom(40);
     }
 
     // Methods | Background | @Override
@@ -80,7 +81,7 @@ public class GameView extends UserView {
         } else {
             drawClouds(g, playerX, xPos, yPos);
         }
-        drawSea(g, yPos);
+        drawSea(g, playerX, xPos, yPos);
     }
     // Methods | Background | Private
     /**
@@ -141,10 +142,12 @@ public class GameView extends UserView {
      * @param graphics the graphics context
      * @param yPos the y position to start drawing
      */
-    private void drawSea(Graphics2D graphics, int yPos) {
+    private void drawSea(Graphics2D graphics, int playerX, int xPos, int yPos) {
         int seaWidth = 112;
-        for (int i = -seaWidth; i < 1200; i+= seaWidth) {
-            graphics.drawImage(sea, i, yPos, this);
+        for (int i = xPos-5000; i < xPos + 5000; i+=seaWidth) {
+            if (i < playerX + 1053 && i > playerX - 1053) {
+                graphics.drawImage(sea, i, yPos, this);
+            }
         }
     }
     /**

@@ -3,6 +3,7 @@ package game.utils;
 import city.cs.engine.Body;
 import game.Game;
 import game.body.items.HealthPotion;
+import game.body.walkers.mobs.WizardWalker;
 import game.core.GameWorld;
 import game.body.walkers.PlayerWalker;
 import game.core.GameView;

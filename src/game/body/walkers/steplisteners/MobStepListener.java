@@ -3,7 +3,7 @@ package game.body.walkers.steplisteners;
 
 import city.cs.engine.Body;
 import city.cs.engine.StepEvent;
-import game.body.staticstructs.Ground;
+import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
 import game.animation.MobAnimationStepListener;
 import game.body.walkers.mobs.MobWalker;
@@ -23,7 +23,7 @@ public class MobStepListener implements MobStepListenerFrame {
     protected static final float WALK_SPEED = 2.0f;
     protected final GameWorld gameWorld;
     private Boolean isOnPlatform = false;
-    private Ground currentPlatform;
+    private GroundFrame currentPlatform;
     // Constructor
     public MobStepListener(MobWalker mob, GameWorld gameWorld) {
         this.mob = mob;
@@ -93,8 +93,8 @@ public class MobStepListener implements MobStepListenerFrame {
     private boolean getPlatform() {
         if (!isOnPlatform) {
             for (Body body : mob.getBodiesInContact()) {
-                if (body instanceof Ground) {
-                    currentPlatform = (Ground) body;
+                if (body instanceof GroundFrame) {
+                    currentPlatform = (GroundFrame) body;
                     return true;
                 }
             }

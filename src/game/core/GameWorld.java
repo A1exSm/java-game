@@ -2,7 +2,10 @@ package game.core;
 // Imports
 import game.Game;
 import game.body.items.Inventory;
-import game.body.staticstructs.Ground;
+import game.body.staticstructs.ground.Bridge;
+import game.body.staticstructs.ground.MediumPlatform;
+import game.body.staticstructs.ground.TempGround;
+import game.body.staticstructs.ground.Platform;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.mobs.HuntressWalker;
@@ -49,7 +52,7 @@ public class GameWorld extends World {
 
     // Population methods
     /**
-     * Creates instances of {@link Ground} below the typical ground level.<br><br>
+     * Creates instances of {@link TempGround} below the typical ground level.<br><br>
      * Each instance has an image of the ground that has an offset
      * which causes the image to be placed inline with ground level.<br><br>
      * this method is typically only called by {@link #populate()}.
@@ -59,7 +62,7 @@ public class GameWorld extends World {
      */
     private void groundImg2(int start, int end) {
         for (float i = start+6.6f; i < end; i+=12) {
-            Ground temp = new Ground(this, new Vec2(6, 2.5f), new Vec2(i, -7.5f));
+            TempGround temp = new TempGround(this, new Vec2(6, 2.5f), new Vec2(i, -7.5f));
             temp.addImage(new BodyImage("data/ground_tiles/tile_0x2.png",5f)).setOffset(new Vec2(0, 5f));
         }
     }
@@ -67,21 +70,26 @@ public class GameWorld extends World {
      * Populates the game world with various bodies.
      */
     private void populate() {
-        groundImg2(-500, 500);
-        new Ground(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
-        playGround();
-        areaOne();
+        MediumPlatform A = new MediumPlatform(this, 0, -4);
+        A.addTree();
+        MediumPlatform B = new MediumPlatform(this, 48, -4);
+        new Bridge(this, A, B);
+        player.setPosition(new Vec2(0, 2));
+//        groundImg2(-500, 500);
+//        new TempGround(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
+//        playGround();
+//        areaOne();
     }
     /**
      * Populates the playground area with ground and platforms, generally used to test new features.
      */
     private void playGround() {
         float offset = 100f;
-        new Ground(this, new Vec2(2, 2f), new Vec2(-5+offset, 2f));
-        new Ground.Platform(this, new Vec2(20+offset, 4));
-        new Ground.Platform(this, new Vec2(27+offset, 7));
+        new TempGround(this, new Vec2(2, 2f), new Vec2(-5+offset, 2f));
+        new Platform(this, new Vec2(20+offset, 4));
+        new Platform(this, new Vec2(27+offset, 7));
         new Trampoline(this, new Vec2(-20+offset, 1));
-        initMobs();
+//        initMobs();
 //        toggleMobsPassive();
 
     }
@@ -94,16 +102,16 @@ public class GameWorld extends World {
      */
     private void areaOne() {
         ArrayList<Body> areaOne= new ArrayList<>();
-        Ground temp1 = new Ground(this, new Vec2(20,2.0f), new Vec2(-25.0f, 200f));
+        TempGround temp1 = new TempGround(this, new Vec2(20,2.0f), new Vec2(-25.0f, 200f));
         StaticBody temp2 = new StaticBody(this, new PolygonShape(0,0, 0,-4, -10,-4, -10,10));
         temp2.setPosition(new Vec2(-45.0f, 202f));
-        Ground temp3 = sheerWall(new Vec2(-3.9f, 213f), 15.0f);
-        Ground temp6 = sheerWall(new Vec2(-56.1f, 218f), 20.0f);
-        Ground temp4 = new Ground(this, new Vec2(20, 1.0f), new Vec2(-25.0f, 210f));
+        TempGround temp3 = sheerWall(new Vec2(-3.9f, 213f), 15.0f);
+        TempGround temp6 = sheerWall(new Vec2(-56.1f, 218f), 20.0f);
+        TempGround temp4 = new TempGround(this, new Vec2(20, 1.0f), new Vec2(-25.0f, 210f));
         DynamicBody box = new DynamicBody(this, new BoxShape(0.5f,0.5f));
         SolidFixture boxFixture = new SolidFixture(box, new BoxShape(2f, 2f));
         box.setPosition(new Vec2(-25.0f, 212f));
-        Ground temp5 = new Ground(this, new Vec2(20, 1.0f), new Vec2(-35.0f, 219f));
+        TempGround temp5 = new TempGround(this, new Vec2(20, 1.0f), new Vec2(-35.0f, 219f));
         areaOne.add(temp1);
         areaOne.add(temp2);
         areaOne.add(temp3);
@@ -128,10 +136,10 @@ public class GameWorld extends World {
      *
      * @param pos the position of the sheer wall
      * @param halfHeight half the height of the sheer wall
-     * @return the created {@link Ground} object
+     * @return the created {@link TempGround} object
      */
-    private Ground sheerWall(Vec2 pos, float halfHeight) {
-        Ground temp3 = new Ground(this, new Vec2(1,4.0f), pos);
+    private TempGround sheerWall(Vec2 pos, float halfHeight) {
+        TempGround temp3 = new TempGround(this, new Vec2(1,4.0f), pos);
         SolidFixture temp3Fixture = new SolidFixture(temp3, new BoxShape(1.1f,  halfHeight));
         temp3Fixture.setFriction(0.00005f);
         return temp3;
