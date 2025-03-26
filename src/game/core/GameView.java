@@ -58,7 +58,7 @@ public class GameView extends UserView {
                 this.setComponentZOrder(component, getComponentCount()-1); // manually correcting z-order after all components are added during init
             }
         }
-        setZoom(40);
+//        setZoom(40);
     }
 
     // Methods | Background | @Override

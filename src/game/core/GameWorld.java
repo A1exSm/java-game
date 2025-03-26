@@ -70,10 +70,12 @@ public class GameWorld extends World {
      * Populates the game world with various bodies.
      */
     private void populate() {
-        MediumPlatform A = new MediumPlatform(this, 0, -4);
+        MediumPlatform A = new MediumPlatform(this, 0, -3);
         A.addTree();
-        MediumPlatform B = new MediumPlatform(this, 48, -4);
+        MediumPlatform B = new MediumPlatform(this, 48, -3);
+        MediumPlatform C = new MediumPlatform(this, -200, -3);
         new Bridge(this, A, B);
+        new Bridge(this, A, C);
         player.setPosition(new Vec2(0, 2));
 //        groundImg2(-500, 500);
 //        new TempGround(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
