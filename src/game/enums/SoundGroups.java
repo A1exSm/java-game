@@ -15,6 +15,7 @@ public enum SoundGroups {
 
     // Fields
     private final ArrayList<GameSound> sounds;
+    private double groupVolume = 0.10;
 
     // Constructor
     SoundGroups() {
@@ -27,5 +28,17 @@ public enum SoundGroups {
     }
     public void addSound(GameSound sound) {
         sounds.add(sound);
+    }
+    public double getVolume() {
+        return groupVolume;
+    }
+    public void setVolume(double groupVolume) {
+        this.groupVolume = groupVolume;
+        if (sounds.isEmpty()) {
+            return;
+        }
+        for (GameSound sound : sounds) {
+            sound.setVolume(groupVolume);
+        }
     }
 }

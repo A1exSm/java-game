@@ -87,7 +87,6 @@ public class Game {
         }
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
-        debugOn();
     }
     // Static | Debug Methods
     /**

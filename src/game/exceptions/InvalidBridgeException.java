@@ -1,6 +1,7 @@
 package game.exceptions;
 
 
+import city.cs.engine.Body;
 import game.body.staticstructs.ground.Bridge;
 import game.body.staticstructs.ground.GroundFrame;
 
@@ -8,17 +9,16 @@ public class InvalidBridgeException extends RuntimeException {
 
 
     // constructor
-    public InvalidBridgeException(String message) {
-        super(message);
-    }
-    public InvalidBridgeException(String type, GroundFrame bridgeStart, GroundFrame bridgeEnd, float distance) {
+    public InvalidBridgeException(String message) {super(message);}
+    public InvalidBridgeException(float distance) {caseThree(distance);}
+    public InvalidBridgeException(Body collisionBody) {caseFour(collisionBody.getName());}
+    public InvalidBridgeException(String type, GroundFrame bridgeStart, GroundFrame bridgeEnd) {
         switch (type) {
             case "BRIDGE_STOP_START" -> {caseOne(bridgeStart, bridgeEnd);}
             case "BRIDGE_HEIGHT_MISMATCH" -> {caseTwo(bridgeStart, bridgeEnd);}
-            case "BRIDGE_DISTANCE" -> {caseThree(distance);}
-            default -> {}
         }
     }
+
     private void caseOne(GroundFrame bridgeStart, GroundFrame bridgeEnd) {
         String type;
         String bridge;
@@ -53,5 +53,9 @@ public class InvalidBridgeException extends RuntimeException {
         } else {
             throw new InvalidBridgeException("Bridge exception BRIDGE_DISTANCE called on distance that is within the acceptable range");
         }
+    }
+
+    private void caseFour(String bodyName) {
+        throw new InvalidBridgeException("Bridge exception BRIDGE_COLLISION: Body " + bodyName + " clips bridge!");
     }
 }

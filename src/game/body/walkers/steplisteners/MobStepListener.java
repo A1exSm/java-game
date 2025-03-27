@@ -12,7 +12,7 @@ import game.enums.State;
 import org.jbox2d.common.Vec2;
 
 // Class
-public class MobStepListener implements MobStepListenerFrame {
+public abstract class MobStepListener implements MobStepListenerFrame {
     // Fields
     protected final MobWalker mob;
     protected final MobAnimationStepListener animationsListener;
@@ -93,8 +93,8 @@ public class MobStepListener implements MobStepListenerFrame {
     private boolean getPlatform() {
         if (!isOnPlatform) {
             for (Body body : mob.getBodiesInContact()) {
-                if (body instanceof GroundFrame) {
-                    currentPlatform = (GroundFrame) body;
+                if (body instanceof GroundFrame ground) {
+                    currentPlatform = ground;
                     return true;
                 }
             }

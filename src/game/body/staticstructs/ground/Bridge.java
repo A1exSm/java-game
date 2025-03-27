@@ -1,9 +1,6 @@
 package game.body.staticstructs.ground;
 // Imports
-import city.cs.engine.AttachedImage;
-import city.cs.engine.BodyImage;
-import city.cs.engine.BoxShape;
-import city.cs.engine.SolidFixture;
+import city.cs.engine.*;
 import game.core.GameWorld;
 import game.enums.Direction;
 import game.exceptions.InvalidBridgeException;
@@ -17,7 +14,7 @@ public class Bridge extends GroundFrame {
     // Fields
     private final HashMap<String, AttachedImage> bridgeParts = new HashMap<>();
     public static final float MAX_DISTANCE = 500f;
-    public static final float MIN_DISTANCE = 10f;
+    public static final float MIN_DISTANCE = 40f;
     private final GroundFrame bridgeStart;
     private final GroundFrame bridgeEnd;
     private SolidFixture bridgeFixture = null;
@@ -34,7 +31,6 @@ public class Bridge extends GroundFrame {
     // Methods | private | setup
     private void buildBridge() {
         float dist;
-        originPos.y = bridgeStart.originPos.y + bridgeStart.halfDimensions.y;
         halfDimensions.y = 2f;
         Direction facingDirection = calcDirection();
         float[] xPos = new float[2]; // float[0] = xStart, float[1] = xEnd
@@ -55,13 +51,12 @@ public class Bridge extends GroundFrame {
             path[0] = "right";
             path[1] = "left";
         }
-        bridgeFixture = new SolidFixture(this, new BoxShape(dist / 2, halfDimensions.y, new Vec2(0, -1.5f)));
+        bridgeFixture = new SolidFixture(this, new BoxShape((dist / 2) - 0.1f, halfDimensions.y, new Vec2(0, 0)));
         halfDimensions.x = dist / 2;
-        setPosition(new Vec2(originPos.x, originPos.y));
-        putBridgePart("bridgeStart", path[0], xPos[0], -1.5f);
+        setPosition(new Vec2(originPos.x,(bridgeStart.originPos.y + bridgeStart.halfDimensions.y) - 1.5f));
+        putBridgePart("bridgeStart", path[0], xPos[0], 0);
         middleBridge();
-        putBridgePart("bridgeEnd", path[1], xPos[1], -1.5f);
-
+        putBridgePart("bridgeEnd", path[1], xPos[1], 0);
     }
 
     private void middleBridge() {
@@ -71,20 +66,20 @@ public class Bridge extends GroundFrame {
         // side A
         for (float i = -halfDimensions.x + 6.0f; i < 0; i += 4) {
             if (i + 2 > 0) {break;}
-            putBridgePart("bridgePartMiddle" + count++, "middle", i, -1.38f);
+            putBridgePart("bridgePartMiddle" + count++, "middle", i, 0.12f);
             counterA = i;
         }
         // side B
         for (float i = halfDimensions.x - 4.0f; i > 0; i -= 4) {
             if (i - 2 < 0) {break;}
-            putBridgePart("bridgePartMiddle" + count++, "middle", i, -1.38f);
+            putBridgePart("bridgePartMiddle" + count++, "middle", i, 0.12f);
             counterB = i;
         }
         // filling the difference
         if (counterA != 0) {
             counterB -= 2.44f;
             while (counterB > counterA + 1f) {
-                putBridgePart("bridgePiece" + count++, "piece", counterB, -1.5f);
+                putBridgePart("bridgePiece" + count++, "piece", counterB, 0);
                 counterB -= 0.68f;
             }
         }
@@ -105,14 +100,25 @@ public class Bridge extends GroundFrame {
     // Methods | Private | Exception handling
     private void validateBridge() {
         if (bridgeStart == null || bridgeEnd == null) {
-            throw new InvalidBridgeException("BRIDGE_STOP_START", bridgeStart, bridgeEnd, 0);
+            throw new InvalidBridgeException("BRIDGE_STOP_START", bridgeStart, bridgeEnd);
         }
         if (bridgeStart.yTop != bridgeEnd.yTop) {
-            throw new InvalidBridgeException("BRIDGE_HEIGHT_MISMATCH", bridgeStart, bridgeEnd, 0);
+            throw new InvalidBridgeException("BRIDGE_HEIGHT_MISMATCH", bridgeStart, bridgeEnd);
         }
         float dist = Math.abs(bridgeStart.getOriginPos().x - bridgeEnd.getOriginPos().x);
         if (dist > MAX_DISTANCE || dist < MIN_DISTANCE) {
-            throw new InvalidBridgeException("BRIDGE_DISTANCE", bridgeStart, bridgeEnd, dist);
+            throw new InvalidBridgeException(dist);
+        }
+        float originY = (bridgeStart.originPos.y + bridgeStart.halfDimensions.y) - 1.5f;
+        for (StaticBody body : getWorld().getStaticBodies()) {
+            if (body == bridgeStart || body == bridgeEnd) {
+                continue;
+            }
+            if (body.getPosition().x > (bridgeStart.originPos.x + bridgeStart.halfDimensions.x) && body.getPosition().x < (bridgeEnd.originPos.x - bridgeEnd.halfDimensions.x)) {
+                if (body.getPosition().y > originY - halfDimensions.y && body.getPosition().y < originY + halfDimensions.y) {
+                    throw new InvalidBridgeException(body);
+                }
+            }
         }
     }
     // Methods | Public

@@ -2,10 +2,7 @@ package game.core;
 // Imports
 import game.Game;
 import game.body.items.Inventory;
-import game.body.staticstructs.ground.Bridge;
-import game.body.staticstructs.ground.MediumPlatform;
-import game.body.staticstructs.ground.TempGround;
-import game.body.staticstructs.ground.Platform;
+import game.body.staticstructs.ground.*;
 import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.mobs.HuntressWalker;
@@ -74,8 +71,12 @@ public class GameWorld extends World {
         A.addTree();
         MediumPlatform B = new MediumPlatform(this, 48, -3);
         MediumPlatform C = new MediumPlatform(this, -200, -3);
+        MediumPlatform D = new MediumPlatform(this, 76, -3); // note to self, game draws by priority of first init, so first object will draw over any object init after it.
+        MediumPlatform E = new MediumPlatform(this, 116, -3);
+        new FloatingPlatform(this, 1420, 5, "LARGE");
         new Bridge(this, A, B);
         new Bridge(this, A, C);
+        new Bridge(this, E, D);
         player.setPosition(new Vec2(0, 2));
 //        groundImg2(-500, 500);
 //        new TempGround(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible

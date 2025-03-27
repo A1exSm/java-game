@@ -29,25 +29,20 @@ final class MenuSliderSurface extends JPanel {
      * @param gameSound The {@link GameSound} instance to control the volume of.
      * @param group The {@link SoundGroups} instance representing the group of sounds to control the volume of.
      */
-    protected MenuSliderSurface(JComponent parent, int[] bounds, GameSound gameSound, SoundGroups group) {
+    MenuSliderSurface(JComponent parent, int[] bounds, GameSound gameSound, SoundGroups group) {
         parent.add(this);
         setLayout(null);
         setFocusable(false);
-        if (group == null) {
-            this.group = null;
-            this.sound = gameSound;
-        } else if (group.equals(SoundGroups.MOBS)) {
-            this.group = group;
-            sound = GameWorld.getMobs().get(0).soundFX.getTrackerSound();
-        } else {
-            throw new IllegalArgumentException("Error: Invalid group name in MenuSliderSurface: " + group);
-        }
+
         JMenuPanel.boundErrorHandler(this, bounds);
         int sliderWidth = (int) (0.75f * bounds[2]);
         int buttonWidth = bounds[2] - sliderWidth;
         slider = new MenuJSlider(this, new int[] {0, 0, sliderWidth, bounds[3]});
         slider.setMaximum(200);
-        button = new MenuJButton(this, String.valueOf(sound.getVolume()), new int[] {sliderWidth, 0, buttonWidth, bounds[3]}, true);
+
+        this.group = group;
+        sound = group == null ? gameSound : null;
+        button = new MenuJButton(this, String.valueOf(getVolume()), new int[] {sliderWidth, 0, buttonWidth, bounds[3]}, true);
         button.setFont(VOLUME_FONT);
         addButtonListeners();
         addSliderListeners();
@@ -58,7 +53,7 @@ final class MenuSliderSurface extends JPanel {
      * Updates the volume of the sound or sound group and reflects the changes on the button and slider.
      */
     private void updateVolumeAll() {
-        int volume =  (int) (sound.getVolume()*100);
+        int volume = (int) (getVolume() * 100);
         updateButtonVolume(volume);
         updateSliderVolume(volume);
     }
@@ -82,38 +77,41 @@ final class MenuSliderSurface extends JPanel {
     private void addButtonListeners() {
         button.addActionListener(e -> {
             double volume;
-            if (sound.getVolume() == 0) {
+            if (getVolume() == 0) {
                 volume = tempVolume;
             } else {
-                tempVolume = sound.getVolume();
+                tempVolume = getVolume();
                 volume = 0;
             }
-            if (group != null) {
-                setGroupVolume(volume);
-            } else {
-                sound.setVolume(volume);
-            }
+            setVolume(volume);
             updateVolumeAll();
         });
-    }
-    /**
-     * Sets the volume for all sounds in the group.
-     * @param volume The volume to be set for the group.
-     */
-    private void setGroupVolume(double volume) {
-        group.getSounds().forEach(sound -> sound.setVolume(volume));
     }
     /**
      * Adds change listeners to the slider to handle volume changes.
      */
     private void addSliderListeners() {
         slider.addChangeListener(e -> {
-            if (group != null) {
-                setGroupVolume(((double) slider.getValue())/100);
-            } else {
-                sound.setVolume(((double) slider.getValue()) / 100);
-            }
+            setVolume(((double) slider.getValue()) / 100);
             updateButtonVolume(slider.getValue());
         });
+    }
+    /**
+     * Gets the volume of the sound or sound group.
+     * @return The volume of the sound or sound group.
+     */
+    private double getVolume() {
+        return sound != null ? sound.getVolume() : group.getVolume();
+    }
+    /**
+     * Sets the volume of the sound or sound group.
+     * @param volume The volume to be set for the sound or sound group.
+     */
+    private void setVolume(double volume) {
+        if (sound != null) {
+            sound.setVolume(volume);
+        } else {
+            group.setVolume(volume);
+        }
     }
 }

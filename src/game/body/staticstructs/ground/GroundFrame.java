@@ -17,16 +17,25 @@ public abstract class GroundFrame extends StaticBody {
         this.halfDimensions = halfDimensions;
         this.originPos = originPos;
         this.setPosition(originPos);
-        count ++;
-        this.setName("Ground"+count);
+        this.setName("Ground"+count++);
     }
     public GroundFrame(GameWorld gameWorld) {
         super(gameWorld);
         this.halfDimensions = new Vec2();
         this.originPos = new Vec2();
-        count ++;
-        this.setName("Ground"+count);
+        this.setName("Ground"+count++);
     }
+    // override
+    @Override
+    public void setPosition(Vec2 pos) {
+        super.setPosition(pos);
+        if (pos != originPos) {
+            originPos.x = pos.x;
+            originPos.y = pos.y;
+        }
+        resetYTop();
+    }
+
     // Getters
     public Vec2 getHalfDimensions() {
         return halfDimensions;
