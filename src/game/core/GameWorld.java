@@ -13,6 +13,7 @@ import game.body.walkers.mobs.WormWalker;
 import game.enums.State;
 import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
+import game.levels.MagicCliff;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
 import java.awt.*;
@@ -67,17 +68,8 @@ public class GameWorld extends World {
      * Populates the game world with various bodies.
      */
     private void populate() {
-        MediumPlatform A = new MediumPlatform(this, 0, -3);
-        A.addTree();
-        MediumPlatform B = new MediumPlatform(this, 48, -3);
-        MediumPlatform C = new MediumPlatform(this, -200, -3);
-        MediumPlatform D = new MediumPlatform(this, 76, -3); // note to self, game draws by priority of first init, so first object will draw over any object init after it.
-        MediumPlatform E = new MediumPlatform(this, 116, -3);
-        new FloatingPlatform(this, 1420, 5, "LARGE");
-        new Bridge(this, A, B);
-        new Bridge(this, A, C);
-        new Bridge(this, E, D);
-        player.setPosition(new Vec2(0, 2));
+        MagicCliff cliff = new MagicCliff(this);
+        cliff.start();
 //        groundImg2(-500, 500);
 //        new TempGround(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
 //        playGround();

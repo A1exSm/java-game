@@ -8,6 +8,7 @@ import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
 import game.enums.State;
 import game.enums.Walkers;
+import game.levels.LevelFrame;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
 
@@ -31,6 +32,7 @@ public final class PlayerWalker extends WalkerFrame {
     private int healthPoints = 1000;
     public boolean destroyed = false;
     private final int damage = 350;
+    private LevelFrame currentLevel;
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
         super(gameWorld, new BoxShape(0.2f,1.6F), new Vec2(0,3), Walkers.PLAYER);
@@ -195,5 +197,12 @@ public final class PlayerWalker extends WalkerFrame {
             }
         }
         return false;
+    }
+    // Methods | Public | Level
+    public void setCurrentLevel(LevelFrame level) {
+        this.currentLevel = level;
+    }
+    public LevelFrame getCurrentLevel() {
+        return currentLevel;
     }
 }

@@ -1,9 +1,11 @@
 package game.core;
 
 import city.cs.engine.EngineerView;
+import game.Game;
 import game.utils.menu.GameJMenuBar;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * The `GameFrame` class extends `JFrame` and represents the main window for the game.<br>
@@ -11,29 +13,16 @@ import javax.swing.*;
  * sets up the frame with common properties.
  */
 public class GameFrame extends JFrame {
-
+    private final Game game;
+    private GameView userView;
+    private EngineerView engineerView;
     /**
-     * Constructs a `GameFrame` with the specified title and user view.
+     * Constructs a `GameFrame`
      *
-     * @param title the title of the frame
-     * @param userView the user view to be added to the frame
-     * @see GameView
      */
-    public GameFrame(String title, GameView userView) {
-        super(title);
-        add(userView);
-        setup();
-    }
-
-    /**
-     * Constructs a `GameFrame` with the specified title and engineer view.
-     *
-     * @param title the title of the frame
-     * @param engineerView the engineer view to be added to the frame
-     */
-    public GameFrame(String title, EngineerView engineerView) {
-        super(title);
-        add(engineerView);
+    public GameFrame(Game game) {
+        super("Slasher");
+        this.game = game;
         setup();
     }
 
@@ -45,8 +34,52 @@ public class GameFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationByPlatform(true);
         setResizable(false);
-        setJMenuBar(new GameJMenuBar());
+        setMinimumSize(new Dimension(1200, 694));
+        pack();
         setVisible(true);
+    }
+    /**
+     * Switches the layout of the frame to the specified layout.
+     *
+     * @param Layout the layout to switch to
+     */
+    public void switchLayout(String Layout) {
+        switch(Layout) {
+            case "MainMenu" -> {
+                getContentPane().removeAll();
+                setJMenuBar(null);
+                add(new MainMenu(game).getMenuPanel());
+                revalidateFrame();
+            }
+            case "Game" -> {addGameView();}
+            default -> {throw new IllegalArgumentException("Error: Invalid layout specified.");}
+        }
+    }
+    /**
+     * Adds the game view to the frame.
+     */
+    private void addGameView() {
+        // check for existing view
+        for (Component component : getContentPane().getComponents()) {
+            if (component instanceof GameView) {
+                throw new IllegalStateException("Error: Game view component is already present.");
+            }
+        }
+        getContentPane().removeAll();
+        game.startGame();
+        userView = Game.gameView;
+        add(userView);
+        userView.setName("View");
+        userView.setBounds(0, 0, 1200, 630);
+        setJMenuBar(new GameJMenuBar());
+        userView.requestFocus();
+        revalidateFrame();
+    }
+    /**
+     * revalidates the frame and packs it.
+     */
+    private void revalidateFrame() {
+        revalidate();
         pack();
     }
 }

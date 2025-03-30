@@ -2,6 +2,7 @@ package game.core;
 // Imports
 import city.cs.engine.UserView;
 import game.Game;
+import game.levels.LevelFrame;
 import game.utils.InventoryButton;
 import game.utils.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
@@ -28,6 +29,7 @@ public class GameView extends UserView {
     private final GameWorld gameWorld;
     public final JMenuPanel jMenuPanel = new JMenuPanel(this);
     private boolean drawReactiveClouds = false;
+    public boolean isOutOfBounds = false;
 
     static {
         slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
@@ -72,8 +74,16 @@ public class GameView extends UserView {
         // vars
         Vec2 playerPos = Game.gameWorld.getPlayer().getPosition();
         int playerX = (int) worldToView(playerPos).getX();
-        int yPos = (int) worldToView(new Vec2(0, 0)).getY();
-        int xPos = (int) worldToView(new Vec2(0, 0)).getX() - 1053;
+        LevelFrame currentLevel = Game.gameWorld.getPlayer().getCurrentLevel();
+        int yPos;
+        int xPos;
+        if (currentLevel != null) {
+            yPos = (int) worldToView(currentLevel.getCentre()).getY();
+            xPos = (int) worldToView(currentLevel.getCentre()).getX() - 1053;
+        } else {
+            yPos = (int) worldToView(new Vec2(0, 0)).getY();
+            xPos = (int) worldToView(new Vec2(0, 0)).getX() - 1053;
+        }
         // method calls
         drawSky(g, yPos);
         if (drawReactiveClouds) {
@@ -206,6 +216,8 @@ public class GameView extends UserView {
             pauseInterface();
         }
         if (gameOver) {
+            graphics.setColor(Color.BLACK);
+            graphics.fillRect(0,0, getWidth(), getHeight());
             graphics.setColor(Color.RED);
             graphics.setFont(DISPLAY_FONT);
             graphics.drawString("GAME OVER", 520, 250);

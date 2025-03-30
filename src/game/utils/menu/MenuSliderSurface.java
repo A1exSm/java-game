@@ -2,6 +2,7 @@ package game.utils.menu;
 // Imports
 import game.body.walkers.mobs.MobWalker;
 import game.core.GameSound;
+import game.core.GameView;
 import game.core.GameWorld;
 import game.enums.SoundGroups;
 import javax.swing.*;
@@ -19,6 +20,7 @@ final class MenuSliderSurface extends JPanel {
     private double tempVolume = 0.50;
     private final GameSound sound;
     private final SoundGroups group;
+    private final JLabel label;
     // Constructor
     /**
      * Constructor for MenuSliderSurface.
@@ -28,8 +30,9 @@ final class MenuSliderSurface extends JPanel {
      * @param bounds The {@code bounds} of the slider surface in the format [x, y, width, height].
      * @param gameSound The {@link GameSound} instance to control the volume of.
      * @param group The {@link SoundGroups} instance representing the group of sounds to control the volume of.
+     * @param labelText The text to be displayed on the label - the name of the {@code group} or {@code gameSound}.
      */
-    MenuSliderSurface(JComponent parent, int[] bounds, GameSound gameSound, SoundGroups group) {
+    MenuSliderSurface(JComponent parent, int[] bounds, GameSound gameSound, SoundGroups group, String labelText) {
         parent.add(this);
         setLayout(null);
         setFocusable(false);
@@ -39,7 +42,8 @@ final class MenuSliderSurface extends JPanel {
         int buttonWidth = bounds[2] - sliderWidth;
         slider = new MenuJSlider(this, new int[] {0, 0, sliderWidth, bounds[3]});
         slider.setMaximum(200);
-
+        label = new JLabel(labelText);
+        initLabel(parent, bounds);
         this.group = group;
         sound = group == null ? gameSound : null;
         button = new MenuJButton(this, String.valueOf(getVolume()), new int[] {sliderWidth, 0, buttonWidth, bounds[3]}, true);
@@ -49,6 +53,15 @@ final class MenuSliderSurface extends JPanel {
         updateVolumeAll();
     }
     // Methods
+    private void initLabel(JComponent parent, int[] bounds) {
+        label.setOpaque(true);
+        label.setBackground(new Color(115, 102, 73));
+        label.setForeground(Color.WHITE);
+        label.setFont(GameView.DISPLAY_FONT);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        parent.add(label);
+        JMenuPanel.boundErrorHandler(label, new int[]{bounds[0] - 221, bounds[1], 156, bounds[3]});
+    }
     /**
      * Updates the volume of the sound or sound group and reflects the changes on the button and slider.
      */

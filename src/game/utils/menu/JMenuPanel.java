@@ -59,8 +59,8 @@ public class JMenuPanel extends JPanel {
   private void addButtons() {
         MenuJButton cont = new MenuJButton(this,"Continue", new int[] {81, 50, 156, 62}, true);
         MenuJButton quit = new MenuJButton(this,"Quit", new int[] {81, 144, 156, 62}, true);
-        MenuSliderSurface gameMusicSlider = new MenuSliderSurface(this, new int[] {302, 50, 313, 62}, Game.getGameMusic(), null);
-        MenuSliderSurface gameSoundSlider = new MenuSliderSurface(this, new int[] {302, 144, 313, 62}, null, SoundGroups.MOBS);
+        new MenuSliderSurface(this, new int[] {302, 239, 313, 62}, Game.getGameMusic(), null, "Music");
+        new MenuSliderSurface(this, new int[] {302, 334, 313, 62}, null, SoundGroups.MOBS, "Mob SFX");
         cont.addActionListener(e -> toggleMenu());
         quit.addActionListener(e -> Game.exit());
   }

@@ -17,13 +17,13 @@ public abstract class GroundFrame extends StaticBody {
         this.halfDimensions = halfDimensions;
         this.originPos = originPos;
         this.setPosition(originPos);
-        this.setName("Ground"+count++);
+        this.setName("Ground"+(++count));
     }
     public GroundFrame(GameWorld gameWorld) {
         super(gameWorld);
         this.halfDimensions = new Vec2();
         this.originPos = new Vec2();
-        this.setName("Ground"+count++);
+        this.setName("Ground"+(++count));
     }
     // override
     @Override

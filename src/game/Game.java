@@ -15,6 +15,9 @@ import java.io.IOException;
 
 /**
  * The main class for the game.
+ * @author Alexander, Smolowitz, alexander.smolowitz@city.ac.uk
+ * @version 1.0
+ * @since 2023-10-23
  */
 public class Game {
     // Fields
@@ -67,7 +70,7 @@ public class Game {
      * A static instance of {@link GameSound} which stores the main game soundtrack.
      * @see GameSound
      */
-    private static final GameSound gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", SoundGroups.MUSIC, true);
+    private static GameSound gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", SoundGroups.MUSIC, true);
 
     /**
      * The Constructor.<br>
@@ -77,14 +80,18 @@ public class Game {
      * @param debugOn a value of {@code true} starts the game with debug mode on.
      */
     public Game(Boolean debugOn) {
+        frame = new GameFrame(this);
+        frame.switchLayout("MainMenu");
+    }
+    /**
+     * Starts the game.<br>
+     * Initialises {@link Game#gameWorld} and {@link Game#gameView}.<br>
+     * Creates a new instance of {@link Controls}.<br>
+     * Calls {@link #viewTracker()}
+     */
+    public void startGame() {
         gameWorld = new GameWorld(this);
         gameView = new GameView(gameWorld, 1200, 630);
-        if(debugOn) {
-            frame = new GameFrame("EngineerView", new EngineerView(gameWorld, 1200, 630));
-            Game.debugOn();
-        } else {
-            frame = new GameFrame("GamePlayground", gameView);
-        }
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
     }
@@ -109,18 +116,30 @@ public class Game {
     /**
      * Exits the game after confirming with the user.<br>
      * Displays a confirmation dialogue and disposes the frame if the user confirms.
-     * @return true if the user confirms the exit, false otherwise.
+     *
      */
-    public static boolean exit() {
+    public void exitWindow() {
         int answer = JOptionPane.showConfirmDialog(Game.gameView, "Are you sure you want to quit?", "Quit", JOptionPane.YES_NO_OPTION);
         if (answer == JOptionPane.YES_OPTION) {
             frame.dispose();
             System.exit(0);
+        }
+    }
+    /**
+     * Exits the game to menu after confirming with the user.
+     * @return true if the user confirms the exit, false otherwise.
+     */
+    public static boolean exit() {
+        int answer = JOptionPane.showConfirmDialog(Game.gameView, "Are you sure you want to quit to the main menu?", "Quit", JOptionPane.YES_NO_OPTION);
+        if (answer == JOptionPane.YES_OPTION) {
+            gameWorld.stop();
+            gameView = null;
+            gameWorld = null;
+            gameTime = null;
+            frame.switchLayout("MainMenu");
             return true;
         }
         return false;
-
-
     }
 
     // Public | Music | Getter
@@ -199,6 +218,13 @@ public class Game {
         int newWidth = width * scaleFactor;
         int newHeight = height * scaleFactor;
         return new int[]{newWidth, newHeight};
+    }
+    /**
+     * Gets the frame field.
+     * @return the frame.
+     */
+    public GameFrame getFrame() {
+        return frame;
     }
 
     /**

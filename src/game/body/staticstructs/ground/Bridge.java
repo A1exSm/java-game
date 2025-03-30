@@ -3,7 +3,10 @@ package game.body.staticstructs.ground;
 import city.cs.engine.*;
 import game.core.GameWorld;
 import game.enums.Direction;
-import game.exceptions.InvalidBridgeException;
+import game.exceptions.BridgeCollisionException;
+import game.exceptions.BridgeIllegalHeightException;
+import game.exceptions.BridgeNullPointException;
+import game.exceptions.BridgeUnacceptableRangeException;
 import org.jbox2d.common.Vec2;
 import java.util.HashMap;
 /**
@@ -18,21 +21,25 @@ public class Bridge extends GroundFrame {
     private final GroundFrame bridgeStart;
     private final GroundFrame bridgeEnd;
     private SolidFixture bridgeFixture = null;
+    private final Direction facingDirection;
 
     // Constructor
     public Bridge(GameWorld gameWorld, GroundFrame bridgeStart, GroundFrame bridgeEnd) {
         super(gameWorld);
         this.bridgeStart = bridgeStart;
         this.bridgeEnd = bridgeEnd;
-        validateBridge();
-        buildBridge();
+        facingDirection = calcDirection();
+        if (validateBridge()) {
+            buildBridge();
+        } else {
+            destroy();
+        }
     }
 
     // Methods | private | setup
     private void buildBridge() {
         float dist;
         halfDimensions.y = 2f;
-        Direction facingDirection = calcDirection();
         float[] xPos = new float[2]; // float[0] = xStart, float[1] = xEnd
         String[] path = new String[2]; // path[0] = start, path[1] = end
 
@@ -98,28 +105,33 @@ public class Bridge extends GroundFrame {
     }
 
     // Methods | Private | Exception handling
-    private void validateBridge() {
-        if (bridgeStart == null || bridgeEnd == null) {
-            throw new InvalidBridgeException("BRIDGE_STOP_START", bridgeStart, bridgeEnd);
+    protected boolean validateBridge() {
+        boolean valid = true;
+        try {
+            BridgeUnacceptableRangeException.CheckBridgeDistance(bridgeStart, bridgeEnd);
+        } catch (BridgeUnacceptableRangeException e) {
+            System.err.println(e.getMessage() + ". Destroying bridge!");
+            if (valid) {valid = false;}
         }
-        if (bridgeStart.yTop != bridgeEnd.yTop) {
-            throw new InvalidBridgeException("BRIDGE_HEIGHT_MISMATCH", bridgeStart, bridgeEnd);
+        try {
+            BridgeNullPointException.CheckBridgeNullPoint(bridgeStart, bridgeEnd);
+        } catch (BridgeNullPointException e) {
+            System.err.println(e.getMessage() + ". Destroying bridge!");
+            if (valid) {valid = false;}
         }
-        float dist = Math.abs(bridgeStart.getOriginPos().x - bridgeEnd.getOriginPos().x);
-        if (dist > MAX_DISTANCE || dist < MIN_DISTANCE) {
-            throw new InvalidBridgeException(dist);
+        try {
+            BridgeIllegalHeightException.CheckBridgeHeightMismatch(bridgeStart, bridgeEnd);
+        } catch (BridgeIllegalHeightException e) {
+            System.err.println(e.getMessage() + ". Destroying bridge!");
+            if (valid) {valid = false;}
         }
-        float originY = (bridgeStart.originPos.y + bridgeStart.halfDimensions.y) - 1.5f;
-        for (StaticBody body : getWorld().getStaticBodies()) {
-            if (body == bridgeStart || body == bridgeEnd) {
-                continue;
-            }
-            if (body.getPosition().x > (bridgeStart.originPos.x + bridgeStart.halfDimensions.x) && body.getPosition().x < (bridgeEnd.originPos.x - bridgeEnd.halfDimensions.x)) {
-                if (body.getPosition().y > originY - halfDimensions.y && body.getPosition().y < originY + halfDimensions.y) {
-                    throw new InvalidBridgeException(body);
-                }
-            }
+        try {
+            BridgeCollisionException.CheckBridgeCollision(halfDimensions, bridgeStart, bridgeEnd);
+        } catch (BridgeCollisionException e) {
+            System.err.println(e.getMessage() + ". Destroying bridge!");
+            if (valid) {valid = false;}
         }
+        return valid;
     }
     // Methods | Public
     public void becomeGhostly() {
