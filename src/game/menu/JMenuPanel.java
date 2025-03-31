@@ -1,4 +1,4 @@
-package game.utils.menu;
+package game.menu;
 // Imports
 
 import game.Game;

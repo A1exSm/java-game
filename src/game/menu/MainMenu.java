@@ -1,11 +1,9 @@
-package game.core;
+package game.menu;
 // Imports
 
 import game.Game;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  *
@@ -13,7 +11,6 @@ import java.awt.event.ActionListener;
 // Class
 public class MainMenu { // Unfortunately, most of my Menus were created before I knew about this amazing GUI builder :(
     // Fields
-    private final Game game;
     private JPanel menuPanel;
     private JPanel innerPanel;
     private JButton startButton;
@@ -27,12 +24,14 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
 
     // Constructor
     public MainMenu(Game game) {
-        this.game = game;
         startButton.addActionListener(e -> {
             game.getFrame().switchLayout("Game");
         });
         quitButton.addActionListener(e -> {
             game.exitWindow();
+        });
+        levelSelectButton.addActionListener(e -> {
+            game.getFrame().switchLayout("LevelSelect");
         });
     }
     // Methods

@@ -38,12 +38,18 @@ public class GameWorld extends World {
      *
      * @param game the game instance
      */
-    public GameWorld(Game game) {
+    public GameWorld(Game game, String level) {
         super();
         GameWorld.game = game;
         player = new PlayerWalker(this);
         new WalkerAnimationFrames(State.RUN, Walkers.PLAYER);
-        populate();
+        switch (level) {
+            case "MagicCliff" -> {
+                MagicCliff magicCliff = new MagicCliff(this);
+                magicCliff.start();
+            }
+        }
+//        populate();
         // end of constructor start of a new world :)
         start();
     }
@@ -68,12 +74,10 @@ public class GameWorld extends World {
      * Populates the game world with various bodies.
      */
     private void populate() {
-        MagicCliff cliff = new MagicCliff(this);
-        cliff.start();
-//        groundImg2(-500, 500);
-//        new TempGround(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
-//        playGround();
-//        areaOne();
+        groundImg2(-500, 500);
+        new TempGround(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
+        playGround();
+        areaOne();
     }
     /**
      * Populates the playground area with ground and platforms, generally used to test new features.
@@ -81,8 +85,8 @@ public class GameWorld extends World {
     private void playGround() {
         float offset = 100f;
         new TempGround(this, new Vec2(2, 2f), new Vec2(-5+offset, 2f));
-        new Platform(this, new Vec2(20+offset, 4));
-        new Platform(this, new Vec2(27+offset, 7));
+//        new Platform(this, new Vec2(20+offset, 4));
+//        new Platform(this, new Vec2(27+offset, 7));
         new Trampoline(this, new Vec2(-20+offset, 1));
 //        initMobs();
 //        toggleMobsPassive();

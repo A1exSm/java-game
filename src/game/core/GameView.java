@@ -4,7 +4,7 @@ import city.cs.engine.UserView;
 import game.Game;
 import game.levels.LevelFrame;
 import game.utils.InventoryButton;
-import game.utils.menu.JMenuPanel;
+import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +60,6 @@ public class GameView extends UserView {
                 this.setComponentZOrder(component, getComponentCount()-1); // manually correcting z-order after all components are added during init
             }
         }
-//        setZoom(40);
     }
 
     // Methods | Background | @Override
@@ -78,8 +77,8 @@ public class GameView extends UserView {
         int yPos;
         int xPos;
         if (currentLevel != null) {
+            xPos = (int) worldToView(currentLevel.getCentre()).getX();
             yPos = (int) worldToView(currentLevel.getCentre()).getY();
-            xPos = (int) worldToView(currentLevel.getCentre()).getX() - 1053;
         } else {
             yPos = (int) worldToView(new Vec2(0, 0)).getY();
             xPos = (int) worldToView(new Vec2(0, 0)).getX() - 1053;
@@ -89,7 +88,14 @@ public class GameView extends UserView {
         if (drawReactiveClouds) {
             drawReactiveClouds(g, playerX, xPos, yPos);
         } else {
-            drawClouds(g, playerX, xPos, yPos);
+            if (currentLevel != null) {
+                int leftBound = (int) worldToView(currentLevel.getBoundary("Left")).getX();
+                int rightBound = (int) worldToView(currentLevel.getBoundary("Right")).getX();
+                drawClouds(g, playerX, xPos, yPos, Math.abs(leftBound - rightBound));
+            } else {
+                drawClouds(g, playerX, xPos, yPos, 5000);
+            }
+
         }
         drawSea(g, playerX, xPos, yPos);
     }
@@ -139,7 +145,7 @@ public class GameView extends UserView {
      * @param xPos the x position to start drawing
      * @param yPos the y position to start drawing
      */
-    private void drawClouds(Graphics2D graphics, int playerX, int xPos, int yPos) {
+    private void drawClouds(Graphics2D graphics, int playerX, int xPos, int yPos, int cloudsOffset) {
         for (int i = xPos-5000; i < xPos + 5000; i+= 544)  {
             if (i < playerX + 2106 && i > playerX - 2106) {
                 graphics.drawImage(clouds, i, yPos - clouds.getHeight(this), this);

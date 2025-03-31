@@ -7,6 +7,8 @@ import game.Game;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
 import org.jbox2d.common.Vec2;
+
+import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -61,8 +63,9 @@ public abstract class LevelFrame {
      * @param groundFrame the ground frame to add
      */
     protected void addGroundFrame(String name, GroundFrame groundFrame) {
-        if (groundFrames.putIfAbsent(name, groundFrame) != null) {;
-            System.err.println("Warning: Ground frame with name " + name + " already exists.");
+        if (groundFrames.putIfAbsent(name, groundFrame) != null) {
+            System.err.println("Warning: Ground frame with name " + name + " already exists. Destroying Duplicate!");
+            groundFrame.destroy();
         }
     }
 
@@ -146,6 +149,15 @@ public abstract class LevelFrame {
      */
     public Vec2 getCentre() {
         return centre;
+    }
+
+    /**
+     * Returns the boundary vector of the given key
+     * @param key can be {@code Lower}, {@coe Upper}, {@code Left} or {@code Right}
+     * @return the boundary value ({@link Vec2})
+     */
+    public Vec2 getBoundary(String key) {
+        return boundaries.get(key);
     }
 
     /**

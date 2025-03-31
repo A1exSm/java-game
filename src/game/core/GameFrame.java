@@ -2,7 +2,10 @@ package game.core;
 
 import city.cs.engine.EngineerView;
 import game.Game;
-import game.utils.menu.GameJMenuBar;
+import game.levels.MagicCliff;
+import game.menu.GameJMenuBar;
+import game.menu.MainMenu;
+import game.menu.SelectLevel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,22 +54,24 @@ public class GameFrame extends JFrame {
                 add(new MainMenu(game).getMenuPanel());
                 revalidateFrame();
             }
-            case "Game" -> {addGameView();}
+            case "LevelSelect" -> {
+                getContentPane().removeAll();
+                setJMenuBar(null);
+                add(new SelectLevel(game).getPanel());
+                revalidateFrame();
+            }
+            case "MagicCliff" -> {
+                addGameView("MagicCliff");
+            }
             default -> {throw new IllegalArgumentException("Error: Invalid layout specified.");}
         }
     }
     /**
      * Adds the game view to the frame.
      */
-    private void addGameView() {
-        // check for existing view
-        for (Component component : getContentPane().getComponents()) {
-            if (component instanceof GameView) {
-                throw new IllegalStateException("Error: Game view component is already present.");
-            }
-        }
+    private void addGameView(String level) {
         getContentPane().removeAll();
-        game.startGame();
+        game.startGame(level);
         userView = Game.gameView;
         add(userView);
         userView.setName("View");

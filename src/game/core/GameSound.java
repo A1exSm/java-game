@@ -198,7 +198,7 @@ public class GameSound extends SoundClip {
     /**
      * Sets the volume of the sound.<br>
      * If the volume is set to 0, which triggers an IllegalArgumentException, the volume is set to 0.0001.<br>
-     * There is nothing to catch an IllegalArgumentException of a volume set too high, as the volume is restricted by the volume slider in {@link game.utils.menu.JMenuPanel}.
+     * There is nothing to catch an IllegalArgumentException of a volume set too high, as the volume is restricted by the volume slider in {@link game.menu.JMenuPanel}.
      * @param volume (double) The volume level to set.
      */
     @Override

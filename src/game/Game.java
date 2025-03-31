@@ -5,13 +5,10 @@ import city.cs.engine.*;
 import game.core.*;
 import game.enums.SoundGroups;
 import game.utils.Controls;
-import game.utils.menu.JMenuPanel;
+import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
-import java.io.IOException;
 
 /**
  * The main class for the game.
@@ -31,9 +28,9 @@ public class Game {
     /**
      * The GameView instance in which the game is displayed.<br>
      * A public static field allowing for non-static methods to be accessed by calling Game.gameView.method();<br>
-     * Currently used by {@link game.utils.menu.GameJMenuBar GameJMenuBar} to access {@link GameView#jMenuPanel} and call {@link JMenuPanel#toggleMenu()}.
+     * Currently used by {@link game.menu.GameJMenuBar GameJMenuBar} to access {@link GameView#jMenuPanel} and call {@link JMenuPanel#toggleMenu()}.
      * @see GameView
-     * @see game.utils.menu.GameJMenuBar
+     * @see game.menu.GameJMenuBar
      * @see JMenuPanel#toggleMenu()
      */
     public static GameView gameView;
@@ -89,8 +86,8 @@ public class Game {
      * Creates a new instance of {@link Controls}.<br>
      * Calls {@link #viewTracker()}
      */
-    public void startGame() {
-        gameWorld = new GameWorld(this);
+    public void startGame(String level) {
+        gameWorld = new GameWorld(this, level);
         gameView = new GameView(gameWorld, 1200, 630);
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();

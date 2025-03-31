@@ -1,9 +1,7 @@
-package game.utils.menu;
+package game.menu;
 // Imports
-import game.body.walkers.mobs.MobWalker;
 import game.core.GameSound;
 import game.core.GameView;
-import game.core.GameWorld;
 import game.enums.SoundGroups;
 import javax.swing.*;
 import java.awt.*;
