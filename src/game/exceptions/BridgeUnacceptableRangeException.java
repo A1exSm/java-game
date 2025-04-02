@@ -1,6 +1,6 @@
 package game.exceptions;
 
-import game.body.staticstructs.ground.Bridge;
+import game.body.staticstructs.ground.magicCliffs.Bridge;
 import game.body.staticstructs.ground.GroundFrame;
 
 public class BridgeUnacceptableRangeException extends InvalidBridgeException {

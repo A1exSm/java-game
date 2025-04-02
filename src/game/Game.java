@@ -3,7 +3,9 @@ package game;
 // Imports
 import city.cs.engine.*;
 import game.core.*;
+import game.enums.Environments;
 import game.enums.SoundGroups;
+import game.levels.LevelFrame;
 import game.utils.Controls;
 import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
@@ -78,7 +80,7 @@ public class Game {
      */
     public Game(Boolean debugOn) {
         frame = new GameFrame(this);
-        frame.switchLayout("MainMenu");
+        frame.switchLayout(Environments.Main_Menu);
     }
     /**
      * Starts the game.<br>
@@ -86,9 +88,9 @@ public class Game {
      * Creates a new instance of {@link Controls}.<br>
      * Calls {@link #viewTracker()}
      */
-    public void startGame(String level) {
+    public void startGame(Environments level) {
         gameWorld = new GameWorld(this, level);
-        gameView = new GameView(gameWorld, 1200, 630);
+        gameView = new GameView(gameWorld, level );
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
     }
@@ -133,7 +135,7 @@ public class Game {
             gameView = null;
             gameWorld = null;
             gameTime = null;
-            frame.switchLayout("MainMenu");
+            frame.switchLayout(Environments.Main_Menu);
             return true;
         }
         return false;
@@ -231,4 +233,5 @@ public class Game {
     public static void main(String[] args) {
         new Game(false);
     }
+    // Misc | Getters
 }

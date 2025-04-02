@@ -1,7 +1,9 @@
 package game.levels;
 // Imports
 
-import game.body.staticstructs.ground.*;
+import game.body.staticstructs.ground.magicCliffs.Bridge;
+import game.body.staticstructs.ground.magicCliffs.FloatingPlatform;
+import game.body.staticstructs.ground.magicCliffs.MagicPlatform;
 import game.body.walkers.mobs.WizardWalker;
 import game.body.walkers.mobs.WormWalker;
 import game.core.GameWorld;
@@ -15,47 +17,40 @@ import org.jbox2d.common.Vec2;
 public class MagicCliff extends LevelFrame {
     // Fields
     public static final int NUM_MOBS = 4;
-    private float xCentre;
-    private float yCentre;
     // Constructor
     public MagicCliff(GameWorld gameWorld) {
         super(gameWorld);
-        initBoundaries();
+        setBoundaries(new Vec2(0,0), 20, -20, -300, 300);
         initMobs();
         initFrames();
-        setPlayerSpawn(new Vec2(100, 2));
+        setPlayerSpawn(new Vec2(0, 2));
         resetPlayerPos();
     }
     // Methods | Private | setup
-    private void initBoundaries() {
-        setCentre(new Vec2(100, 0));
-        xCentre = getCentre().x;
-        yCentre = getCentre().y;
-        setBoundary("Lower", new Vec2(xCentre + 0, yCentre + -20));
-        setBoundary("Upper", new Vec2(xCentre + 0, yCentre + 20));
-        setBoundary("Left", new Vec2(xCentre + -300, yCentre + 0));
-        setBoundary("Right", new Vec2(xCentre + 300, yCentre + 0));
-    }
-    private void initFrames() {
+    @Override
+    protected void initFrames() {
         GameWorld gameWorld = getGameWorld();
-        addGroundFrame("A", new Platform(gameWorld, xCentre + 0, yCentre + -3, PlatformType.GROUND));
-        addGroundFrame("B", new Platform(gameWorld, xCentre + 48, yCentre + -3, PlatformType.GROUND));
-        addGroundFrame("C", new Platform(gameWorld, xCentre + 76, yCentre + -3, PlatformType.GROUND));
-        addGroundFrame("D", new Platform(gameWorld, xCentre + 116, yCentre + -3, PlatformType.GROUND));
-        addGroundFrame("platform", new FloatingPlatform(gameWorld, xCentre + 1420, yCentre + 5, "LARGE"));
+        addGroundFrame("A", new MagicPlatform(gameWorld, 0, -3, PlatformType.GROUND));
+        addGroundFrame("B", new MagicPlatform(gameWorld, 48, -3, PlatformType.GROUND));
+        addGroundFrame("C", new MagicPlatform(gameWorld, 76, -3, PlatformType.GROUND));
+        addGroundFrame("D", new MagicPlatform(gameWorld, 116, -3, PlatformType.GROUND));
+        addGroundFrame("platform", new FloatingPlatform(gameWorld, 1420, 5, "LARGE"));
         addGroundFrame("A_bridge_B", new Bridge(gameWorld, groundFrames.get("A"), groundFrames.get("B")));
         addGroundFrame("E_bridge_D", new Bridge(gameWorld, groundFrames.get("C"), groundFrames.get("D")));
-        addGroundFrame("FloatingPlatformA", new FloatingPlatform(gameWorld, xCentre + 140, yCentre + 3, "LARGE"));
-        addGroundFrame("FloatingPlatformB", new FloatingPlatform(gameWorld, xCentre + 160, yCentre + 5, "MEDIUM"));
-        addGroundFrame("FloatingPlatformC", new FloatingPlatform(gameWorld, xCentre + 175, yCentre + 7, "MEDIUM"));
-        addGroundFrame("FloatingPlatformD", new FloatingPlatform(gameWorld, xCentre + 190, yCentre + 9, "MEDIUM"));
-        addGroundFrame("CliffPlatformA", new Platform(gameWorld, xCentre + 210, yCentre + 6, PlatformType.CLIFF_LIGHT));
-        if (groundFrames.get("A") instanceof Platform a) {a.addTree();}
-        if (groundFrames.get("D") instanceof Platform d) {d.addTree();}
+        addGroundFrame("FloatingPlatformA", new FloatingPlatform(gameWorld, 140, 3, "LARGE"));
+        addGroundFrame("FloatingPlatformB", new FloatingPlatform(gameWorld, 160, 5, "MEDIUM"));
+        addGroundFrame("FloatingPlatformC", new FloatingPlatform(gameWorld, 175, 7, "MEDIUM"));
+        addGroundFrame("FloatingPlatformD", new FloatingPlatform(gameWorld, 190, 9, "MEDIUM"));
+        addGroundFrame("CliffPlatformA", new MagicPlatform(gameWorld, 210, 6, PlatformType.CLIFF_LIGHT));
+        if (groundFrames.get("A") instanceof MagicPlatform a) {a.addTree();}
+        if (groundFrames.get("D") instanceof MagicPlatform d) {d.addTree();}
     }
-    private void initMobs() {
+    @Override
+    protected void initMobs() {
         GameWorld gameWorld = getGameWorld();
-        new WizardWalker(gameWorld, new Vec2(xCentre + 0, yCentre + 2));
+        float xCentre = getCentre().x;
+        float yCentre = getCentre().y;
+        new WizardWalker(gameWorld, new Vec2(xCentre + 10, yCentre + 4));
         new WizardWalker(gameWorld, new Vec2(xCentre + 50, yCentre + 2));
         new WizardWalker(gameWorld, new Vec2(xCentre + 110, yCentre + 4));
         new WormWalker(gameWorld, new Vec2(xCentre + 190 + 10, yCentre + 12));

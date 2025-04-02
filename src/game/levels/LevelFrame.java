@@ -53,8 +53,45 @@ public abstract class LevelFrame {
         boundaries.put("Left", null);
         boundaries.put("Right", null);
     }
+    /**
+     * Sets the boundary of a given key.<br>
+     * If the boundary value already exists, it will not be updated and a warning is given.
+     *
+     * @param key the key for the boundary ({@link String})
+     * @param boundary the boundary value ({@link Vec2})
+     */
+    private void addBoundary(String key, Vec2 boundary) {
+        if (boundaries.putIfAbsent(key, boundary) != null) {
+            System.err.println("Warning: Boundary " + key + " does not exist.\nPlease set the boundary for the following keys:\n1.Lower\n2.Upper\n3.Left\n4.Right");
+        }
+    }
 
     // Methods | Protected
+    /**
+     * Initialises the {@link GroundFrame GroundFrames} of the level.<br>
+     * This method is called in the constructor of the level.
+     */
+    protected abstract void initFrames();
+    /**
+     * Initialises the {@link game.body.walkers.mobs.MobWalker MobWalkers} of the level.<br>
+     * This method is called in the constructor of the level.
+     */
+    protected abstract void initMobs();
+    /**
+     * Sets the values of boundaries and returns the centre of the level.<br>
+     * @param centre the centre of the level ({@link Vec2})
+     * @param upperY the upper Y boundary
+     * @param lowerY the lower Y boundary
+     * @param leftX the left X boundary
+     * @param rightX the right X boundary
+     */
+    protected void setBoundaries(Vec2 centre, float upperY, float lowerY, float leftX, float rightX) {
+        this.centre = centre;
+        addBoundary("Upper", new Vec2(centre.x, centre.y + upperY));
+        addBoundary("Lower", new Vec2(centre.x, centre.y + lowerY));
+        addBoundary("Left", new Vec2(centre.x + leftX, centre.y));
+        addBoundary("Right", new Vec2(centre.x + rightX, centre.y));
+    }
     /**
      * Adds a ground frame to the level.<br>
      * If a ground frame with the same name already exists, it will not be added.
@@ -66,7 +103,9 @@ public abstract class LevelFrame {
         if (groundFrames.putIfAbsent(name, groundFrame) != null) {
             System.err.println("Warning: Ground frame with name " + name + " already exists. Destroying Duplicate!");
             groundFrame.destroy();
+            return;
         }
+        groundFrame.setPosition(new Vec2(centre.x + groundFrame.getOriginPos().x, centre.y + groundFrame.getOriginPos().y));
     }
 
     /**
@@ -87,33 +126,12 @@ public abstract class LevelFrame {
         return gameWorld;
     }
 
-    /**
-     * Sets the boundary of a given key.<br>
-     * If the boundary value already exists, it will not be updated and a warning is given.
-     *
-     * @param key the key for the boundary ({@link String})
-     * @param boundary the boundary value ({@link Vec2})
-     */
-    protected void setBoundary(String key, Vec2 boundary) {
-        if (boundaries.putIfAbsent(key, boundary) != null) {
-            System.err.println("Warning: Boundary " + key + " does not exist.\nPlease set the boundary for the following keys:\n1.Lower\n2.Upper\n3.Left\n4.Right");
-        }
-    }
-
-    /**
-     * Sets the centre of the level.<br>
-     *
-     * @param centre the centre value ({@link Vec2})
-     */
-    protected void setCentre(Vec2 centre) {
-        this.centre = centre;
-    }
     // Methods | Private | StepListener
     private void initStepListener() {
         stepListener = new StepListener() {
             @Override
             public void preStep(StepEvent event) {
-                if (gameWorld.getPlayer().getCurrentLevel() != LevelFrame.this) {
+                if (gameWorld.level != LevelFrame.this) {
                     stop();
                 }
                 Vec2 playerPos = gameWorld.getPlayer().getPosition();
@@ -165,7 +183,6 @@ public abstract class LevelFrame {
      * <p>Adds the level stepListener to the world.</p>
      */
     public void start() {
-        gameWorld.getPlayer().setCurrentLevel(this);
         if (stepListener == null) {
             initStepListener();
         }

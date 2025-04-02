@@ -2,6 +2,7 @@ package game.core;
 
 import city.cs.engine.EngineerView;
 import game.Game;
+import game.enums.Environments;
 import game.levels.MagicCliff;
 import game.menu.GameJMenuBar;
 import game.menu.MainMenu;
@@ -46,22 +47,25 @@ public class GameFrame extends JFrame {
      *
      * @param Layout the layout to switch to
      */
-    public void switchLayout(String Layout) {
+    public void switchLayout(Environments Layout) {
         switch(Layout) {
-            case "MainMenu" -> {
+            case Main_Menu -> {
                 getContentPane().removeAll();
                 setJMenuBar(null);
                 add(new MainMenu(game).getMenuPanel());
                 revalidateFrame();
             }
-            case "LevelSelect" -> {
+            case Level_Select -> {
                 getContentPane().removeAll();
                 setJMenuBar(null);
                 add(new SelectLevel(game).getPanel());
                 revalidateFrame();
             }
-            case "MagicCliff" -> {
-                addGameView("MagicCliff");
+            case MAGIC_CLIFF -> {
+                addGameView(Environments.MAGIC_CLIFF);
+            }
+            case HAUNTED_FOREST -> {
+                addGameView(Environments.HAUNTED_FOREST);
             }
             default -> {throw new IllegalArgumentException("Error: Invalid layout specified.");}
         }
@@ -69,7 +73,7 @@ public class GameFrame extends JFrame {
     /**
      * Adds the game view to the frame.
      */
-    private void addGameView(String level) {
+    private void addGameView(Environments level) {
         getContentPane().removeAll();
         game.startGame(level);
         userView = Game.gameView;

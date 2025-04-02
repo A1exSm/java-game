@@ -10,9 +10,12 @@ import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
 import game.body.walkers.mobs.WormWalker;
+import game.enums.Environments;
 import game.enums.State;
 import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
+import game.levels.HauntedForest;
+import game.levels.LevelFrame;
 import game.levels.MagicCliff;
 import org.jbox2d.common.Vec2;
 import game.animation.*;
@@ -31,6 +34,7 @@ public class GameWorld extends World {
     private static final ArrayList<MobWalker> mobs = new ArrayList<>();
     public static final Inventory playerInventory = new Inventory(4);
     private boolean toggleMobsPassive = false;
+    public final LevelFrame level;
 
     // Constructor
     /**
@@ -38,16 +42,23 @@ public class GameWorld extends World {
      *
      * @param game the game instance
      */
-    public GameWorld(Game game, String level) {
+    public GameWorld(Game game, Environments level) {
         super();
         GameWorld.game = game;
         player = new PlayerWalker(this);
         new WalkerAnimationFrames(State.RUN, Walkers.PLAYER);
         switch (level) {
-            case "MagicCliff" -> {
+            case MAGIC_CLIFF -> {
                 MagicCliff magicCliff = new MagicCliff(this);
+                this.level = magicCliff;
                 magicCliff.start();
             }
+            case HAUNTED_FOREST -> {
+                HauntedForest hauntedForest = new HauntedForest(this);
+                this.level = hauntedForest;
+                hauntedForest.start();
+            }
+            default -> {throw new IllegalArgumentException("Invalid level: " + level);}
         }
 //        populate();
         // end of constructor start of a new world :)

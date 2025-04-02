@@ -1,10 +1,11 @@
-package game.body.staticstructs.ground;
+package game.body.staticstructs.ground.magicCliffs;
 // Imports
 
 import city.cs.engine.AttachedImage;
 import city.cs.engine.BodyImage;
 import city.cs.engine.BoxShape;
 import city.cs.engine.SolidFixture;
+import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
 import org.jbox2d.common.Vec2;
 
@@ -37,13 +38,13 @@ public class FloatingPlatform extends GroundFrame {
     private void constructMedium() {
         halfDimensions.set(2, 1.5f);
         new SolidFixture(this, new BoxShape(halfDimensions.x, halfDimensions.y));
-        new AttachedImage(this, new BodyImage("data/Magic_Cliffs/ground/floating_medium.png"), 4f, 0, new Vec2(0, 0.5f));
+        new AttachedImage(this, new BodyImage("data/MagicCliffs/ground/floating_medium.png"), 4f, 0, new Vec2(0, 0.5f));
     }
     private void constructLarge() {
         halfDimensions.set(4, 5.7f/2); // -1.9 -0.8 = -2.7, 1.4 + 1.5 = 2.9; dist (-2.7, 2.9) = 2.7 + 2.9 = 5.6
         new SolidFixture(this, new BoxShape(4, 1.5f, new Vec2(0, 1.4f)));
         new SolidFixture(this, new BoxShape(3, 0.5f, new Vec2(0.5f, -0.6f))).setFriction(0);
         new SolidFixture(this, new BoxShape(2, 0.8f, new Vec2(0, -1.9f))).setFriction(0);
-        new AttachedImage(this, new BodyImage("data/Magic_Cliffs/ground/floating_large.png"), 7f, 0, new Vec2(0, 0));
+        new AttachedImage(this, new BodyImage("data/MagicCliffs/ground/floating_large.png"), 7f, 0, new Vec2(0, 0));
     }
 }

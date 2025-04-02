@@ -2,6 +2,7 @@ package game.menu;
 // Imports
 
 import game.Game;
+import game.enums.Environments;
 
 import javax.swing.*;
 
@@ -25,13 +26,13 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
     // Constructor
     public MainMenu(Game game) {
         startButton.addActionListener(e -> {
-            game.getFrame().switchLayout("Game");
+//            game.getFrame().switchLayout(Environments.MAGIC_CLIFF);
         });
         quitButton.addActionListener(e -> {
             game.exitWindow();
         });
         levelSelectButton.addActionListener(e -> {
-            game.getFrame().switchLayout("LevelSelect");
+            game.getFrame().switchLayout(Environments.Level_Select);
         });
     }
     // Methods

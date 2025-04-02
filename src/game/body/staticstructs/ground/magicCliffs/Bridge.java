@@ -1,6 +1,7 @@
-package game.body.staticstructs.ground;
+package game.body.staticstructs.ground.magicCliffs;
 // Imports
 import city.cs.engine.*;
+import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
 import game.enums.Direction;
 import game.exceptions.BridgeCollisionException;
@@ -44,15 +45,15 @@ public class Bridge extends GroundFrame {
         String[] path = new String[2]; // path[0] = start, path[1] = end
 
         if (facingDirection.equals(Direction.RIGHT)) {
-            dist = Math.abs((bridgeStart.originPos.x + bridgeStart.halfDimensions.x) - (bridgeEnd.originPos.x - bridgeEnd.halfDimensions.x));
-            originPos.x = (bridgeStart.originPos.x + bridgeStart.halfDimensions.x) + (dist / 2);
+            dist = Math.abs((bridgeStart.getOriginPos().x + bridgeStart.getHalfDimensions().x) - (bridgeEnd.getOriginPos().x - bridgeEnd.getHalfDimensions().x));
+            originPos.x = (bridgeStart.getOriginPos().x + bridgeStart.getHalfDimensions().x) + (dist / 2);
             xPos[0] = -(dist / 2) + 1.26f;
             xPos[1] = (dist / 2) - 1.26f;
             path[0] = "left";
             path[1] = "right";
         } else {
-            dist = Math.abs((bridgeStart.originPos.x - bridgeStart.halfDimensions.x) - (bridgeEnd.originPos.x + bridgeEnd.halfDimensions.x));
-            originPos.x = (bridgeStart.originPos.x - bridgeStart.halfDimensions.x) - (dist / 2);
+            dist = Math.abs((bridgeStart.getOriginPos().x - bridgeStart.getHalfDimensions().x) - (bridgeEnd.getOriginPos().x + bridgeEnd.getHalfDimensions().x));
+            originPos.x = (bridgeStart.getOriginPos().x - bridgeStart.getHalfDimensions().x) - (dist / 2);
             xPos[0] = (dist / 2) - 1.26f;
             xPos[1] = -(dist / 2) + 1.26f;
             path[0] = "right";
@@ -60,7 +61,7 @@ public class Bridge extends GroundFrame {
         }
         bridgeFixture = new SolidFixture(this, new BoxShape((dist / 2) - 0.1f, halfDimensions.y, new Vec2(0, 0)));
         halfDimensions.x = dist / 2;
-        setPosition(new Vec2(originPos.x,(bridgeStart.originPos.y + bridgeStart.halfDimensions.y) - 1.5f));
+        setPosition(new Vec2(originPos.x,(bridgeStart.getOriginPos().y + bridgeStart.getHalfDimensions().y) - 1.5f));
         putBridgePart("bridgeStart", path[0], xPos[0], 0);
         middleBridge();
         putBridgePart("bridgeEnd", path[1], xPos[1], 0);
@@ -93,7 +94,7 @@ public class Bridge extends GroundFrame {
     }
 
     private void putBridgePart(String name, String path, float x, float y) {
-        bridgeParts.put(name, new AttachedImage(this, new BodyImage("data/Magic_Cliffs/bridge/" + path + ".png"), 4f, 0, new Vec2(x, y)));
+        bridgeParts.put(name, new AttachedImage(this, new BodyImage("data/MagicCliffs/bridge/" + path + ".png"), 4f, 0, new Vec2(x, y)));
     }
 
     private Direction calcDirection() {

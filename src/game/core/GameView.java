@@ -2,6 +2,7 @@ package game.core;
 // Imports
 import city.cs.engine.UserView;
 import game.Game;
+import game.enums.Environments;
 import game.levels.LevelFrame;
 import game.utils.InventoryButton;
 import game.menu.JMenuPanel;
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 public class GameView extends UserView {
     // Fields
     private static final ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
-    private final Image sky = new ImageIcon("data/Magic_Cliffs/PNG/sky2.png").getImage();
-    private final Image sea = new ImageIcon("data/Magic_Cliffs/PNG/sea3.png").getImage();
-    private final Image clouds = new ImageIcon("data/Magic_Cliffs/PNG/clouds.png").getImage();
+    private final Image parallaxBackground;
+    private final Image parallaxForeground;
+    private final Image sea;
     private int cloudsOffset = 0;
     public static final Font STATUS_FONT = new Font("Monospaced", Font.PLAIN, 20);
     public static final Font DISPLAY_FONT = new  Font("Niagara Solid", Font.BOLD, 50);
@@ -30,6 +31,7 @@ public class GameView extends UserView {
     public final JMenuPanel jMenuPanel = new JMenuPanel(this);
     private boolean drawReactiveClouds = false;
     public boolean isOutOfBounds = false;
+    private final Environments level;
 
     static {
         slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
@@ -44,11 +46,10 @@ public class GameView extends UserView {
      * Constructs a `GameView` with the specified game world, width, and height.
      *
      * @param gameWorld the game world to be displayed
-     * @param width the width of the view
-     * @param height the height of the view
+     * @param level the environment level
      */
-    public GameView(GameWorld gameWorld, int width, int height) {
-        super(gameWorld, width, height);
+    public GameView(GameWorld gameWorld, Environments level) {
+        super(gameWorld, 1200, 630);
         requestFocus();
         setFocusable(true);
         Game.gameTime = new GameTime();
@@ -60,6 +61,26 @@ public class GameView extends UserView {
                 this.setComponentZOrder(component, getComponentCount()-1); // manually correcting z-order after all components are added during init
             }
         }
+        this.level = level;
+        switch (level) {
+            case MAGIC_CLIFF -> {
+                parallaxBackground = new ImageIcon("data/MagicCliffs/PNG/sky2.png").getImage();
+                parallaxForeground = new ImageIcon("data/MagicCliffs/PNG/clouds.png").getImage();
+                sea = new ImageIcon("data/MagicCliffs/PNG/sea3.png").getImage();
+            }
+            case HAUNTED_FOREST -> {
+                // getting scaled dimensions for the background and foreground images
+                Image tempBack = new ImageIcon("data/HauntedForest/back.png").getImage();
+                Image tempFront = new ImageIcon("data/HauntedForest/middle.png").getImage();
+                int[] backDimensions = Game.getScaledDimensions(tempBack.getWidth(this), tempBack.getHeight(this), 1200, 630);
+                int[] frontDimensions = Game.getScaledDimensions(tempFront.getWidth(this), tempFront.getHeight(this), 1200, 630);
+                parallaxBackground = tempBack.getScaledInstance(backDimensions[0], backDimensions[1], Image.SCALE_SMOOTH);
+                parallaxForeground = tempFront.getScaledInstance(frontDimensions[0], frontDimensions[1], Image.SCALE_SMOOTH);
+                sea = null;
+                setBackground(Color.BLACK);
+            }
+            default -> {throw new IllegalStateException("Unexpected value: " + level);}
+        }
     }
 
     // Methods | Background | @Override
@@ -70,99 +91,38 @@ public class GameView extends UserView {
      */
     @Override
     protected void paintBackground(Graphics2D g) {
-        // vars
         Vec2 playerPos = Game.gameWorld.getPlayer().getPosition();
         int playerX = (int) worldToView(playerPos).getX();
-        LevelFrame currentLevel = Game.gameWorld.getPlayer().getCurrentLevel();
+        LevelFrame currentLevel = Game.gameWorld.level;
         int yPos;
         int xPos;
-        if (currentLevel != null) {
-            xPos = (int) worldToView(currentLevel.getCentre()).getX();
-            yPos = (int) worldToView(currentLevel.getCentre()).getY();
-        } else {
-            yPos = (int) worldToView(new Vec2(0, 0)).getY();
-            xPos = (int) worldToView(new Vec2(0, 0)).getX() - 1053;
-        }
-        // method calls
-        drawSky(g, yPos);
-        if (drawReactiveClouds) {
-            drawReactiveClouds(g, playerX, xPos, yPos);
-        } else {
-            if (currentLevel != null) {
-                int leftBound = (int) worldToView(currentLevel.getBoundary("Left")).getX();
-                int rightBound = (int) worldToView(currentLevel.getBoundary("Right")).getX();
-                drawClouds(g, playerX, xPos, yPos, Math.abs(leftBound - rightBound));
-            } else {
-                drawClouds(g, playerX, xPos, yPos, 5000);
-            }
-
-        }
-        drawSea(g, playerX, xPos, yPos);
-    }
-    // Methods | Background | Private
-    /**
-     * Draws the sky background.
-     *
-     * @param graphics the graphics context
-     * @param yPos the y position to start drawing
-     */
-    private void drawSky(Graphics2D graphics, int yPos) {
-        int SKY_HEIGHT = 1080;
-        int SKY_WIDTH = 112;
-        for (int i = -SKY_WIDTH; i < 1200; i+= SKY_WIDTH) {
-            graphics.drawImage(sky, i, yPos - SKY_HEIGHT, this);
-        }
+        xPos = (int) worldToView(currentLevel.getCentre()).getX();
+        yPos = (int) worldToView(currentLevel.getCentre()).getY();
+        if (level.equals(Environments.HAUNTED_FOREST)) {yPos -= 30;}
+        int offset = Math.abs((int) worldToView(currentLevel.getBoundary("Left")).getX() - (int) worldToView(currentLevel.getBoundary("Right")).getX());
+        staticWorldDraw(g, parallaxBackground, playerX, xPos, yPos - parallaxBackground.getHeight(this), offset, 2106);
+        staticWorldDraw(g, parallaxForeground, playerX, xPos, yPos - parallaxForeground.getHeight(this), offset, 2106);
+        if (level == Environments.HAUNTED_FOREST) {return;}
+        staticWorldDraw(g, sea, playerX, xPos, yPos, offset, 1053);
     }
     /**
-     * Draws reactive clouds based on the player's position.
-     * The clouds will appear to be in the gameWorld, despite being drawn in the view.
-     * Clouds are drawn using a parallax effect with the sky.
+     * Draws static parallax elements in the game view.
+     * The elements are drawn in a parallax effect based on the player's position.<br><br>
+     * this replaced three methods that output the same thing as this; however, this function performs better.
      *
      * @param graphics the graphics context
+     * @param img the image to be drawn
      * @param playerX the x position of the player
      * @param xPos the x position to start drawing
      * @param yPos the y position to start drawing
+     * @param offset the offset for drawing
+     * @param drawDistance the distance to draw from the {@link game.body.walkers.PlayerWalker PlayerWalker}
      */
-    private void drawReactiveClouds(Graphics2D graphics, int playerX, int xPos, int yPos) {
-        if (playerX > xPos + cloudsOffset + 1053) {
-            cloudsOffset += 1053;
-            System.out.println("offset increased");
-        } else if (playerX < xPos + cloudsOffset - 1053) {
-            cloudsOffset -= 1053;
-            System.out.println("offset decreased");
-        }
-        for (int i = xPos - 2106 + cloudsOffset; i < xPos + 2106 + cloudsOffset; i+= 544) {
-            graphics.drawImage(clouds, i, yPos - clouds.getHeight(this), this);
-        }
-    }
-    /**
-     * Draws clouds only within a distance of the player.
-     * These clouds also use a parallax effect with the sky.
-     * The clouds will appear to be in the gameWorld, despite being drawn in the view.
-     *
-     * @param graphics the graphics context
-     * @param playerX the x position of the player
-     * @param xPos the x position to start drawing
-     * @param yPos the y position to start drawing
-     */
-    private void drawClouds(Graphics2D graphics, int playerX, int xPos, int yPos, int cloudsOffset) {
-        for (int i = xPos-5000; i < xPos + 5000; i+= 544)  {
-            if (i < playerX + 2106 && i > playerX - 2106) {
-                graphics.drawImage(clouds, i, yPos - clouds.getHeight(this), this);
-            }
-        }
-    }
-    /**
-     * Draws the sea background.
-     *
-     * @param graphics the graphics context
-     * @param yPos the y position to start drawing
-     */
-    private void drawSea(Graphics2D graphics, int playerX, int xPos, int yPos) {
-        int seaWidth = 112;
-        for (int i = xPos-5000; i < xPos + 5000; i+=seaWidth) {
-            if (i < playerX + 1053 && i > playerX - 1053) {
-                graphics.drawImage(sea, i, yPos, this);
+    private void staticWorldDraw(Graphics2D graphics, Image img, int playerX, int xPos, int yPos, int offset, int drawDistance) {
+        int width = img.getWidth(this);
+        for (int i = xPos-offset; i < xPos + offset; i+= width)  {
+            if (i < playerX + drawDistance && i > playerX - drawDistance) {
+                graphics.drawImage(img, i, yPos, this);
             }
         }
     }
@@ -367,15 +327,5 @@ public class GameView extends UserView {
      */
     public void gameOver() {
         gameOver = true;
-    }
-
-    // Methods | Public | Toggle
-    /**
-     * Toggles the reactive clouds feature.
-     *
-     * @param value true to enable reactive clouds, false to disable
-     */
-    public void toggleReactiveClouds(boolean value) {
-        drawReactiveClouds = value;
     }
 }
