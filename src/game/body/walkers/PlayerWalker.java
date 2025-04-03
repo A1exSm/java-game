@@ -1,14 +1,13 @@
 package game.body.walkers;
 // Imports
-
 import city.cs.engine.*;
+import game.body.staticstructs.HauntedBackdrop;
 import game.core.GameWorld;
 import game.animation.PlayerStepListener;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.Direction;
 import game.enums.State;
 import game.enums.Walkers;
-import game.levels.LevelFrame;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
 
@@ -192,6 +191,8 @@ public final class PlayerWalker extends WalkerFrame {
     public boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
         for (Body body : getBodiesInContact()) {
             if (body.getPosition().y < getPosition().y-2) {
+                return true;
+            } else if (body instanceof HauntedBackdrop) {
                 return true;
             }
         }

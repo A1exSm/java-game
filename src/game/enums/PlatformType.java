@@ -8,10 +8,7 @@ import org.jbox2d.common.Vec2;
 public enum PlatformType {
     CLIFF_DARK,
     CLIFF_LIGHT,
-    GROUND,
-    SKULL_SLOPED,
-    SLOPED,
-    FLAT;
+    GROUND;
     static {
         // CLIFF_DARK | Setup
         CLIFF_DARK.side = new BodyImage("data/MagicCliffs/cliff/dark_left.png", 15.5f);
@@ -34,18 +31,6 @@ public enum PlatformType {
         GROUND.middleX = 0;
         GROUND.middleY = 4.8f;
         GROUND.sideY = 0.5f;
-        // FLAT | Setup
-        FLAT.side = new BodyImage("data/HauntedForest/tiles/flat_A.png", 11f);
-        FLAT.middle = new BodyImage("data/HauntedForest/tiles/flat_B.png", 11f);
-        FLAT.sideWidth = 3.65f;
-        // SLOPED | Setup
-        SLOPED.side = new BodyImage("data/HauntedForest/tiles/sloped_A.png", 11f);
-        SLOPED.middle = new BodyImage("data/HauntedForest/tiles/sloped_B.png", 11f);
-        SLOPED.sideWidth = 3.65f;
-        // SKULL_SLOPED | Setup
-        SKULL_SLOPED.side = new BodyImage("data/HauntedForest/tiles/sloped_skull_A.png", 11f);
-        SKULL_SLOPED.middle = new BodyImage("data/HauntedForest/tiles/sloped_skull_B.png", 11f);
-        SKULL_SLOPED.sideWidth = 3.65f;
     }
 
     private BodyImage middle;

@@ -1,11 +1,11 @@
 package game.levels;
 // Imports
 
-import game.body.staticstructs.ground.hauntedForest.HauntedPlatform;
-import game.body.staticstructs.ground.magicCliffs.MagicPlatform;
+import game.body.staticstructs.HauntedBackdrop;
+import game.body.staticstructs.ground.hauntedForest.HauntedFlatPlatform;
+import game.body.staticstructs.ground.hauntedForest.HauntedSlopePlatform;
 import game.core.GameWorld;
 import game.enums.Direction;
-import game.enums.PlatformType;
 import org.jbox2d.common.Vec2;
 
 /**
@@ -28,17 +28,11 @@ public class HauntedForest extends LevelFrame {
     @Override
     protected void initFrames() {
         GameWorld gameWorld = getGameWorld();
-        addGroundFrame("B", new HauntedPlatform(gameWorld,  PlatformType.SLOPED.getSideWidth() - 0.2f, 0, 1.825f, PlatformType.FLAT, Direction.RIGHT));
-        addGroundFrame("C", new HauntedPlatform(gameWorld, -29.2f, -1, 29.2f, PlatformType.FLAT, Direction.RIGHT));
-        addGroundFrame("A", new HauntedPlatform(gameWorld, 0, -1, 0, PlatformType.SKULL_SLOPED, Direction.RIGHT));
-        addGroundFrame("D", new HauntedPlatform(gameWorld, (PlatformType.SLOPED.getSideWidth() - 0.4f) + 3.65f, 0, 0, PlatformType.SLOPED, Direction.LEFT));
-        addGroundFrame("E", new HauntedPlatform(gameWorld, (PlatformType.SLOPED.getSideWidth() - 0.4f) + (3.65f*2), -1, 0, PlatformType.SLOPED, Direction.LEFT));
-        addGroundFrame("F", new HauntedPlatform(gameWorld, (PlatformType.SLOPED.getSideWidth() - 0.4f) + (3.65f*3), -2, 0, PlatformType.SLOPED, Direction.LEFT));
-        addGroundFrame("G", new HauntedPlatform(gameWorld, (PlatformType.SLOPED.getSideWidth() - 0.4f) + (3.65f*4), -3, 0, PlatformType.SLOPED, Direction.LEFT));
-        addGroundFrame("H", new HauntedPlatform(gameWorld, (PlatformType.SLOPED.getSideWidth() - 0.4f) + (3.65f*5), -4, 0, PlatformType.SLOPED, Direction.LEFT));
-        addGroundFrame("I", new HauntedPlatform(gameWorld, (PlatformType.SLOPED.getSideWidth() - 0.4f) + (3.65f*6), -5, 0, PlatformType.SLOPED, Direction.LEFT));
-        addGroundFrame("J", new HauntedPlatform(gameWorld, (PlatformType.SLOPED.getSideWidth() - 0.4f) + (3.65f*7), -6, 0, PlatformType.SLOPED, Direction.LEFT));
-
+        addGroundFrame("SlopeA", new HauntedSlopePlatform(gameWorld, 20, 0, 3, Direction.RIGHT, Direction.UP));
+        addGroundFrame("PlatformA", new HauntedFlatPlatform(gameWorld, -0.8f, -1, 3, Direction.RIGHT));
+        addGroundFrame("SlopeB", new HauntedSlopePlatform(gameWorld, -31.3f, -12f, 6, Direction.LEFT, Direction.DOWN));
+        addGroundFrame("BackdropA", new HauntedBackdrop(gameWorld, getGroundFramePosition("SlopeB").x - groundFrames.get("SlopeB").getHalfDimensions().x - HauntedBackdrop.WIDTH/2, -5.8f));
+        addGroundFrame("BackdropB", new HauntedBackdrop(gameWorld, getGroundFramePosition("BackdropA").x - HauntedBackdrop.WIDTH, -5.8f));
     }
     @Override
     protected void initMobs() {

@@ -11,6 +11,7 @@ import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * The main class for the game.
@@ -107,6 +108,7 @@ public class Game {
         }
         for (Body body : gameWorld.getStaticBodies()) {
             body.setAlwaysOutline(!debugOn);
+            body.setLineColor(Color.CYAN);
         }
         debugOn = !debugOn;
     }

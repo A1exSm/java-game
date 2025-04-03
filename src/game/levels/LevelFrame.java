@@ -108,6 +108,10 @@ public abstract class LevelFrame {
         groundFrame.setPosition(new Vec2(centre.x + groundFrame.getOriginPos().x, centre.y + groundFrame.getOriginPos().y));
     }
 
+    protected Vec2 getGroundFramePosition(String name) {
+        return new Vec2(groundFrames.get(name).getOriginPos().x + centre.x, groundFrames.get(name).getOriginPos().y + centre.y);
+    }
+
     /**
      * Sets the player spawn position.
      *
