@@ -43,14 +43,11 @@ public abstract class GroundFrame extends StaticBody {
     public Vec2 getOriginPos() {
         return originPos;
     }
-    public static int getCount() {
-        return count;
-    }
     public float getYTop() {
         return yTop;
     }
-    // Methods | Protected
-    protected void resetYTop() {
+    // Methods | Public
+    public void resetYTop() {
         yTop = originPos.y + halfDimensions.y;
     }
 }

@@ -22,7 +22,7 @@ public abstract class LevelFrame {
     private final GameWorld gameWorld;
     private final int levelNumber;
     private HashMap<String, Vec2> boundaries;
-    protected HashMap<String, GroundFrame> groundFrames;
+    private HashMap<String, GroundFrame> groundFrames;
     private Vec2 centre;
     private Vec2 playerSpawn;
     private StepListener stepListener;
@@ -92,6 +92,7 @@ public abstract class LevelFrame {
         addBoundary("Left", new Vec2(centre.x + leftX, centre.y));
         addBoundary("Right", new Vec2(centre.x + rightX, centre.y));
     }
+    // Methods | Public
     /**
      * Adds a ground frame to the level.<br>
      * If a ground frame with the same name already exists, it will not be added.
@@ -99,19 +100,75 @@ public abstract class LevelFrame {
      * @param name the name of the ground frame
      * @param groundFrame the ground frame to add
      */
-    protected void addGroundFrame(String name, GroundFrame groundFrame) {
+    public void addGroundFrame(String name, GroundFrame groundFrame) {
         if (groundFrames.putIfAbsent(name, groundFrame) != null) {
             System.err.println("Warning: Ground frame with name " + name + " already exists. Destroying Duplicate!");
             groundFrame.destroy();
             return;
         }
-        groundFrame.setPosition(new Vec2(centre.x + groundFrame.getOriginPos().x, centre.y + groundFrame.getOriginPos().y));
+        groundFrame.setName(name);
+        updatePosition(groundFrame);
     }
-
+    // Methods | Protected
+    /**
+     * Returns the origin position in relation {@link #centre} of the added {@link GroundFrame} with the given name.
+     *
+     * @param name the name of the ground frame
+     * @return a {@link Vec2} object representing the position of the {@link GroundFrame}
+     */
     protected Vec2 getGroundFramePosition(String name) {
         return new Vec2(groundFrames.get(name).getOriginPos().x + centre.x, groundFrames.get(name).getOriginPos().y + centre.y);
     }
+    /**
+     * Sets the position of the ground frame with the given name.<br>
+     * The position is set in relation to the {@link #centre} of the level.
+     *
+     * @param name the name of the ground frame
+     * @param position the new position of the ground frame
+     */
+    protected void setGroundPosition(String name, Vec2 position) {
+        if (!groundFrames.containsKey(name)) {
+            throw new NullPointerException("Ground frame with key " + name + " does not exist in groundFrame HashMap.");
+        }
+        groundFrames.get(name).setPosition(new Vec2(centre.x + position.x, centre.y + position.y));
+    }
+    /**
+     * Updates the position of the given ground frame.<br>
+     * The position is set in relation to the {@link #centre} of the level.
+     *
+     * @param groundFrame the ground frame to update
+     */
+    protected void updatePosition(GroundFrame groundFrame) {
+        groundFrame.setPosition(new Vec2(centre.x + groundFrame.getOriginPos().x, centre.y + groundFrame.getOriginPos().y));
+    }
 
+    /**
+     * Returns the {@link GroundFrame} with the given name.
+     *
+     * @param name the name of the ground frame
+     * @return the {@link GroundFrame} object
+     */
+    protected GroundFrame getGroundFrame(String name) {
+        if (!groundFrames.containsKey(name)) {
+            throw new NullPointerException("Ground frame with key " + name + " does not exist in groundFrame HashMap.");
+        }
+        return groundFrames.get(name);
+    }
+    // Methods | Public
+    /**
+     * Removes the ground frame with the given name.<br>
+     * If the key doesn't exist, an exception is thrown.
+     *
+     * @param name the name of the ground frame
+     */
+    public void removeGroundFrame(String name) {
+        if (!groundFrames.containsKey(name)) {
+            throw new NullPointerException("Ground frame with key " + name + " does not exist in groundFrame HashMap.");
+        }
+        groundFrames.get(name).destroy();
+        groundFrames.remove(name);
+    }
+    // Methods | Protected
     /**
      * Sets the player spawn position.
      *

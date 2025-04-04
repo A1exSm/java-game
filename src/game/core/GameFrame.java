@@ -61,13 +61,7 @@ public class GameFrame extends JFrame {
                 add(new SelectLevel(game).getPanel());
                 revalidateFrame();
             }
-            case MAGIC_CLIFF -> {
-                addGameView(Environments.MAGIC_CLIFF);
-            }
-            case HAUNTED_FOREST -> {
-                addGameView(Environments.HAUNTED_FOREST);
-            }
-            default -> {throw new IllegalArgumentException("Error: Invalid layout specified.");}
+            default -> {addGameView(Layout);}
         }
     }
     /**

@@ -35,15 +35,15 @@ public class MagicCliff extends LevelFrame {
         addGroundFrame("C", new MagicPlatform(gameWorld, 76, -3, PlatformType.GROUND));
         addGroundFrame("D", new MagicPlatform(gameWorld, 116, -3, PlatformType.GROUND));
         addGroundFrame("platform", new FloatingPlatform(gameWorld, 1420, 5, "LARGE"));
-        addGroundFrame("A_bridge_B", new Bridge(gameWorld, groundFrames.get("A"), groundFrames.get("B")));
-        addGroundFrame("E_bridge_D", new Bridge(gameWorld, groundFrames.get("C"), groundFrames.get("D")));
+        addGroundFrame("A_bridge_B", new Bridge(gameWorld, getGroundFrame("A"), getGroundFrame("B")));
+        addGroundFrame("E_bridge_D", new Bridge(gameWorld, getGroundFrame("C"), getGroundFrame("D")));
         addGroundFrame("FloatingPlatformA", new FloatingPlatform(gameWorld, 140, 3, "LARGE"));
         addGroundFrame("FloatingPlatformB", new FloatingPlatform(gameWorld, 160, 5, "MEDIUM"));
         addGroundFrame("FloatingPlatformC", new FloatingPlatform(gameWorld, 175, 7, "MEDIUM"));
         addGroundFrame("FloatingPlatformD", new FloatingPlatform(gameWorld, 190, 9, "MEDIUM"));
         addGroundFrame("CliffPlatformA", new MagicPlatform(gameWorld, 210, 6, PlatformType.CLIFF_LIGHT));
-        if (groundFrames.get("A") instanceof MagicPlatform a) {a.addTree();}
-        if (groundFrames.get("D") instanceof MagicPlatform d) {d.addTree();}
+        if (getGroundFrame("A") instanceof MagicPlatform a) {a.addTree();}
+        if (getGroundFrame("D") instanceof MagicPlatform d) {d.addTree();}
     }
     @Override
     protected void initMobs() {

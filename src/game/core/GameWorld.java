@@ -14,6 +14,7 @@ import game.enums.Environments;
 import game.enums.State;
 import game.enums.WalkerBehaviour;
 import game.enums.Walkers;
+import game.levels.GothicCemetery;
 import game.levels.HauntedForest;
 import game.levels.LevelFrame;
 import game.levels.MagicCliff;
@@ -57,6 +58,11 @@ public class GameWorld extends World {
                 HauntedForest hauntedForest = new HauntedForest(this);
                 this.level = hauntedForest;
                 hauntedForest.start();
+            }
+            case GOTHIC_CEMETERY -> {
+                GothicCemetery gothicCemetery = new GothicCemetery(this);
+                this.level = gothicCemetery;
+                gothicCemetery.start();
             }
             default -> {throw new IllegalArgumentException("Invalid level: " + level);}
         }

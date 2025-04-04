@@ -70,17 +70,33 @@ public class GameView extends UserView {
             }
             case HAUNTED_FOREST -> {
                 // getting scaled dimensions for the background and foreground images
-                Image tempBack = new ImageIcon("data/HauntedForest/back.png").getImage();
-                Image tempFront = new ImageIcon("data/HauntedForest/middle.png").getImage();
-                int[] backDimensions = Game.getScaledDimensions(tempBack.getWidth(this), tempBack.getHeight(this), 1200, 630);
-                int[] frontDimensions = Game.getScaledDimensions(tempFront.getWidth(this), tempFront.getHeight(this), 1200, 630);
-                parallaxBackground = tempBack.getScaledInstance(backDimensions[0], backDimensions[1], Image.SCALE_SMOOTH);
-                parallaxForeground = tempFront.getScaledInstance(frontDimensions[0], frontDimensions[1], Image.SCALE_SMOOTH);
+                parallaxBackground = scaleImage(new ImageIcon("data/HauntedForest/back.png").getImage());
+                parallaxForeground = scaleImage(new ImageIcon("data/HauntedForest/middle.png").getImage());
                 sea = null;
                 setBackground(Color.BLACK);
             }
+            case GOTHIC_CEMETERY -> {
+                parallaxBackground = scaleImage(new ImageIcon("data/GothicvaniaCemetery/background.png").getImage());
+                parallaxForeground = scaleImage(new ImageIcon("data/GothicvaniaCemetery/graveyard.png").getImage());
+                sea = null;
+                setBackground(new Color(0, 0, 34));
+
+            }
             default -> {throw new IllegalStateException("Unexpected value: " + level);}
         }
+    }
+    // Method | private | scaling
+    private Image scaleImage(Image image) {
+        int scaleWidth, scaleHeight;
+        if (level.equals(Environments.HAUNTED_FOREST)) {
+            scaleWidth = 1200;
+            scaleHeight = 630;
+        } else {
+            scaleWidth =  (int) (1200*1.2f);
+            scaleHeight = (int) (630*1.2f);
+        }
+        int[] scaledDimensions = Game.getScaledDimensions(image.getWidth(this), image.getHeight(this), scaleWidth, scaleHeight);
+        return image.getScaledInstance(scaledDimensions[0], scaledDimensions[1], Image.SCALE_SMOOTH);
     }
 
     // Methods | Background | @Override
@@ -98,11 +114,16 @@ public class GameView extends UserView {
         int xPos;
         xPos = (int) worldToView(currentLevel.getCentre()).getX();
         yPos = (int) worldToView(currentLevel.getCentre()).getY();
-        if (level.equals(Environments.HAUNTED_FOREST)) {yPos -= 30;}
+        if (level.equals(Environments.HAUNTED_FOREST)) {
+            yPos -= 30;
+        } else if (level.equals(Environments.GOTHIC_CEMETERY)) {
+            yPos += 200;
+        }
+
         int offset = Math.abs((int) worldToView(currentLevel.getBoundary("Left")).getX() - (int) worldToView(currentLevel.getBoundary("Right")).getX());
         staticWorldDraw(g, parallaxBackground, playerX, xPos, yPos - parallaxBackground.getHeight(this), offset, 2106);
         staticWorldDraw(g, parallaxForeground, playerX, xPos, yPos - parallaxForeground.getHeight(this), offset, 2106);
-        if (level == Environments.HAUNTED_FOREST) {return;}
+        if (sea == null) {return;}
         staticWorldDraw(g, sea, playerX, xPos, yPos, offset, 1053);
     }
     /**
