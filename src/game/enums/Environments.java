@@ -5,5 +5,5 @@ public enum Environments {
     Level_Select,
     MAGIC_CLIFF,
     HAUNTED_FOREST,
-    GOTHIC_CEMETERY;
+    GOTHIC_CEMETERY
 }
