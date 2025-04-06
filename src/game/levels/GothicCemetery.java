@@ -1,11 +1,7 @@
 package game.levels;
 // Imports
 
-import game.body.staticstructs.HauntedBackdrop;
-import game.body.staticstructs.ground.GroundFrame;
-import game.body.staticstructs.ground.hauntedForest.HauntedFlatPlatform;
-import game.body.staticstructs.ground.hauntedForest.HauntedPillar;
-import game.body.staticstructs.ground.hauntedForest.HauntedSlopePlatform;
+import game.body.staticstructs.ground.gothicCemetery.*;
 import game.core.GameWorld;
 import game.enums.Direction;
 import org.jbox2d.common.Vec2;
@@ -30,7 +26,10 @@ public class GothicCemetery extends LevelFrame{
     @Override
     protected void initFrames() {
         GameWorld gameWorld = getGameWorld();
-        addGroundFrame("test", new HauntedFlatPlatform(gameWorld, 0, -1, 3, Direction.RIGHT));
+        addGroundFrame("FlatA", new GothicFlatDefault(gameWorld, 0, -1, 1));
+//        addGroundFrame("FlatB", new GothicFlatSkull(gameWorld, getGroundFramePosition("FlatA").x + getGroundFrame("FlatA").getHalfDimensions().x + GothicFlatSkull.IMG.getHalfDimensions().x*5, -1, 5));
+//        addGroundFrame("PillarA", new GothicPillar(gameWorld, getGroundFramePosition("FlatA").x - getGroundFrame("FlatA").getHalfDimensions().x - GothicPillar.IMG.getHalfDimensions().x, -1));
+        addGroundFrame("Slope", new GothicSlopeDefault(gameWorld, 15,-1 , 3, Direction.DOWN));
     }
     @Override
     protected void initMobs() {

@@ -5,7 +5,9 @@ import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.Game;
 import game.body.staticstructs.ground.GroundFrame;
+import game.body.staticstructs.ground.gothicCemetery.GothicFlatSkull;
 import game.core.GameWorld;
+import game.enums.Direction;
 import org.jbox2d.common.Vec2;
 
 import java.awt.*;
@@ -119,6 +121,14 @@ public abstract class LevelFrame {
     protected Vec2 getGroundFramePosition(String name) {
         return new Vec2(groundFrames.get(name).getOriginPos().x + centre.x, groundFrames.get(name).getOriginPos().y + centre.y);
     }
+//    protected void appendGroundFrame(Direction direction, GroundFrame targetFrame, GroundFrame groundFrame) {
+//        float half_Dimensions
+//        if (groundFrame instanceof GothicFlatSkull) {}
+//    }
+//        if (direction.equals(Direction.LEFT)) {
+//
+//        }
+//    }
     /**
      * Sets the position of the ground frame with the given name.<br>
      * The position is set in relation to the {@link #centre} of the level.
