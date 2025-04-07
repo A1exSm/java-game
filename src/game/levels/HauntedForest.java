@@ -30,9 +30,9 @@ public class HauntedForest extends LevelFrame {
     protected void initFrames() {
         GameWorld gameWorld = getGameWorld();
         addGroundFrame("PillarA", new HauntedPillar(gameWorld, 35,0, false, true, this));
-        addGroundFrame("SlopeA", new HauntedSlopePlatform(gameWorld, 20, 0, 3, Direction.RIGHT, Direction.UP));
-        addGroundFrame("PlatformA", new HauntedFlatPlatform(gameWorld, -0.8f, -1, 3, Direction.RIGHT));
-        addGroundFrame("SlopeB", new HauntedSlopePlatform(gameWorld, -31.3f, -12f, 6, Direction.LEFT, Direction.DOWN));
+        addGroundFrame("SlopeA", new HauntedSlopePlatform(gameWorld, 20, 0, 3, Direction.UP));
+        addGroundFrame("PlatformA", new HauntedFlatPlatform(gameWorld, -0.8f, -1, 3));
+        addGroundFrame("SlopeB", new HauntedSlopePlatform(gameWorld, -31.3f, -12f, 6, Direction.DOWN));
         addGroundFrame("BackdropA", new HauntedBackdrop(gameWorld, getGroundFramePosition("SlopeB").x - getGroundFrame("SlopeB").getHalfDimensions().x - HauntedBackdrop.WIDTH/2, -5.8f));
         addGroundFrame("BackdropB", new HauntedBackdrop(gameWorld, getGroundFramePosition("BackdropA").x - HauntedBackdrop.WIDTH, -5.8f));
         if (getGroundFrame("PlatformA") instanceof HauntedFlatPlatform platformA) {

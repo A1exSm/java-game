@@ -50,7 +50,7 @@ public class Projectile extends DynamicBody {
         addCollisionListener(e ->{
             System.out.println(getName() +  " hit the " + e.getOtherBody().getName());
             if (e.getOtherBody().getName().equals("Player")) {
-                Game.gameWorld.getPlayer().takeDamage(damage, walker);
+                Game.gameWorld.getPlayer().takeDamage(damage, walker.getWalkerType().name());
             }
             this.destroy();
         });

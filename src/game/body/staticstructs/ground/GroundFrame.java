@@ -50,4 +50,10 @@ public abstract class GroundFrame extends StaticBody {
     public void resetYTop() {
         yTop = originPos.y + halfDimensions.y;
     }
+    // Methods | Public | Static
+    public static float randIntRange(float min, float max) {
+        return min + (float) (Math.random() * (max - min));
+    }
+    // Methods | Public | Abstract
+    public abstract void paint();
 }

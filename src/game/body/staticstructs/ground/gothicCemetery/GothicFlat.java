@@ -5,6 +5,7 @@ import city.cs.engine.BoxShape;
 import city.cs.engine.SolidFixture;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
+import game.exceptions.IllegalLengthScaleException;
 import game.utils.GameBodyImage;
 import org.jbox2d.common.Vec2;
 
@@ -24,14 +25,12 @@ abstract class GothicFlat extends GroundFrame {
         halfDimensions.y = 1;
         setPosition(new Vec2(x, y));
         new SolidFixture(this, new BoxShape(halfDimensions.x, halfDimensions.y));
-        this.lengthScale = lengthScale;
+        this.lengthScale = IllegalLengthScaleException.checkLengthScale(lengthScale);
         paint();
     }
     // Methods
-    private void paint() {
-        if (lengthScale < 1) {
-            throw new IllegalArgumentException("Length scale must be greater than 0");
-        } else if (lengthScale == 1) {
+    public void paint() {
+        if (lengthScale == 1) {
             addImage(groundImage);
         } else {
             for (float i = -halfDimensions.x + groundImage.getHalfDimensions().x; i < halfDimensions.x; i+= groundImage.getDimensions().x) {

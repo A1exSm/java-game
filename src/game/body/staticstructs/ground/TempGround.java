@@ -16,4 +16,6 @@ public class TempGround extends GroundFrame{
         super(gameWorld, halfDimensions, originPos);
     }
     // Methods
+    @Override
+    public void paint() {}
 }

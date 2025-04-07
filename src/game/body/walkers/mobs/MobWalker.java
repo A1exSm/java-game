@@ -134,7 +134,7 @@ public class MobWalker extends WalkerFrame {
 
     public void damagePlayer() {
         if (getAttacking()) {
-            Game.gameWorld.getPlayer().takeDamage(125, this);
+            Game.gameWorld.getPlayer().takeDamage(125, this.getWalkerType().name());
         }
     }
 

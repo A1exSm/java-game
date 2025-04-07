@@ -197,6 +197,9 @@ public class Game {
                 Vec2 playerPos = gameWorld.getPlayer().getPosition();
                 gameView.setCentre(new Vec2(playerPos.x, playerPos.y + 2));
                 if(gameWorld.getPlayer().destroyed) {gameView.gameOver();}
+//                gameWorld.getPlayer().removeAllImages();
+//                gameWorld.getPlayer().setFillColor(new Color(0, 0, 0, 0));
+//                gameWorld.getPlayer().setLineColor(new Color(0, 0, 0, 0));
             }
             @Override
             public void postStep(StepEvent event) {

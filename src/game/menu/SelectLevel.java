@@ -36,6 +36,7 @@ public class SelectLevel {
     // Constructor
     public SelectLevel(Game game) {
         thumbnail.setIcon(new ImageIcon("data/MagicCliffs/thumbnail.png"));
+        cemeteryThumbnail.setIcon(new ImageIcon("data/GothicvaniaCemetery/thumbnail.png"));
         thumbnail.setHorizontalAlignment(SwingConstants.CENTER);
         thumbnail.setVerticalAlignment(SwingConstants.CENTER);
         descriptionPane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ MagicCliff.NUM_MOBS + "</p></body></html>");

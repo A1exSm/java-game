@@ -25,7 +25,12 @@ public class HauntedBackdrop extends GroundFrame {
         float PLATFORM_Y = 7.125f;
         new SolidFixture(this, new BoxShape(WIDTH/2, PLATFORM_HEIGHT, new Vec2(0, PLATFORM_Y)));
         new SolidFixture(this, new BoxShape(WIDTH/2, PLATFORM_HEIGHT, new Vec2(0, -PLATFORM_Y)));
-        new AttachedImage(this, new BodyImage("data/HauntedForest/tiles/back_drop_platform.png"), 16f, 0, new Vec2(0, 0));
+        paint();
     }
     // Methods
+    @Override
+    public void paint() {
+        removeAllImages();
+        new AttachedImage(this, new BodyImage("data/HauntedForest/tiles/back_drop_platform.png"), 16f, 0, new Vec2(0, 0));
+    }
 }

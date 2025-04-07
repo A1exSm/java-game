@@ -31,14 +31,15 @@ public class Bridge extends GroundFrame {
         this.bridgeEnd = bridgeEnd;
         facingDirection = calcDirection();
         if (validateBridge()) {
-            buildBridge();
+            paint();
         } else {
             destroy();
         }
     }
 
     // Methods | private | setup
-    private void buildBridge() {
+    @Override
+    public void paint() {
         float dist;
         halfDimensions.y = 2f;
         float[] xPos = new float[2]; // float[0] = xStart, float[1] = xEnd
@@ -112,7 +113,7 @@ public class Bridge extends GroundFrame {
             BridgeUnacceptableRangeException.CheckBridgeDistance(bridgeStart, bridgeEnd);
         } catch (BridgeUnacceptableRangeException e) {
             System.err.println(e.getMessage() + ". Destroying bridge!");
-            if (valid) {valid = false;}
+            valid = false;
         }
         try {
             BridgeNullPointException.CheckBridgeNullPoint(bridgeStart, bridgeEnd);
@@ -149,6 +150,6 @@ public class Bridge extends GroundFrame {
             System.err.println("Warning: becomeSolid called on an already solid bridge");
             return;
         }
-        buildBridge();
+        paint();
     }
 }

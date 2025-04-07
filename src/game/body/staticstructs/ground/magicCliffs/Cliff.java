@@ -17,7 +17,13 @@ public class Cliff extends GroundFrame {
     public Cliff(GameWorld gameWorld, float x, float y) {
         super(gameWorld);
         setPosition(new Vec2(x,y));
-//        addImage(new BodyImage("data/MagicCliffs/cliff/background.png", 11f));
+        paint();
+
+    }
+    // Methods | Public
+    @Override
+    public void paint() {
+        removeAllImages();
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_centre.png", 11f));
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_inside_large.png", 5.5f)).setOffset(new Vec2(-7.45f, -2.75f));
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_inside_large.png", 5.5f)).setOffset(new Vec2(-7.45f, 2.75f));
@@ -25,5 +31,4 @@ public class Cliff extends GroundFrame {
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_left_side.png", 4.5f)).setOffset(new Vec2(-12.45f, 3.25f));
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_left_side.png", 4.5f)).setOffset(new Vec2(-12.45f, -1.25f));
     }
-    // Methods
 }

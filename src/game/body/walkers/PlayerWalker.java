@@ -2,6 +2,9 @@ package game.body.walkers;
 // Imports
 import city.cs.engine.*;
 import game.body.staticstructs.HauntedBackdrop;
+import game.body.staticstructs.ground.gothicCemetery.GothicSlope;
+import game.body.staticstructs.ground.gothicCemetery.GothicSlopeDefault;
+import game.body.staticstructs.ground.gothicCemetery.GothicSpikes;
 import game.core.GameWorld;
 import game.animation.PlayerStepListener;
 import game.body.walkers.mobs.MobWalker;
@@ -132,8 +135,8 @@ public final class PlayerWalker extends WalkerFrame {
         }
     }
     // Methods | Public | Health
-    public void takeDamage(int damage, WalkerFrame  walker) {
-        System.out.println(getName() + " taking damage from " + walker.getName() + ": " + healthPoints + " - " + damage);
+    public void takeDamage(int damage, String  attacker) {
+        System.out.println(getName() + " taking damage from " + attacker + ": " + healthPoints + " - " + damage);
         healthPoints -= damage;
         toggleOnHit();
         if (healthPoints <= 0) {
@@ -190,10 +193,15 @@ public final class PlayerWalker extends WalkerFrame {
     // Methods | Private | Movement
     public boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
         for (Body body : getBodiesInContact()) {
-            if (body.getPosition().y < getPosition().y-2) {
+            if (body.getPosition().y < getPosition().y-1.8) {
                 return true;
             } else if (body instanceof HauntedBackdrop) {
                 return true;
+            } else if (body instanceof GothicSlope slope) {
+                if (getPosition().y - 2.8 < slope.getLineEquationYPos(getPosition().x)) {
+                    setLinearVelocity(new Vec2(0, 0));
+                    return true;
+                }
             }
         }
         return false;

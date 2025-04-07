@@ -15,7 +15,7 @@ import org.jbox2d.common.Vec2;
 // Class
 public class FloatingPlatform extends GroundFrame {
     // Fields
-
+    private final String size;
     // Constructor
     /**
      * Constructor for Ground.<br>
@@ -29,12 +29,12 @@ public class FloatingPlatform extends GroundFrame {
     public FloatingPlatform(GameWorld gameWorld, float x, float y, String size) {
         super(gameWorld);
         setPosition(new Vec2(x, y));
-        switch (size) {
-            case "MEDIUM" -> constructMedium();
-            case "LARGE" -> constructLarge();
+        this.size = size;
+        if (!size.equals("MEDIUM") && !size.equals("LARGE")) {
+            throw new IllegalArgumentException("Invalid size: " + size + ". Req: MEDIUM or LARGE.");
         }
     }
-    // Methods
+    // Methods | Private
     private void constructMedium() {
         halfDimensions.set(2, 1.5f);
         new SolidFixture(this, new BoxShape(halfDimensions.x, halfDimensions.y));
@@ -46,5 +46,13 @@ public class FloatingPlatform extends GroundFrame {
         new SolidFixture(this, new BoxShape(3, 0.5f, new Vec2(0.5f, -0.6f))).setFriction(0);
         new SolidFixture(this, new BoxShape(2, 0.8f, new Vec2(0, -1.9f))).setFriction(0);
         new AttachedImage(this, new BodyImage("data/MagicCliffs/ground/floating_large.png"), 7f, 0, new Vec2(0, 0));
+    }
+    // Methods | Public
+    @Override
+    public void paint() {
+        switch (size) {
+            case "MEDIUM" -> constructMedium();
+            case "LARGE" -> constructLarge();
+        }
     }
 }

@@ -35,12 +35,14 @@ public class MagicPlatform extends GroundFrame {
         this.type = type;
         halfDimensions.x = 12;
         halfDimensions.y = 6;
-        initImages();
+        paint();
         new SolidFixture(this, new BoxShape(12, 1, new Vec2(0, 5.5f)));
         new SolidFixture(this, new BoxShape(12, 4.9f, new Vec2(0, -0.1f))).setFriction(0.00005f); // ensures player cant jump back up using friction as it is know to be possible :)
     }
-    // Methods | private | setup
-    private void initImages() {
+
+    // Method | public
+    @Override
+    public void paint() {
         if (type.equals(PlatformType.GROUND)) {addImage(new BodyImage("data/MagicCliffs/ground/background.png", 11f)).setOffset(new Vec2(0, -1.75f));}
         if(tree){addImage(new BodyImage("data/MagicCliffs/misc/tree.png", 11f)).setOffset(new Vec2(0, halfDimensions.y*2));}
         AttachedImage leftSide = addImage(type.getSideBody());
@@ -53,7 +55,6 @@ public class MagicPlatform extends GroundFrame {
             addImage(type.getMiddleBody()).setOffset(new Vec2(-type.getMiddleX(), type.getMiddleY()));
         }
     }
-    // Method | public
     /**
      * Adds a tree image to the platform.
      */
@@ -64,6 +65,6 @@ public class MagicPlatform extends GroundFrame {
         }
         removeAllImages();
         tree = true;
-        initImages();
+        paint();
     }
 }

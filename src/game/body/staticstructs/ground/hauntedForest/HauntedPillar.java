@@ -33,8 +33,7 @@ public class HauntedPillar extends GroundFrame {
             new SolidFixture(this, new BoxShape(halfDimensions.x, halfDimensions.y));
         }
         // Images
-        addImage(PILLAR_IMAGE).setOffset(new Vec2(0, -PILLAR_IMAGE.getHalfDimensions().y));
-        addImage(PILLAR_FACE_IMAGE).setOffset(new Vec2(0, PILLAR_FACE_IMAGE.getHalfDimensions().y));
+        paint();
         // Destruction Listener
         if (isElevator) {
             addCollisionListener(e -> {
@@ -55,9 +54,13 @@ public class HauntedPillar extends GroundFrame {
         setPosition(pos);
         new SolidFixture(this, new BoxShape(halfDimensions.x, halfDimensions.y));
         // Images
-        addImage(PILLAR_IMAGE).setOffset(new Vec2(0, -PILLAR_IMAGE.getHalfDimensions().y));
-        addImage(PILLAR_FACE_IMAGE).setOffset(new Vec2(0, PILLAR_FACE_IMAGE.getHalfDimensions().y));
+        paint();
         level.addGroundFrame(this.getName() + ++count, this);
     }
     // Methods
+    @Override
+    public void paint() {
+        addImage(PILLAR_IMAGE).setOffset(new Vec2(0, -PILLAR_IMAGE.getHalfDimensions().y));
+        addImage(PILLAR_FACE_IMAGE).setOffset(new Vec2(0, PILLAR_FACE_IMAGE.getHalfDimensions().y));
+    }
 }
