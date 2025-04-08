@@ -2,6 +2,7 @@ package game.core;
 // Imports
 
 import city.cs.engine.SoundClip;
+import game.core.console.Console;
 import game.enums.SoundGroups;
 import javax.swing.Timer;
 import javax.sound.sampled.LineUnavailableException;
@@ -121,13 +122,13 @@ public class GameSound extends SoundClip {
                 sound = new GameSound(path, group, duration);
             }
         } catch (UnsupportedAudioFileException e) {
-            System.err.println("Audio file format not supported: " + e.getMessage());
+            Console.error("Audio file format not supported: " + e.getMessage());
             return null;
         } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
+            Console.error("Error reading the file: " + e.getMessage());
             return null;
         } catch (LineUnavailableException e) {
-            System.err.println("Audio line unavailable: " + e.getMessage());
+            Console.error("Audio line unavailable: " + e.getMessage());
             return null;
         }
         return sound;
@@ -173,7 +174,7 @@ public class GameSound extends SoundClip {
     @Override
     public void play() {
         if (isPlaying) {
-            System.err.println("Warning: GameSound.play() called on sound that is already playing @ " + path);
+            Console.warning("GameSound.play() called on sound that is already playing @ " + path);
             return;
         }
         super.play();

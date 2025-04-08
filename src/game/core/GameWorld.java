@@ -10,6 +10,7 @@ import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
 import game.body.walkers.mobs.WormWalker;
+import game.core.console.Console;
 import game.enums.Environments;
 import game.enums.State;
 import game.enums.WalkerBehaviour;
@@ -64,7 +65,7 @@ public class GameWorld extends World {
                 this.level = gothicCemetery;
                 gothicCemetery.start();
             }
-            default -> {throw new IllegalArgumentException("Invalid level: " + level);}
+            default -> {throw new IllegalArgumentException(Console.exceptionMessage("Invalid level: " + level));}
         }
 //        populate();
         // end of constructor start of a new world :)
@@ -256,7 +257,7 @@ public class GameWorld extends World {
                 return (WormWalker) mob; // casts the mob to a WormWalker
             }
         }
-        System.err.println("WormWalker with name: "+ name + " not found! Returning null.");
+        Console.warning("WormWalker with name: "+ name + " not found! Returning null.");
         return null;
     }
     /**
@@ -271,7 +272,7 @@ public class GameWorld extends World {
                 return (WizardWalker) mob; // casts the mob to a WormWalker
             }
         }
-        System.err.println("WizardWalker with name: "+ name + " not found! Returning null.");
+        Console.warning("WizardWalker with name: "+ name + " not found! Returning null.");
         return null;
     }
     /**

@@ -3,11 +3,10 @@ package game.body.walkers;
 import city.cs.engine.*;
 import game.body.staticstructs.HauntedBackdrop;
 import game.body.staticstructs.ground.gothicCemetery.GothicSlope;
-import game.body.staticstructs.ground.gothicCemetery.GothicSlopeDefault;
-import game.body.staticstructs.ground.gothicCemetery.GothicSpikes;
 import game.core.GameWorld;
 import game.animation.PlayerStepListener;
 import game.body.walkers.mobs.MobWalker;
+import game.core.console.Console;
 import game.enums.Direction;
 import game.enums.State;
 import game.enums.Walkers;
@@ -62,7 +61,7 @@ public final class PlayerWalker extends WalkerFrame {
             addSensorListeners();
             return;
         }
-        System.err.println("Constructing Player Sensors: Sensors already exist!");
+        Console.warning("Constructing Player Sensors: Sensors already exist!");
     }
 
     private void createSensorListeners() {
@@ -136,7 +135,7 @@ public final class PlayerWalker extends WalkerFrame {
     }
     // Methods | Public | Health
     public void takeDamage(int damage, String  attacker) {
-        System.out.println(getName() + " taking damage from " + attacker + ": " + healthPoints + " - " + damage);
+        Console.debug(getName() + " taking damage from " + attacker + ": " + healthPoints + " - " + damage);
         healthPoints -= damage;
         toggleOnHit();
         if (healthPoints <= 0) {

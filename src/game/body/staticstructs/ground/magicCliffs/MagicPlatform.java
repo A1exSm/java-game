@@ -7,6 +7,7 @@ import city.cs.engine.BoxShape;
 import city.cs.engine.SolidFixture;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
+import game.core.console.Console;
 import game.enums.PlatformType;
 import org.jbox2d.common.Vec2;
 
@@ -30,9 +31,10 @@ public class MagicPlatform extends GroundFrame {
     public MagicPlatform(GameWorld gameWorld, float x, float y, PlatformType type) {
         super(gameWorld, new Vec2(5f, 5), new Vec2(x, y));
         if (type != PlatformType.GROUND && type != PlatformType.CLIFF_DARK && type != PlatformType.CLIFF_LIGHT) {
-            throw new IllegalArgumentException("Unsupported platform type: " + type + ". Accepted types:\n1.GROUND\n2.CLIFF_DARK\n3.CLIFF_LIGHT");
+            throw new IllegalArgumentException(Console.exceptionMessage("Unsupported platform type: " + type + ". Accepted types:\n1.GROUND\n2.CLIFF_DARK\n3.CLIFF_LIGHT"));
         }
         this.type = type;
+        setPropEnabled(true, 2);
         halfDimensions.x = 12;
         halfDimensions.y = 6;
         paint();
@@ -60,7 +62,7 @@ public class MagicPlatform extends GroundFrame {
      */
     public void addTree() {
         if (tree) {
-            System.err.println("Warning: Tree already exists on this platform.");
+            Console.warning("Tree already exists on this platform.");
             return;
         }
         removeAllImages();

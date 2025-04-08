@@ -1,6 +1,7 @@
 package game.levels;
 // Imports
 
+import game.body.staticstructs.ground.Prop;
 import game.body.staticstructs.ground.gothicCemetery.*;
 import game.core.GameWorld;
 import game.enums.Direction;
@@ -33,8 +34,15 @@ public class GothicCemetery extends LevelFrame{
         addGroundFrame("SlopeA", new GothicSlopeDefault(gameWorld, getGroundFramePosition("SpikesA").x + GothicSpikes.IMG.getHalfDimensions().x*2 + GothicSlopeDefault.IMG.getDimensions().x*3, -1, 3, Direction.DOWN));
 //        addGroundFrame("FlatB", new GothicFlatSkull(gameWorld, getGroundFramePosition("FlatA").x + getGroundFrame("FlatA").getHalfDimensions().x + GothicFlatSkull.IMG.getHalfDimensions().x*5, -1, 5));
 //        addGroundFrame("PillarA", new GothicPillar(gameWorld, getGroundFramePosition("FlatA").x - getGroundFrame("FlatA").getHalfDimensions().x - GothicPillar.IMG.getHalfDimensions().x, -1));
-        addGroundFrame("propA", new Prop(gameWorld, getGroundFrame("FlatB"), Prop.TREE_2_IMG));
+//        addGroundFrame("propA", new Prop(gameWorld, getGroundFrame("FlatB"), Prop.TREE_2_IMG));
 //        addGroundFrame("Slope", new GothicSlopeDefault(gameWorld, 15,-1 , 3, Direction.DOWN));
+        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STATUE_IMG), -1);
+        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_1_IMG), -1);
+        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_2_IMG), -1);
+        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_3_IMG), -1);
+        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STONE_2_IMG), -1).flip();
+        getGroundFrame("FlatB").removeProp(2);
+        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STONE_1_IMG), -1).flip();
     }
     @Override
     protected void initMobs() {

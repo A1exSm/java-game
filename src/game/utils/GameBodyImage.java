@@ -20,9 +20,11 @@ public class GameBodyImage extends BodyImage {
     // Fields
     private final float width;
     private final float height;
+    private final String fileName;
     // Constructor
     public GameBodyImage(String fileName, float height) {
         super(fileName, height);
+        this.fileName = fileName;
         ImageIcon icon = new ImageIcon(fileName);
         float aspectRatio = (float) icon.getIconWidth() / (float) icon.getIconHeight();
         this.width = height*aspectRatio;
@@ -36,5 +38,8 @@ public class GameBodyImage extends BodyImage {
     }
     public Vec2 getHalfDimensions() {
         return new Vec2(width/2, height/2);
+    }
+    public GameBodyImage getScaledInstance(float height) {
+        return new GameBodyImage(fileName, this.height + height);
     }
 }

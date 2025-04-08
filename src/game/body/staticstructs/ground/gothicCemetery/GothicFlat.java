@@ -22,6 +22,7 @@ abstract class GothicFlat extends GroundFrame {
         super(gameWorld);
         this.groundImage = groundImage;
         halfDimensions.x = groundImage.getHalfDimensions().x*lengthScale;
+        setPropEnabled(true, lengthScale);
         halfDimensions.y = 1;
         setPosition(new Vec2(x, y));
         new SolidFixture(this, new BoxShape(halfDimensions.x, halfDimensions.y));

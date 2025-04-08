@@ -3,6 +3,7 @@ package game.body.staticstructs.ground.magicCliffs;
 import city.cs.engine.*;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
+import game.core.console.Console;
 import game.enums.Direction;
 import game.exceptions.BridgeCollisionException;
 import game.exceptions.BridgeIllegalHeightException;
@@ -112,25 +113,25 @@ public class Bridge extends GroundFrame {
         try {
             BridgeUnacceptableRangeException.CheckBridgeDistance(bridgeStart, bridgeEnd);
         } catch (BridgeUnacceptableRangeException e) {
-            System.err.println(e.getMessage() + ". Destroying bridge!");
+            Console.warning(e.getMessage() + ". Destroying bridge!");
             valid = false;
         }
         try {
             BridgeNullPointException.CheckBridgeNullPoint(bridgeStart, bridgeEnd);
         } catch (BridgeNullPointException e) {
-            System.err.println(e.getMessage() + ". Destroying bridge!");
+            Console.warning(e.getMessage() + ". Destroying bridge!");
             if (valid) {valid = false;}
         }
         try {
             BridgeIllegalHeightException.CheckBridgeHeightMismatch(bridgeStart, bridgeEnd);
         } catch (BridgeIllegalHeightException e) {
-            System.err.println(e.getMessage() + ". Destroying bridge!");
+            Console.warning(e.getMessage() + ". Destroying bridge!");
             if (valid) {valid = false;}
         }
         try {
             BridgeCollisionException.CheckBridgeCollision(halfDimensions, bridgeStart, bridgeEnd);
         } catch (BridgeCollisionException e) {
-            System.err.println(e.getMessage() + ". Destroying bridge!");
+            Console.warning(e.getMessage() + ". Destroying bridge!");
             if (valid) {valid = false;}
         }
         return valid;
@@ -138,7 +139,7 @@ public class Bridge extends GroundFrame {
     // Methods | Public
     public void becomeGhostly() {
         if (bridgeFixture == null) {
-            System.err.println("Warning: becomeGhostly called on an already ghostly bridge");
+            Console.warning("BecomeGhostly called on an already ghostly bridge");
             return;
         }
         bridgeFixture.destroy();
@@ -147,7 +148,7 @@ public class Bridge extends GroundFrame {
     }
     public void becomeSolid() {
         if (bridgeFixture != null) {
-            System.err.println("Warning: becomeSolid called on an already solid bridge");
+            Console.warning("BecomeSolid called on an already solid bridge");
             return;
         }
         paint();

@@ -4,6 +4,7 @@ package game.body.staticstructs.ground.gothicCemetery;
 import city.cs.engine.*;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
+import game.core.console.Console;
 import game.enums.Direction;
 import game.exceptions.IllegalLengthScaleException;
 import game.utils.GameBodyImage;
@@ -62,7 +63,7 @@ public abstract class GothicSlope extends GroundFrame { // this class is witchcr
                 vertices = new float[]{-halfDimensions.x,2 + -bodyImage.getHalfDimensions().y + (bodyImage.getHalfDimensions().y * 0.5f), halfDimensions.x, 2 + -bodyImage.getHalfDimensions().y + (bodyImage.getHalfDimensions().y * 0.5f), halfDimensions.x, 2 + (lengthScale -0.25f) * bodyImage.getDimensions().y/divVal};
                 yOffset = 0;
             }
-            default -> {throw new IllegalArgumentException("Invalid verticalDirection: " + direction + ". Req: UP or DOWN.");}
+            default -> {throw new IllegalArgumentException(Console.exceptionMessage("Invalid verticalDirection: " + direction + ". Req: UP or DOWN."));}
         }
         return vertices;
     }

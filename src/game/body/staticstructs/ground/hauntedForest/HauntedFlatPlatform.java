@@ -19,8 +19,6 @@ public class HauntedFlatPlatform extends GroundFrame {
     // Fields
     public static final GameBodyImage IMG_A = new GameBodyImage("data/HauntedForest/tiles/flat_A.png", 8f);
     public static final GameBodyImage IMG_B = new GameBodyImage("data/HauntedForest/tiles/flat_B.png", 8f);
-    private final float[] yPositions = new float[2]; // [0] = tree, [1] = pillar
-    private final GameBodyImage[] images = new GameBodyImage[]{null, null}; // [0] = tree, [1] = pillar
     private final int lengthScale;
     // Constructor
     /**
@@ -35,6 +33,7 @@ public class HauntedFlatPlatform extends GroundFrame {
     public HauntedFlatPlatform(GameWorld gameWorld, float x, float y, int lengthScale) {
         super(gameWorld);
         this.lengthScale = IllegalLengthScaleException.checkLengthScale(lengthScale);
+        setPropEnabled(true, lengthScale);
         halfDimensions.x = IMG_A.getDimensions().x*lengthScale;
         halfDimensions.y = 1;
         setPosition(new Vec2(x, y));
@@ -45,12 +44,6 @@ public class HauntedFlatPlatform extends GroundFrame {
     @Override
     public void paint() {
         removeAllImages();
-        if (images[0] != null) {
-            new AttachedImage(this, images[0], 1.5f, 0, new Vec2(1, yPositions[0]));
-        }
-        if (images[1] != null) {
-            new AttachedImage(this, images[1], 1f, 0, new Vec2(1, yPositions[1]));
-        }
         if (lengthScale == 1) {
             GameBodyImage img = ((int)(Math.random() * 101) % 12 != 0) ? IMG_A : IMG_B;
             addImage(img).setOffset(new Vec2(0, -img.getHalfDimensions().y/2));
@@ -60,38 +53,5 @@ public class HauntedFlatPlatform extends GroundFrame {
                 addImage(img).setOffset(new Vec2(i, -img.getHalfDimensions().y/2));
             }
         }
-    }
-    /**
-     * Adds a tree image to the platform.
-     * @param random if true, a random tree is added, else a default tree is added.
-     */
-    public void addTree(boolean random) {
-        if(images[0] != null) {
-            System.err.println("Warning: Tree already attached to this platform!");
-            return;
-        }
-        if (random) {
-            if ((int)(Math.random() * 101) % 2 == 0) {
-                images[0] = new GameBodyImage("data/HauntedForest/Props/tree-2.png", 8f);
-                yPositions[0] = 6.5f;
-            }
-        }
-        if (images[0] == null) {
-            images[0] = new GameBodyImage("data/HauntedForest/Props/tree.png", 8f);
-            yPositions[0] = 5.5f;
-        }
-        paint();
-    }
-    /**
-     * Adds a pillar image to the platform.
-     */
-    public void addPillar() {
-        if (images[1] != null) {
-            System.err.println("Warning: Pillar already attached to this platform!");
-            return;
-        }
-        images[1] = new GameBodyImage("data/HauntedForest/Props/pillarB.png", 3f);
-        yPositions[1] = 2.5f;
-        paint();
     }
 }

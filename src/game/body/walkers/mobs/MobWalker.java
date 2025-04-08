@@ -7,6 +7,7 @@ import game.body.walkers.steplisteners.AggressiveStepListener;
 import game.body.walkers.steplisteners.MobStepListener;
 import game.body.walkers.steplisteners.PassiveStepListener;
 import game.body.walkers.steplisteners.PassthroughListener;
+import game.core.console.Console;
 import game.enums.Direction;
 import city.cs.engine.*;
 import game.core.GameWorld;
@@ -68,7 +69,7 @@ public class MobWalker extends WalkerFrame {
                 HALF_X = 0.0f;
                 HALF_Y = 0.0f;
                 behaviour = WalkerBehaviour.PASSIVE;
-                System.err.println("Error: Invalid mob type, defaulting.");
+                Console.error("Error: Invalid mob type, defaulting.");
             }
         }
         mobCount++;
@@ -143,6 +144,16 @@ public class MobWalker extends WalkerFrame {
     public void die() {
         mobStepListener.remove();
         dropLoot();
+        boolean gameOver = true;
+        for (MobWalker mob : getGameWorld().level.getMobs()) {
+            if (!mob.isDead()) {
+                gameOver = false;
+                break;
+            }
+        }
+        if (gameOver) {
+            Game.gameView.gameOver();
+        }
         destroy();
     }
 
@@ -151,7 +162,7 @@ public class MobWalker extends WalkerFrame {
      * @param damage may be changed to a WalkerType or something similar, used to access a static damage variable of a class.
      */
     public void takeDamage(int damage) {
-        System.out.println(getName() + " taking damage: " + healthPoints + " - " + damage);
+        Console.debug(getName() + " taking damage: " + healthPoints + " - " + damage);
         healthPoints -= damage;
         if (healthPoints <= 0) {
             beginDeath();
@@ -177,7 +188,7 @@ public class MobWalker extends WalkerFrame {
             case AGGRESSIVE -> mobStepListener = new AggressiveStepListener(this, getGameWorld(), getChaseDistance());
             default -> {
                 mobStepListener = new PassiveStepListener(this, getGameWorld());
-                System.err.println(this.getName() + ": Invalid behaviour, defaulting to passive.");
+                Console.error(this.getName() + ": Invalid behaviour, defaulting to passive.");
             }
         }
     }
@@ -188,7 +199,7 @@ public class MobWalker extends WalkerFrame {
             case WORM -> {return WormWalker.CHASE_DISTANCE;}
             case HUNTRESS -> {return HuntressWalker.CHASE_DISTANCE;}
             default -> {
-                System.err.println("Invalid mob type, defaulting to 3.0f");
+                Console.error("Invalid mob type, defaulting to 3.0f");
                 return 3.0f;
             }
         }

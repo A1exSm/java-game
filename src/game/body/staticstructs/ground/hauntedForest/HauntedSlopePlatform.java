@@ -4,6 +4,7 @@ package game.body.staticstructs.ground.hauntedForest;
 import city.cs.engine.*;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
+import game.core.console.Console;
 import game.enums.Direction;
 import game.exceptions.IllegalLengthScaleException;
 import game.utils.GameBodyImage;
@@ -56,7 +57,7 @@ public class HauntedSlopePlatform extends GroundFrame {
             case UP -> {
                 vertices = new float[]{-halfDimensions.x, 0, halfDimensions.x, 0, halfDimensions.x, IMG.getHalfDimensions().y*lengthScale -  IMG.getHalfDimensions().y/4};
             }
-            default -> {throw new IllegalArgumentException("Invalid direction: " + direction + ". Req: UP or DOWN.");}
+            default -> {throw new IllegalArgumentException(Console.exceptionMessage("Invalid direction: " + direction + ". Req: UP or DOWN."));}
         }
         return vertices;
     }

@@ -34,6 +34,9 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
         levelSelectButton.addActionListener(e -> {
             game.getFrame().switchLayout(Environments.Level_Select);
         });
+        optionsButton.addActionListener(e -> {;
+//            game.getFrame().switchLayout(Environments.Options); // not implemented yet
+        });
     }
     // Methods
     public JPanel getMenuPanel() {

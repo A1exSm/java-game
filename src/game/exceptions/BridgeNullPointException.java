@@ -1,9 +1,11 @@
 package game.exceptions;
 
+import game.core.console.Console;
+
 public class BridgeNullPointException extends InvalidBridgeException {
     // fields
     public BridgeNullPointException(String message) {
-        super(message);
+        super(Console.exceptionMessage(message));
     }
     // Static Methods
     public static void CheckBridgeNullPoint(Object bridgeStart, Object bridgeEnd) throws BridgeNullPointException {

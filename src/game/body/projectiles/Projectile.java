@@ -7,6 +7,7 @@ import city.cs.engine.DynamicBody;
 import city.cs.engine.SolidFixture;
 import game.Game;
 import game.body.walkers.WalkerFrame;
+import game.core.console.Console;
 import game.enums.Direction;
 import org.jbox2d.common.Vec2;
 
@@ -48,7 +49,7 @@ public class Projectile extends DynamicBody {
 
     private void initListener() {
         addCollisionListener(e ->{
-            System.out.println(getName() +  " hit the " + e.getOtherBody().getName());
+            Console.debug(getName() +  " hit the " + e.getOtherBody().getName());
             if (e.getOtherBody().getName().equals("Player")) {
                 Game.gameWorld.getPlayer().takeDamage(damage, walker.getWalkerType().name());
             }

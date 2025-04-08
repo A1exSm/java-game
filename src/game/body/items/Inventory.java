@@ -1,6 +1,7 @@
 package game.body.items;
 // Imports
 import game.Game;
+import game.core.console.Console;
 import game.enums.items.ItemBehaviour;
 import org.jbox2d.common.Vec2;
 
@@ -14,7 +15,7 @@ public class Inventory {
     // Constructor
     public Inventory(int capacity) {
         if (capacity % 2 != 0) {
-            System.err.println("Error: Capacity must be an even number! Setting capacity to 4");
+            Console.error("Error: Capacity must be an even number! Setting capacity to 4");
             CAPACITY = 4;
         } else {
             CAPACITY = capacity;

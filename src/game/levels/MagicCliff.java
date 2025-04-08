@@ -8,6 +8,7 @@ import game.body.walkers.mobs.WizardWalker;
 import game.body.walkers.mobs.WormWalker;
 import game.core.GameWorld;
 import game.enums.PlatformType;
+import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
 /**
@@ -47,12 +48,9 @@ public class MagicCliff extends LevelFrame {
     }
     @Override
     protected void initMobs() {
-        GameWorld gameWorld = getGameWorld();
-        float xCentre = getCentre().x;
-        float yCentre = getCentre().y;
-        new WizardWalker(gameWorld, new Vec2(xCentre + 10, yCentre + 4));
-        new WizardWalker(gameWorld, new Vec2(xCentre + 50, yCentre + 2));
-        new WizardWalker(gameWorld, new Vec2(xCentre + 110, yCentre + 4));
-        new WormWalker(gameWorld, new Vec2(xCentre + 190 + 10, yCentre + 12));
+        addMob(Walkers.WIZARD, new Vec2(10, 4));
+        addMob(Walkers.WIZARD, new Vec2(50,2));
+        addMob(Walkers.WIZARD, new Vec2(110, 4));
+        addMob(Walkers.WORM,new Vec2(190 + 10, 12));
     }
 }

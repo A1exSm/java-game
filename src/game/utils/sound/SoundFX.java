@@ -5,6 +5,7 @@ import game.Game;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.WalkerFrame;
 import game.core.GameSound;
+import game.core.console.Console;
 import game.enums.SoundGroups;
 import game.enums.State;
 import game.enums.Walkers;
@@ -78,7 +79,7 @@ public class SoundFX implements SoundInterface  {
 
             }
             default -> { // we should never reach this point :)
-                throw new IllegalArgumentException("Unknown Walker: " + walker);
+                throw new IllegalArgumentException(Console.exceptionMessage("Unknown Walker: " + walker));
             }
         }
 

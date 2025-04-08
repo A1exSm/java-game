@@ -2,6 +2,7 @@ package game.body.walkers;
 // Imports
 import city.cs.engine.*;
 import game.core.GameWorld;
+import game.core.console.Console;
 import game.enums.Direction;
 import game.enums.State;
 import game.enums.Walkers;
@@ -124,7 +125,7 @@ public abstract class WalkerFrame extends Walker {
             isGhostly = true;
             return;
         }
-        System.err.println("Warning: WalkerFrame.makeGhostly() called on a Ghostly WalkerFrame " + getName() + ", Ignoring method call.");
+        Console.warning("WalkerFrame.makeGhostly() called on a Ghostly WalkerFrame " + getName() + ", Ignoring method call.");
     }
 
     public void makeSolid() {
@@ -137,7 +138,7 @@ public abstract class WalkerFrame extends Walker {
             isGhostly = false;
             return;
         }
-        System.err.println("Warning: WalkerFrame.makeSolid() called on a solid WalkerFrame " + getName() + ", Ignoring method call.");
+        Console.warning("WalkerFrame.makeSolid() called on a solid WalkerFrame " + getName() + ", Ignoring method call.");
     }
 
     public void beginDeath() {

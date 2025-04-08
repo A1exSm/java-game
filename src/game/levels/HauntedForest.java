@@ -4,6 +4,7 @@ package game.levels;
 import game.body.staticstructs.HauntedBackdrop;
 import game.body.staticstructs.ground.hauntedForest.HauntedFlatPlatform;
 import game.body.staticstructs.ground.hauntedForest.HauntedPillar;
+import game.body.staticstructs.ground.hauntedForest.HauntedProp;
 import game.body.staticstructs.ground.hauntedForest.HauntedSlopePlatform;
 import game.core.GameWorld;
 import game.enums.Direction;
@@ -35,10 +36,11 @@ public class HauntedForest extends LevelFrame {
         addGroundFrame("SlopeB", new HauntedSlopePlatform(gameWorld, -31.3f, -12f, 6, Direction.DOWN));
         addGroundFrame("BackdropA", new HauntedBackdrop(gameWorld, getGroundFramePosition("SlopeB").x - getGroundFrame("SlopeB").getHalfDimensions().x - HauntedBackdrop.WIDTH/2, -5.8f));
         addGroundFrame("BackdropB", new HauntedBackdrop(gameWorld, getGroundFramePosition("BackdropA").x - HauntedBackdrop.WIDTH, -5.8f));
-        if (getGroundFrame("PlatformA") instanceof HauntedFlatPlatform platformA) {
-            platformA.addTree(true);
-            platformA.addPillar();
-        }
+        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.TREE_1_IMG), -1);
+        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.TREE_2_IMG), -1);
+        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.PILLAR_1_IMG), -1);
+        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.PILLAR_2_IMG), -1);
+        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.PILLAR_FACE_IMG), -1);
     }
     @Override
     protected void initMobs() {

@@ -1,5 +1,7 @@
 package game.exceptions;
 
+import game.core.console.Console;
+
 public class IllegalLengthScaleException extends IllegalArgumentException {
     public static int checkLengthScale(int lengthScale) {
         if (lengthScale < 1) {
@@ -8,6 +10,6 @@ public class IllegalLengthScaleException extends IllegalArgumentException {
         return lengthScale;
     }
     public IllegalLengthScaleException() {
-        super("Length scale must be greater than 0!");
+        super(Console.exceptionMessage("Length scale must be greater than 0!"));
     }
 }

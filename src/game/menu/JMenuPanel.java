@@ -4,6 +4,7 @@ package game.menu;
 import game.Game;
 import game.core.GameSound;
 import game.core.GameView;
+import game.core.console.Console;
 import game.enums.SoundGroups;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -63,6 +64,10 @@ public class JMenuPanel extends JPanel {
         new MenuSliderSurface(this, new int[] {302, 334, 313, 62}, null, SoundGroups.MOBS, "Mob SFX");
         cont.addActionListener(e -> toggleMenu());
         quit.addActionListener(e -> Game.exit());
+        JFileChooser fileChooser = new JFileChooser();
+//        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//        add(fileChooser);
+//        fileChooser.showOpenDialog(this);
   }
     /**
      * Removes all buttons from the panel.
@@ -146,7 +151,7 @@ public class JMenuPanel extends JPanel {
         try {
             component.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.err.println("Error: Bounds array must have 4 elements! Setting bounds to default.");
+            Console.error("Bounds array must have 4 elements! Setting bounds to default.");
             component.setBounds(81, 82, 30, 30);
         }
     }

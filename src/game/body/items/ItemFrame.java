@@ -6,6 +6,7 @@ import city.cs.engine.Shape;
 import game.Game;
 import game.body.walkers.PlayerWalker;
 import game.core.GameWorld;
+import game.core.console.Console;
 import game.enums.items.ItemBehaviour;
 import game.enums.items.ItemType;
 import game.enums.items.ItemSize;
@@ -69,7 +70,7 @@ public class ItemFrame extends DynamicBody implements itemInterface {
         if (this instanceof HealthPotion) {
             return HealthPotion.getImgPath(itemSize);
         } else {
-            System.err.println("Error: ItemType not found! returning my image of choice");
+            Console.warning("ItemType not found! returning my image of choice");
             return "data/Items/Potions/large/purpleVial.gif";
         }
     }
@@ -80,7 +81,7 @@ public class ItemFrame extends DynamicBody implements itemInterface {
 
     public void setInInventory(boolean inInventory) {
         if(this.inInventory == inInventory) {
-            System.err.println("Warning: ItemFrame.setInInventory() called with the same value as current!, returning.");
+            Console.warning("ItemFrame.setInInventory() called with the same value as current!, returning.");
             return;
         }
         this.inInventory = inInventory;
@@ -137,7 +138,7 @@ public class ItemFrame extends DynamicBody implements itemInterface {
     public void addSensor(Shape shape) {
         // Checking for existing sensor
         if (itemSensor != null) {
-            System.err.println("Warning: ItemFrame.addSensor() called on an item with an existing sensor! Returning.");
+            Console.warning("ItemFrame.addSensor() called on an item with an existing sensor! Returning.");
             return;
         }
         // Main logic
@@ -161,7 +162,7 @@ public class ItemFrame extends DynamicBody implements itemInterface {
         try {
             itemSensor.removeAllSensorListeners();
         } catch (NullPointerException e) {
-            System.err.println("Warning: ItemFrame.removeSensor() called on an item with no sensor! Returning.");
+            Console.warning("ItemFrame.removeSensor() called on an item with no sensor! Returning.");
             return;
         }
         // Main logic

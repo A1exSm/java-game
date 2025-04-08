@@ -3,6 +3,7 @@ package game;
 // Imports
 import city.cs.engine.*;
 import game.core.*;
+import game.core.console.Console;
 import game.enums.Environments;
 import game.enums.SoundGroups;
 import game.levels.LevelFrame;
@@ -80,6 +81,7 @@ public class Game {
      * @param debugOn a value of {@code true} starts the game with debug mode on.
      */
     public Game(Boolean debugOn) {
+        Console.log("Starting...");
         frame = new GameFrame(this);
         frame.switchLayout(Environments.Main_Menu);
     }
@@ -122,6 +124,7 @@ public class Game {
     public void exitWindow() {
         int answer = JOptionPane.showConfirmDialog(Game.gameView, "Are you sure you want to quit?", "Quit", JOptionPane.YES_NO_OPTION);
         if (answer == JOptionPane.YES_OPTION) {
+            Console.log("Closing game...");
             frame.dispose();
             System.exit(0);
         }
@@ -133,10 +136,12 @@ public class Game {
     public static boolean exit() {
         int answer = JOptionPane.showConfirmDialog(Game.gameView, "Are you sure you want to quit to the main menu?", "Quit", JOptionPane.YES_NO_OPTION);
         if (answer == JOptionPane.YES_OPTION) {
-            gameWorld.stop();
-            gameView = null;
-            gameWorld = null;
-            gameTime = null;
+            if (gameWorld != null) {
+                gameWorld.stop();
+                gameView = null;
+                gameWorld = null;
+                gameTime = null;
+            }
             frame.switchLayout(Environments.Main_Menu);
             return true;
         }

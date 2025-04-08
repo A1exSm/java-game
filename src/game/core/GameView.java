@@ -2,6 +2,7 @@ package game.core;
 // Imports
 import city.cs.engine.UserView;
 import game.Game;
+import game.core.console.Console;
 import game.enums.Environments;
 import game.levels.LevelFrame;
 import game.utils.InventoryButton;
@@ -82,7 +83,7 @@ public class GameView extends UserView {
                 setBackground(new Color(0, 0, 34));
 
             }
-            default -> {throw new IllegalStateException("Unexpected value: " + level);}
+            default -> {throw new IllegalStateException(Console.exceptionMessage("Unexpected value: " + level));}
         }
     }
     // Method | private | scaling
@@ -327,7 +328,7 @@ public class GameView extends UserView {
                 case "YELLOW" -> {return new Color(240, 180, 50);}
                 case "GREEN" -> {return new Color(50, 200, 100);}
                 default -> {
-                    System.out.println("Invalid colour in GameView.getRGBValues! Returning default");
+                    Console.error("Invalid colour in GameView.getRGBValues! Returning default");
                     return new Color(200, 40, 40);
                 }
             }
@@ -337,7 +338,7 @@ public class GameView extends UserView {
                 case "YELLOW" -> {return new Color(180, 140, 40);}
                 case "GREEN" -> {return new Color(30, 140, 70);}
                 default -> {
-                    System.out.println("Invalid colour in GameView.getRGBValues! Returning default");
+                    Console.error("Invalid colour in GameView.getRGBValues! Returning default");
                     return new Color(140, 30, 30);
                 }
             }

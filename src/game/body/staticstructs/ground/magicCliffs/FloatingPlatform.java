@@ -7,6 +7,7 @@ import city.cs.engine.BoxShape;
 import city.cs.engine.SolidFixture;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
+import game.core.console.Console;
 import org.jbox2d.common.Vec2;
 
 /**
@@ -29,10 +30,12 @@ public class FloatingPlatform extends GroundFrame {
     public FloatingPlatform(GameWorld gameWorld, float x, float y, String size) {
         super(gameWorld);
         setPosition(new Vec2(x, y));
+        setPropEnabled(true, 1);
         this.size = size;
         if (!size.equals("MEDIUM") && !size.equals("LARGE")) {
-            throw new IllegalArgumentException("Invalid size: " + size + ". Req: MEDIUM or LARGE.");
+            throw new IllegalArgumentException(Console.exceptionMessage("Invalid size: " + size + ". Req: MEDIUM or LARGE."));
         }
+        paint();
     }
     // Methods | Private
     private void constructMedium() {

@@ -2,6 +2,7 @@ package game.menu;
 // Imports
 
 import game.Game;
+import game.core.console.Console;
 import org.jbox2d.common.Vec2;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -38,7 +39,7 @@ public class GameJMenuBar extends JMenuBar {
      */
     private void newMenu(String name) {
         if (menuItems.putIfAbsent(name, new ArrayList<>()) != null) { // so basically this returns null if the key is not present, and the value if it is present
-            System.err.println("Warning: JMenu with name: " + name + " already exists! Returning.");
+            Console.warning("JMenu with name: " + name + " already exists! Returning.");
             return;
         }
         JMenu menu = new JMenu(name);
@@ -56,10 +57,10 @@ public class GameJMenuBar extends JMenuBar {
     // Methods | Menu Item Creation
     private void newMenuItem(String menuName, String itemName) {
         if (!menuItems.containsKey(menuName)) {
-            System.err.println("Warning: JMenu with name: " + menuName + " does not exist! Returning.");
+            Console.warning("JMenu with name: " + menuName + " does not exist! Returning.");
             return;
         } else if (menuItems.get(menuName).contains(itemName)) {
-            System.err.println("Warning: JMenuItem with name: " + itemName + " already exists in JMenu: " + menuName + "! Returning.");
+            Console.warning("JMenuItem with name: " + itemName + " already exists in JMenu: " + menuName + "! Returning.");
             return;
         }
         JMenuItem item = new JMenuItem(itemName);
@@ -196,7 +197,7 @@ public class GameJMenuBar extends JMenuBar {
      */
     private JMenuItem getMenuItem(String menuName, String itemName) {
         if (!menuItems.containsKey(menuName)) {
-            System.err.println("Warning: JMenu with name: " + menuName + " does not exist!");
+            Console.warning("JMenu with name: " + menuName + " does not exist!");
             return new JMenuItem();
         }
         for (int i = 0; i < menuItems.get(menuName).size(); i++) {
@@ -204,7 +205,7 @@ public class GameJMenuBar extends JMenuBar {
                 return menuItems.get(menuName).get(i);
             }
         }
-        System.err.println("Warning: JMenuItem with name: " + itemName + " does not exist in JMenu: " + menuName + "!");
+        Console.warning("JMenuItem with name: " + itemName + " does not exist in JMenu: " + menuName + "!");
         return new JMenuItem();
     }
     /**
@@ -216,7 +217,7 @@ public class GameJMenuBar extends JMenuBar {
      */
     protected void setMenuMnemonic(String name, int keyEvent) {
         if (getMenu(name) == null) {
-            System.err.println("Warning: Cannot setMnemonic since JMenu with name: " + name + " does not exist! Returning.");
+            Console.warning("Cannot setMnemonic since JMenu with name: " + name + " does not exist! Returning.");
             return;
         }
         getMenu(name).setMnemonic(keyEvent);

@@ -2,13 +2,14 @@ package game.exceptions;
 
 import city.cs.engine.StaticBody;
 import game.body.staticstructs.ground.GroundFrame;
+import game.core.console.Console;
 import game.enums.Direction;
 import org.jbox2d.common.Vec2;
 
 public class BridgeCollisionException extends InvalidBridgeException {
 
     public BridgeCollisionException(String message) {
-        super(message);
+        super(Console.exceptionMessage(message));
     }
 
     public static void CheckBridgeCollision(Vec2 halfDimensions, GroundFrame startGround, GroundFrame endGround) throws BridgeCollisionException {

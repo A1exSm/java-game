@@ -1,11 +1,12 @@
 package game.exceptions;
 
 import game.body.staticstructs.ground.GroundFrame;
+import game.core.console.Console;
 
 public class BridgeIllegalHeightException extends InvalidBridgeException {
 
     public BridgeIllegalHeightException(String message) {
-        super(message);
+        super(Console.exceptionMessage(message));
     }
 
     public static void CheckBridgeHeightMismatch(GroundFrame bridgeStart, GroundFrame bridgeEnd) throws BridgeIllegalHeightException {

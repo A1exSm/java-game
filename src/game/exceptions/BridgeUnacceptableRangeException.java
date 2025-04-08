@@ -2,11 +2,12 @@ package game.exceptions;
 
 import game.body.staticstructs.ground.magicCliffs.Bridge;
 import game.body.staticstructs.ground.GroundFrame;
+import game.core.console.Console;
 
 public class BridgeUnacceptableRangeException extends InvalidBridgeException {
 
     public BridgeUnacceptableRangeException(String message) {
-        super(message);
+        super(Console.exceptionMessage(message));
     }
 
     public static void CheckBridgeDistance(GroundFrame startGround, GroundFrame endGround) throws BridgeUnacceptableRangeException {

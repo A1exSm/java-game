@@ -1,6 +1,8 @@
 package game.animation;
 import static game.enums.Walkers.*;
 import static game.enums.State.*;
+
+import game.core.console.Console;
 import game.enums.State;
 import game.enums.Walkers;
 import java.util.HashMap;
@@ -75,7 +77,7 @@ public final class WalkerAnimationFrames extends AnimationFrames {
     /**
      * Initializes the walker type and sets the appropriate folder and frame count.<br><br>
      * <i>if there is no key for the {@code walkerType} or inner key for the {@code animationName},
-     * a warining will be printed and default values will be assigned.<br>
+     * a warning will be printed and default values will be assigned.<br>
      * Additionally, {@link #errorHandling()} is called, then the method returns.</i>
      * @param animationName The state of the animation.
      * @param walkerType The type of walker.
@@ -83,7 +85,7 @@ public final class WalkerAnimationFrames extends AnimationFrames {
     private void initWalkerType(State animationName, Walkers walkerType) {
         // Error Handling
         if (!WALKER_MAP.containsKey(walkerType) || !WALKER_MAP.get(walkerType).containsKey(animationName)) {
-            System.err.println("Warning: Animation '" + animationName + "' not defined for walker type '" + walkerType + "'");
+            Console.error("Warning: Animation '" + animationName + "' not defined for walker type '" + walkerType + "'");
             // fallback animation
             parentFolder = walkerType.name() + "PNG";
             folder = "idle";
@@ -118,12 +120,12 @@ public final class WalkerAnimationFrames extends AnimationFrames {
                 X_OFFSET = 0;
             }
             default -> {
-                System.err.println("Unhandled walker type: " + walkerType);
+                Console.error("Unhandled walker type: " + walkerType);
                 errorHandling();
             }
         }
         if (numFrames <= 0) {
-            System.err.println("Invalid frame count for " + walkerType + "/" + animationName);
+            Console.error("Invalid frame count for " + walkerType + "/" + animationName);
             numFrames = 1;
         }
     }

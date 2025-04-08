@@ -6,11 +6,19 @@ import city.cs.engine.StepListener;
 import game.Game;
 import game.body.staticstructs.ground.GroundFrame;
 import game.body.staticstructs.ground.gothicCemetery.GothicFlatSkull;
+import game.body.walkers.mobs.HuntressWalker;
+import game.body.walkers.mobs.MobWalker;
+import game.body.walkers.mobs.WizardWalker;
+import game.body.walkers.mobs.WormWalker;
 import game.core.GameWorld;
+import game.core.console.Console;
 import game.enums.Direction;
+import game.enums.Walkers;
 import org.jbox2d.common.Vec2;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -20,11 +28,10 @@ import java.util.HashMap;
 // Class
 public abstract class LevelFrame {
     // Fields
-    private static int levelCount = -1;
     private final GameWorld gameWorld;
-    private final int levelNumber;
     private HashMap<String, Vec2> boundaries;
-    private HashMap<String, GroundFrame> groundFrames;
+    private final HashMap<String, GroundFrame> groundFrames;
+    private ArrayList<MobWalker> mobs;
     private Vec2 centre;
     private Vec2 playerSpawn;
     private StepListener stepListener;
@@ -38,9 +45,9 @@ public abstract class LevelFrame {
      */
     LevelFrame(GameWorld gameWorld) {
         this.gameWorld = gameWorld;
-        levelNumber = ++levelCount;
         initBoundaries();
         groundFrames = new HashMap<>();
+        mobs = new ArrayList<>();
 
     }
     // Methods | Private
@@ -64,7 +71,7 @@ public abstract class LevelFrame {
      */
     private void addBoundary(String key, Vec2 boundary) {
         if (boundaries.putIfAbsent(key, boundary) != null) {
-            System.err.println("Warning: Boundary " + key + " does not exist.\nPlease set the boundary for the following keys:\n1.Lower\n2.Upper\n3.Left\n4.Right");
+            Console.warning("Boundary " + key + " does not exist.\nPlease set the boundary for the following keys:\n1.Lower\n2.Upper\n3.Left\n4.Right");
         }
     }
 
@@ -104,7 +111,7 @@ public abstract class LevelFrame {
      */
     public void addGroundFrame(String name, GroundFrame groundFrame) {
         if (groundFrames.putIfAbsent(name, groundFrame) != null) {
-            System.err.println("Warning: Ground frame with name " + name + " already exists. Destroying Duplicate!");
+            Console.warning("Ground frame with name " + name + " already exists. Destroying Duplicate!");
             groundFrame.destroy();
             return;
         }
@@ -138,7 +145,7 @@ public abstract class LevelFrame {
      */
     protected void setGroundPosition(String name, Vec2 position) {
         if (!groundFrames.containsKey(name)) {
-            throw new NullPointerException("Ground frame with key " + name + " does not exist in groundFrame HashMap.");
+            throw new NullPointerException(Console.exceptionMessage("Ground frame with key " + name + " does not exist in groundFrame HashMap."));
         }
         groundFrames.get(name).setPosition(new Vec2(centre.x + position.x, centre.y + position.y));
     }
@@ -160,7 +167,7 @@ public abstract class LevelFrame {
      */
     protected GroundFrame getGroundFrame(String name) {
         if (!groundFrames.containsKey(name)) {
-            throw new NullPointerException("Ground frame with key " + name + " does not exist in groundFrame HashMap.");
+            throw new NullPointerException(Console.exceptionMessage("Ground frame with key " + name + " does not exist in groundFrame HashMap."));
         }
         return groundFrames.get(name);
     }
@@ -173,7 +180,7 @@ public abstract class LevelFrame {
      */
     public void removeGroundFrame(String name) {
         if (!groundFrames.containsKey(name)) {
-            throw new NullPointerException("Ground frame with key " + name + " does not exist in groundFrame HashMap.");
+            throw new NullPointerException(Console.exceptionMessage("Ground frame with key " + name + " does not exist in groundFrame HashMap."));
         }
         groundFrames.get(name).destroy();
         groundFrames.remove(name);
@@ -197,6 +204,27 @@ public abstract class LevelFrame {
         return gameWorld;
     }
 
+    /**
+     * Adds a mob to the level.<br>
+     * The position is set in relation to the {@link #centre} of the level.
+     *
+     * @param mob the mob to add
+     */
+    protected void addMob(Walkers walkerType, Vec2 pos) {
+        switch (walkerType) {
+            case WORM -> {
+                mobs.add(new WormWalker(gameWorld, new Vec2(centre.x + pos.x, centre.y + pos.y)));
+            }
+            case WIZARD -> {
+                mobs.add(new WizardWalker(gameWorld, new Vec2(centre.x + pos.x, centre.y + pos.y)));
+            }
+            case Walkers.HUNTRESS -> {
+                mobs.add(new HuntressWalker(gameWorld, new Vec2(centre.x + pos.x, centre.y + pos.y)));
+            }
+            default -> Console.warning("Walker type " + walkerType + " not recognised.");
+        }
+    }
+
     // Methods | Private | StepListener
     private void initStepListener() {
         stepListener = new StepListener() {
@@ -210,7 +238,6 @@ public abstract class LevelFrame {
                     Game.gameView.isOutOfBounds = true;
                     gameWorld.getPlayer().die();
                 }
-
             }
 
             @Override
@@ -226,7 +253,7 @@ public abstract class LevelFrame {
      */
     public void resetPlayerPos() {
         if (playerSpawn == null) {
-            System.err.println("Warning: Player spawn position not set.");
+            Console.warning("Player spawn position not set.");
             return;
         }
         gameWorld.getPlayer().setPosition(playerSpawn);
@@ -239,10 +266,25 @@ public abstract class LevelFrame {
     public Vec2 getCentre() {
         return centre;
     }
+    /**
+     * Returns the player spawn position.<br>
+     * @return the player spawn value ({@link Vec2})
+     */
+    public Vec2 getPlayerSpawn() {
+        return playerSpawn;
+    }
+
+    /**
+     * Returns the ArrayList of mobs in the level.
+     * @return the ArrayList of mobs ({@link ArrayList<MobWalker>})
+     */
+    public ArrayList<MobWalker> getMobs() {
+        return mobs;
+    }
 
     /**
      * Returns the boundary vector of the given key
-     * @param key can be {@code Lower}, {@coe Upper}, {@code Left} or {@code Right}
+     * @param key can be {@code Lower}, {@code Upper}, {@code Left} or {@code Right}
      * @return the boundary value ({@link Vec2})
      */
     public Vec2 getBoundary(String key) {
@@ -265,7 +307,7 @@ public abstract class LevelFrame {
      */
     public void stop() {
         if (stepListener == null) {
-            System.err.println("Warning: Step listener not initialised.");
+            Console.warning("Step listener not initialised.");
             return;
         }
         gameWorld.removeStepListener(stepListener);

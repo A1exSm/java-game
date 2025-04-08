@@ -31,6 +31,12 @@ public class SelectLevel {
     private JPanel cemeteryInterface;
     private JTextPane cemeteryDescription;
     private JButton cemeteryStart;
+    private JButton gothicBack;
+    private JButton hauntedBack;
+    private JButton magicBack;
+    private JPanel cemeteryButtonInterface;
+    private JPanel forestButtonInterface;
+    private JPanel magicButtonInterface;
     // Fields
 
     // Constructor
@@ -50,6 +56,15 @@ public class SelectLevel {
         cemeteryDescription.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ GothicCemetery.NUM_MOBS + "</p></body></html>");
         cemeteryStart.addActionListener(e -> {
             game.getFrame().switchLayout(Environments.GOTHIC_CEMETERY);
+        });
+        magicBack.addActionListener(e -> {
+            Game.exit();
+        });
+        hauntedBack.addActionListener(e -> {
+            Game.exit();
+        });
+        gothicBack.addActionListener(e -> {
+            Game.exit();
         });
     }
     // reminder, use GameView JPanel to check whether the scaled images have been completed, and call a static method on a future progress bar to increment!
