@@ -48,9 +48,8 @@ public class HauntedFlatPlatform extends GroundFrame {
             GameBodyImage img = ((int)(Math.random() * 101) % 12 != 0) ? IMG_A : IMG_B;
             addImage(img).setOffset(new Vec2(0, -img.getHalfDimensions().y/2));
         } else {
-            for (float i = -halfDimensions.x + IMG_A.getHalfDimensions().x; i < halfDimensions.x; i+= IMG_A.getDimensions().x) {
-                GameBodyImage img = ((int)(Math.random() * 101) % 12 != 0) ? IMG_A : IMG_B;
-                addImage(img).setOffset(new Vec2(i, -img.getHalfDimensions().y/2));
+            for (int i = 0; i < lengthScale*2; i++) {
+                addImage(IMG_A).setOffset(new Vec2((-halfDimensions.x + IMG_A.getHalfDimensions().x) + i*IMG_A.getDimensions().x, -IMG_A.getHalfDimensions().y/2));
             }
         }
     }

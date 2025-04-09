@@ -110,18 +110,18 @@ public class GameView extends UserView {
     protected void paintBackground(Graphics2D g) {
         Vec2 playerPos = Game.gameWorld.getPlayer().getPosition();
         int playerX = (int) worldToView(playerPos).getX();
-        LevelFrame currentLevel = Game.gameWorld.level;
+        LevelFrame currentEnvironment = Game.gameWorld.environment;
         int yPos;
         int xPos;
-        xPos = (int) worldToView(currentLevel.getCentre()).getX();
-        yPos = (int) worldToView(currentLevel.getCentre()).getY();
+        xPos = (int) worldToView(currentEnvironment.getCentre()).getX();
+        yPos = (int) worldToView(currentEnvironment.getCentre()).getY();
         if (level.equals(Environments.HAUNTED_FOREST)) {
             yPos -= 30;
         } else if (level.equals(Environments.GOTHIC_CEMETERY)) {
             yPos += 200;
         }
 
-        int offset = Math.abs((int) worldToView(currentLevel.getBoundary("Left")).getX() - (int) worldToView(currentLevel.getBoundary("Right")).getX());
+        int offset = Math.abs((int) worldToView(currentEnvironment.getBoundary("Left")).getX() - (int) worldToView(currentEnvironment.getBoundary("Right")).getX());
         staticWorldDraw(g, parallaxBackground, playerX, xPos, yPos - parallaxBackground.getHeight(this), offset, 2106);
         staticWorldDraw(g, parallaxForeground, playerX, xPos, yPos - parallaxForeground.getHeight(this), offset, 2106);
         if (sea == null) {return;}

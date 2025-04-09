@@ -6,6 +6,7 @@ import game.core.*;
 import game.core.console.Console;
 import game.enums.Environments;
 import game.enums.SoundGroups;
+import game.levels.LevelData;
 import game.levels.LevelFrame;
 import game.utils.Controls;
 import game.menu.JMenuPanel;
@@ -74,6 +75,21 @@ public class Game {
     private static GameSound gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", SoundGroups.MUSIC, true);
 
     /**
+     * A static instance of {@link LevelData} which stores the level data for {@link Environments#MAGIC_CLIFF}.
+     * @see LevelData
+     */
+    public static final LevelData magicData = new LevelData(Environments.MAGIC_CLIFF);
+    /**
+     * A static instance of {@link LevelData} which stores the level data for {@link Environments#HAUNTED_FOREST}.
+     * @see LevelData
+     */
+    public static final LevelData hauntedData = new LevelData(Environments.HAUNTED_FOREST);
+    /**
+     * A static instance of {@link LevelData} which stores the level data for {@link Environments#GOTHIC_CEMETERY}.
+     * @see LevelData
+     */
+    public static final LevelData gothicData = new LevelData(Environments.GOTHIC_CEMETERY);
+    /**
      * The Constructor.<br>
      * Initialises {@link Game#gameWorld}, {@link Game#gameView} and {@link Game#frame}.<br>
      * Creates a new instance of {@link Controls}.<br>
@@ -91,9 +107,9 @@ public class Game {
      * Creates a new instance of {@link Controls}.<br>
      * Calls {@link #viewTracker()}
      */
-    public void startGame(Environments level) {
-        gameWorld = new GameWorld(this, level);
-        gameView = new GameView(gameWorld, level );
+    public void startGame(Environments environment, int level) {
+        gameWorld = new GameWorld(this, environment, level);
+        gameView = new GameView(gameWorld, environment);
         new Controls(gameWorld, gameWorld.getPlayer(), gameView);
         viewTracker();
     }
@@ -165,7 +181,6 @@ public class Game {
     public static Vec2 getFrameDimensions() {
         return new  Vec2(frame.getWidth(), frame.getHeight());
     }
-
     // Settings
     /**
      * Toggles the game pause state.<br>
@@ -202,9 +217,6 @@ public class Game {
                 Vec2 playerPos = gameWorld.getPlayer().getPosition();
                 gameView.setCentre(new Vec2(playerPos.x, playerPos.y + 2));
                 if(gameWorld.getPlayer().destroyed) {gameView.gameOver();}
-//                gameWorld.getPlayer().removeAllImages();
-//                gameWorld.getPlayer().setFillColor(new Color(0, 0, 0, 0));
-//                gameWorld.getPlayer().setLineColor(new Color(0, 0, 0, 0));
             }
             @Override
             public void postStep(StepEvent event) {

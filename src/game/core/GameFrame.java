@@ -2,6 +2,7 @@ package game.core;
 
 import city.cs.engine.EngineerView;
 import game.Game;
+import game.core.console.Console;
 import game.enums.Environments;
 import game.levels.MagicCliff;
 import game.menu.GameJMenuBar;
@@ -10,6 +11,7 @@ import game.menu.SelectLevel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
 
 /**
  * The `GameFrame` class extends `JFrame` and represents the main window for the game.<br>
@@ -41,6 +43,16 @@ public class GameFrame extends JFrame {
         setMinimumSize(new Dimension(1200, 694));
         pack();
         setVisible(true);
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                if (e.getKeyCode() == java.awt.event.KeyEvent.VK_F1) {
+                    if (Game.gameView == null) {
+                        Console.toggleConsole();
+                    }
+                }
+            }
+        });
     }
     /**
      * Switches the layout of the frame to the specified layout.
@@ -61,15 +73,18 @@ public class GameFrame extends JFrame {
                 add(new SelectLevel(game).getPanel());
                 revalidateFrame();
             }
-            default -> {addGameView(Layout);}
+            default -> {Console.error("GameFrame.switchLayout() called with invalid environment, if attempting to start a level, use the GameFrame.selectLevel() method");}
         }
+    }
+    public void selectLevel(Environments environment, int level) {
+        addGameView(environment, level);
     }
     /**
      * Adds the game view to the frame.
      */
-    private void addGameView(Environments level) {
+    private void addGameView(Environments environment, int level) {
         getContentPane().removeAll();
-        game.startGame(level);
+        game.startGame(environment, level);
         userView = Game.gameView;
         add(userView);
         userView.setName("View");

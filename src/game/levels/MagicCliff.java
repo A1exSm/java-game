@@ -19,18 +19,27 @@ public class MagicCliff extends LevelFrame {
     // Fields
     public static final int NUM_MOBS = 4;
     // Constructor
-    public MagicCliff(GameWorld gameWorld) {
+    public MagicCliff(GameWorld gameWorld, int levelNumber) {
         super(gameWorld);
         setBoundaries(new Vec2(0,0), 20, -20, -300, 300);
-        initMobs();
-        initFrames();
+        initLevel(levelNumber);
         setPlayerSpawn(new Vec2(0, 2));
         resetPlayerPos();
     }
     // Methods | Private | setup
     @Override
-    protected void initFrames() {
-        GameWorld gameWorld = getGameWorld();
+    protected void initLevel(int levelNumber) {
+        if (levelNumber == 1) {
+            levelOneStructures();
+            levelOneMobs();
+        } else if (levelNumber == 2) {
+            levelTwoStructures();
+            levelTwoMobs();
+        }
+
+    }
+
+    private void levelOneStructures() {
         addGroundFrame("A", new MagicPlatform(gameWorld, 0, -3, PlatformType.GROUND));
         addGroundFrame("B", new MagicPlatform(gameWorld, 48, -3, PlatformType.GROUND));
         addGroundFrame("C", new MagicPlatform(gameWorld, 76, -3, PlatformType.GROUND));
@@ -46,11 +55,12 @@ public class MagicCliff extends LevelFrame {
         if (getGroundFrame("A") instanceof MagicPlatform a) {a.addTree();}
         if (getGroundFrame("D") instanceof MagicPlatform d) {d.addTree();}
     }
-    @Override
-    protected void initMobs() {
+    private void levelOneMobs() {
         addMob(Walkers.WIZARD, new Vec2(10, 4));
         addMob(Walkers.WIZARD, new Vec2(50,2));
         addMob(Walkers.WIZARD, new Vec2(110, 4));
         addMob(Walkers.WORM,new Vec2(190 + 10, 12));
     }
+    private void levelTwoStructures() {}
+    private void levelTwoMobs() {}
 }

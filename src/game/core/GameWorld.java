@@ -36,7 +36,7 @@ public class GameWorld extends World {
     private static final ArrayList<MobWalker> mobs = new ArrayList<>();
     public static final Inventory playerInventory = new Inventory(4);
     private boolean toggleMobsPassive = false;
-    public final LevelFrame level;
+    public final LevelFrame environment;
 
     // Constructor
     /**
@@ -44,141 +44,30 @@ public class GameWorld extends World {
      *
      * @param game the game instance
      */
-    public GameWorld(Game game, Environments level) {
+    public GameWorld(Game game, Environments environment, int level) {
         super();
         GameWorld.game = game;
         player = new PlayerWalker(this);
         new WalkerAnimationFrames(State.RUN, Walkers.PLAYER);
-        switch (level) {
-            case MAGIC_CLIFF -> {
-                MagicCliff magicCliff = new MagicCliff(this);
-                this.level = magicCliff;
-                magicCliff.start();
-            }
-            case HAUNTED_FOREST -> {
-                HauntedForest hauntedForest = new HauntedForest(this);
-                this.level = hauntedForest;
-                hauntedForest.start();
-            }
-            case GOTHIC_CEMETERY -> {
-                GothicCemetery gothicCemetery = new GothicCemetery(this);
-                this.level = gothicCemetery;
-                gothicCemetery.start();
-            }
-            default -> {throw new IllegalArgumentException(Console.exceptionMessage("Invalid level: " + level));}
-        }
-//        populate();
+        this.environment = populate(environment, level);
+        this.environment.start();
         // end of constructor start of a new world :)
         start();
     }
 
     // Population methods
+
     /**
-     * Creates instances of {@link TempGround} below the typical ground level.<br><br>
-     * Each instance has an image of the ground that has an offset
-     * which causes the image to be placed inline with ground level.<br><br>
-     * this method is typically only called by {@link #populate()}.
-     *
-     * @param start the starting x-coordinate
-     * @param end the ending x-coordinate
+     * Defines the level.
      */
-    private void groundImg2(int start, int end) {
-        for (float i = start+6.6f; i < end; i+=12) {
-            TempGround temp = new TempGround(this, new Vec2(6, 2.5f), new Vec2(i, -7.5f));
-            temp.addImage(new BodyImage("data/ground_tiles/tile_0x2.png",5f)).setOffset(new Vec2(0, 5f));
+    private LevelFrame populate(Environments environment, int level) {
+        switch (environment) {
+            case MAGIC_CLIFF -> {return new MagicCliff(this, level);}
+            case HAUNTED_FOREST -> {return new HauntedForest(this, level);}
+            case GOTHIC_CEMETERY -> {return new GothicCemetery(this, level);}
+            default -> {throw new IllegalArgumentException(Console.exceptionMessage("Invalid environment: " + environment));}
         }
     }
-    /**
-     * Populates the game world with various bodies.
-     */
-    private void populate() {
-        groundImg2(-500, 500);
-        new TempGround(this, new Vec2(500, 2f), new Vec2(0, -2f)); // changed from 2.5 to 2 so that fillColor is not visible
-        playGround();
-        areaOne();
-    }
-    /**
-     * Populates the playground area with ground and platforms, generally used to test new features.
-     */
-    private void playGround() {
-        float offset = 100f;
-        new TempGround(this, new Vec2(2, 2f), new Vec2(-5+offset, 2f));
-//        new Platform(this, new Vec2(20+offset, 4));
-//        new Platform(this, new Vec2(27+offset, 7));
-        new Trampoline(this, new Vec2(-20+offset, 1));
-//        initMobs();
-//        toggleMobsPassive();
-
-    }
-
-    /**
-     * Populates the area one with various bodies.<br><br>
-     * AreaOne is another testing area, like {@link #playGround()}, albeit more complex.<br>
-     * For example, sheer walls cannot be scaled, as they have low friction values.
-     *
-     */
-    private void areaOne() {
-        ArrayList<Body> areaOne= new ArrayList<>();
-        TempGround temp1 = new TempGround(this, new Vec2(20,2.0f), new Vec2(-25.0f, 200f));
-        StaticBody temp2 = new StaticBody(this, new PolygonShape(0,0, 0,-4, -10,-4, -10,10));
-        temp2.setPosition(new Vec2(-45.0f, 202f));
-        TempGround temp3 = sheerWall(new Vec2(-3.9f, 213f), 15.0f);
-        TempGround temp6 = sheerWall(new Vec2(-56.1f, 218f), 20.0f);
-        TempGround temp4 = new TempGround(this, new Vec2(20, 1.0f), new Vec2(-25.0f, 210f));
-        DynamicBody box = new DynamicBody(this, new BoxShape(0.5f,0.5f));
-        SolidFixture boxFixture = new SolidFixture(box, new BoxShape(2f, 2f));
-        box.setPosition(new Vec2(-25.0f, 212f));
-        TempGround temp5 = new TempGround(this, new Vec2(20, 1.0f), new Vec2(-35.0f, 219f));
-        areaOne.add(temp1);
-        areaOne.add(temp2);
-        areaOne.add(temp3);
-        areaOne.add(temp4);
-        areaOne.add(temp5);
-        areaOne.add(temp6);
-        for (Body body : areaOne) {
-            Color col =  new Color(120, 110, 100);
-            body.setFillColor(col);
-            body.setLineColor(col);
-        }
-        box.setFillColor(new Color(85, 72, 63));
-        box.setName("box");
-        temp2.setName("Stairs");
-        player.setPosition(new Vec2(-28.0f, 212.0f));
-        player.setPosition(new Vec2(0, 2));
-    }
-    /**
-     * Creates a sheer wall at the specified position with the given height.<br><br>
-     * Sheer walls have protrusions ({@link SolidFixture SolidFixtures}) with a low friction value;
-     * which prevents scaling.
-     *
-     * @param pos the position of the sheer wall
-     * @param halfHeight half the height of the sheer wall
-     * @return the created {@link TempGround} object
-     */
-    private TempGround sheerWall(Vec2 pos, float halfHeight) {
-        TempGround temp3 = new TempGround(this, new Vec2(1,4.0f), pos);
-        SolidFixture temp3Fixture = new SolidFixture(temp3, new BoxShape(1.1f,  halfHeight));
-        temp3Fixture.setFriction(0.00005f);
-        return temp3;
-    }
-
-    // Store
-    /**
-     * Initializes the mobs in the game world.
-     */
-    private void initMobs() {
-        new WizardWalker(this, new Vec2(-25, 202));
-        new WizardWalker(this, new Vec2(70,2));
-        new WizardWalker(this, new Vec2(127, 8.9f));
-        new WizardWalker(this, new Vec2(-30,2));
-        new WizardWalker(this, new Vec2(-80,2));
-        new WizardWalker(this, new Vec2(-110,2));
-        new WormWalker(this, new Vec2(20,2));
-//        new WormWalker(this, new Vec2(-25,222));
-        new HuntressWalker(this, new Vec2(-25, 222));
-    }
-
-
     // External Getters & Setters
     /**
      * Toggles the player's attack state.

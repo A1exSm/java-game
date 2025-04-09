@@ -6,8 +6,8 @@ import game.enums.Environments;
 import game.levels.GothicCemetery;
 import game.levels.HauntedForest;
 import game.levels.MagicCliff;
-
 import javax.swing.*;
+import java.awt.*;
 
 /**
  *
@@ -18,9 +18,9 @@ public class SelectLevel {
     private JTabbedPane selectionTabPane;
     private JPanel magicPane;
     private JLabel thumbnail;
-    private JTextPane descriptionPane;
+    private JTextPane magicDescriptionPane;
     private JButton magicStart;
-    private JPanel interfacePanel;
+    private JPanel magicInterfacePanel;
     private JPanel forestPane;
     private JLabel forestThumbnail;
     private JPanel forestInterface;
@@ -34,38 +34,37 @@ public class SelectLevel {
     private JButton gothicBack;
     private JButton hauntedBack;
     private JButton magicBack;
-    private JPanel cemeteryButtonInterface;
-    private JPanel forestButtonInterface;
     private JPanel magicButtonInterface;
+    private JPanel magicStartPanel;
+    private JRadioButton magicLevelOne;
+    private JRadioButton magicLevelTwo;
+    private JPanel magicRadioPanel;
+    private JPanel forestButtonInterface;
+    private JButton forestBack;
+    private JPanel forestStartPanel;
+    private JPanel forestRadioPanel;
+    private JRadioButton forestLevelOne;
+    private JRadioButton forestLevelTwo;
+    private JPanel cemeteryButtonInterface;
+    private JButton cemeteryBack;
+    private JPanel cemeteryStartPanel;
+    private JPanel cemeteryRadioPanel;
+    private JRadioButton cemeteryLevelOne;
+    private JRadioButton cemeteryLevelTwo;
+    private JLabel cemeteryWarning;
+    private JLabel magicWarning;
+    private JLabel forestWarning;
     // Fields
 
     // Constructor
     public SelectLevel(Game game) {
-        thumbnail.setIcon(new ImageIcon("data/MagicCliffs/thumbnail.png"));
-        cemeteryThumbnail.setIcon(new ImageIcon("data/GothicvaniaCemetery/thumbnail.png"));
-        thumbnail.setHorizontalAlignment(SwingConstants.CENTER);
-        thumbnail.setVerticalAlignment(SwingConstants.CENTER);
-        descriptionPane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ MagicCliff.NUM_MOBS + "</p></body></html>");
-        magicStart.addActionListener(e -> {
-            game.getFrame().switchLayout(Environments.MAGIC_CLIFF);
-        });
+        initIcons();
+        initLevels();
+        initButtons(game);
+        magicDescriptionPane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ MagicCliff.NUM_MOBS + "</p></body></html>");
         forestDescription.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ HauntedForest.NUM_MOBS + "</p></body></html>");
-        forestStart.addActionListener(e -> {
-            game.getFrame().switchLayout(Environments.HAUNTED_FOREST);
-        });
         cemeteryDescription.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ GothicCemetery.NUM_MOBS + "</p></body></html>");
-        cemeteryStart.addActionListener(e -> {
-            game.getFrame().switchLayout(Environments.GOTHIC_CEMETERY);
-        });
-        magicBack.addActionListener(e -> {
-            Game.exit();
-        });
-        hauntedBack.addActionListener(e -> {
-            Game.exit();
-        });
-        gothicBack.addActionListener(e -> {
-            Game.exit();
-        });
+
     }
     // reminder, use GameView JPanel to check whether the scaled images have been completed, and call a static method on a future progress bar to increment!
     // we can call a static method every time a part of the constructor is done to update a text field stating what is being done, like... "compiling probability map...", "Assigning textures...", "Loading level..." etc.
@@ -73,5 +72,99 @@ public class SelectLevel {
     // Methods
     public JPanel getPanel() {
         return levelPanel;
+    }
+    private void initIcons() {
+        setThumbnail("data/HauntedForest/thumbnail.png", forestThumbnail);
+        setThumbnail("data/MagicCliffs/thumbnail.png", thumbnail);
+        setThumbnail("data/GothicvaniaCemetery/thumbnail.png", cemeteryThumbnail);
+    }
+
+    private void initLevels() {
+        setupLevelRadios(magicLevelOne, magicLevelTwo, magicWarning, Environments.MAGIC_CLIFF);
+        setupLevelRadios(forestLevelOne, forestLevelTwo, forestWarning, Environments.HAUNTED_FOREST);
+        setupLevelRadios(cemeteryLevelOne, cemeteryLevelTwo, cemeteryWarning, Environments.GOTHIC_CEMETERY);
+    }
+
+    private void initButtons(Game game) {
+        // MagicCliffs
+        magicStart.addActionListener(e -> {
+            if (magicLevelOne.isSelected()) {
+                game.getFrame().selectLevel(Environments.MAGIC_CLIFF, 1);
+            } else if (magicLevelTwo.isSelected()) {
+                game.getFrame().selectLevel(Environments.MAGIC_CLIFF, 2);
+            } else if (!magicWarning.isVisible()) {
+                lockedWarning(magicLevelOne, magicLevelTwo, magicWarning);
+            }
+        });
+        magicBack.addActionListener(e -> {
+            Game.exit();
+        });
+        // HauntedForest
+        forestStart.addActionListener(e -> {
+            if (forestLevelOne.isSelected()) {
+                game.getFrame().selectLevel(Environments.HAUNTED_FOREST, 1);
+            } else if (forestLevelTwo.isSelected()) {
+                game.getFrame().selectLevel(Environments.HAUNTED_FOREST, 2);
+            } else if (!forestWarning.isVisible()) {
+                lockedWarning(forestLevelOne, forestLevelTwo, forestWarning);
+            }
+        });
+        forestBack.addActionListener(e -> {
+            Game.exit();
+        });
+        // GothicCemetery
+        cemeteryStart.addActionListener(e -> {
+            if (cemeteryLevelOne.isSelected()) {
+                game.getFrame().selectLevel(Environments.GOTHIC_CEMETERY, 1);
+            } else if (cemeteryLevelTwo.isSelected()) {
+                game.getFrame().selectLevel(Environments.GOTHIC_CEMETERY, 2);
+            } else if (!cemeteryWarning.isVisible()) {
+                lockedWarning(cemeteryLevelOne, cemeteryLevelTwo, cemeteryWarning);
+            }
+        });
+        cemeteryBack.addActionListener(e -> {
+            Game.exit();
+        });
+    }
+
+    private void lockedWarning(JRadioButton levelOne, JRadioButton levelTwo, JLabel warning ) {
+        if (!levelOne.isEnabled() && !levelTwo.isEnabled()) {
+            warning.setText("All levels are locked.");
+        } else {
+            warning.setText("Please select a level.");
+        }
+        warning.setVisible(true);
+    }
+    private void setThumbnail(String path, JLabel thumbnail) {
+        thumbnail.setIcon(new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(1180, 480, Image.SCALE_SMOOTH))); // Slightly stretched, but oh well.
+        thumbnail.setHorizontalAlignment(SwingConstants.CENTER);
+        thumbnail.setVerticalAlignment(SwingConstants.CENTER);
+    }
+
+    private void setupLevelRadios(JRadioButton levelOne, JRadioButton levelTwo, JLabel warning, Environments environment) {
+        levelOne.setText("Level 1");
+        levelTwo.setText("Level 2");
+        boolean one = environment.getBool(1);
+        boolean two = environment.getBool(2);
+        setLevelStatus(levelTwo, levelOne, warning, two, one);
+        setLevelStatus(levelOne, levelTwo, warning, one, two);
+    }
+
+    private void setLevelStatus(JRadioButton levelOne, JRadioButton levelTwo, JLabel warning, boolean one, boolean two) {
+        if (two) {
+            levelTwo.addActionListener(e -> {
+                if (levelTwo.isSelected()) {
+                    levelOne.setSelected(false);
+                    if (warning.isVisible()) {
+                        warning.setVisible(false);
+                    }
+                }
+            });
+            if (!one) {
+                levelTwo.setSelected(true);
+            }
+        } else {
+            levelTwo.setEnabled(false);
+        }
     }
 }

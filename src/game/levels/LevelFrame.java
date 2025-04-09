@@ -28,7 +28,7 @@ import java.util.HashMap;
 // Class
 public abstract class LevelFrame {
     // Fields
-    private final GameWorld gameWorld;
+    protected final GameWorld gameWorld;
     private HashMap<String, Vec2> boundaries;
     private final HashMap<String, GroundFrame> groundFrames;
     private ArrayList<MobWalker> mobs;
@@ -77,15 +77,12 @@ public abstract class LevelFrame {
 
     // Methods | Protected
     /**
-     * Initialises the {@link GroundFrame GroundFrames} of the level.<br>
+     * Initialises {@link game.enums.Environments Environment} level.<br>
      * This method is called in the constructor of the level.
+     * @param levelNumber the level number
      */
-    protected abstract void initFrames();
-    /**
-     * Initialises the {@link game.body.walkers.mobs.MobWalker MobWalkers} of the level.<br>
-     * This method is called in the constructor of the level.
-     */
-    protected abstract void initMobs();
+    protected abstract void initLevel(int levelNumber);
+
     /**
      * Sets the values of boundaries and returns the centre of the level.<br>
      * @param centre the centre of the level ({@link Vec2})
@@ -208,7 +205,8 @@ public abstract class LevelFrame {
      * Adds a mob to the level.<br>
      * The position is set in relation to the {@link #centre} of the level.
      *
-     * @param mob the mob to add
+     * @param walkerType the type of mob to add
+     * @param pos the position of the mob
      */
     protected void addMob(Walkers walkerType, Vec2 pos) {
         switch (walkerType) {
@@ -230,7 +228,7 @@ public abstract class LevelFrame {
         stepListener = new StepListener() {
             @Override
             public void preStep(StepEvent event) {
-                if (gameWorld.level != LevelFrame.this) {
+                if (gameWorld.environment != LevelFrame.this) {
                     stop();
                 }
                 Vec2 playerPos = gameWorld.getPlayer().getPosition();

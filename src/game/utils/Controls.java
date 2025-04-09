@@ -1,13 +1,9 @@
 package game.utils;
 // Imports
-import city.cs.engine.Body;
-import game.Game;
-import game.body.items.HealthPotion;
-import game.body.walkers.mobs.WizardWalker;
 import game.core.GameWorld;
 import game.body.walkers.PlayerWalker;
 import game.core.GameView;
-import game.enums.items.ItemSize;
+import game.core.console.Console;
 import org.jbox2d.common.Vec2;
 
 import java.awt.event.*;
@@ -58,6 +54,8 @@ public class Controls {
                     GameWorld.useInventoryItem(2);
                 } else if (e.getKeyCode() == KeyEvent.VK_4) {
                     GameWorld.useInventoryItem(3);
+                } else if (e.getKeyCode() == KeyEvent.VK_F1) {
+                    Console.toggleConsole();
                 }
             }
         });

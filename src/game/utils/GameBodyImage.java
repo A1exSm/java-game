@@ -29,8 +29,6 @@ public class GameBodyImage extends BodyImage {
         float aspectRatio = (float) icon.getIconWidth() / (float) icon.getIconHeight();
         this.width = height*aspectRatio;
         this.height = height;
-
-
     }
     // Methods | Getters
     public Vec2 getDimensions() {

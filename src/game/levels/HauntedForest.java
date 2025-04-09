@@ -2,6 +2,7 @@ package game.levels;
 // Imports
 
 import game.body.staticstructs.HauntedBackdrop;
+import game.body.staticstructs.ground.GroundFrame;
 import game.body.staticstructs.ground.hauntedForest.HauntedFlatPlatform;
 import game.body.staticstructs.ground.hauntedForest.HauntedPillar;
 import game.body.staticstructs.ground.hauntedForest.HauntedProp;
@@ -18,35 +19,36 @@ public class HauntedForest extends LevelFrame {
     // Fields
     public static final int NUM_MOBS = 0;
     // Constructor
-    public HauntedForest(GameWorld gameWorld) {
+    public HauntedForest(GameWorld gameWorld, int levelNumber) {
         super(gameWorld);
-        setBoundaries(new Vec2(0, 0), 200, -20, -300, 300);
-        initMobs();
-        initFrames();
+        setBoundaries(new Vec2(0, 0), 200, -30, -300, 300);
+        initLevel(levelNumber);
         setPlayerSpawn(new Vec2(0, 2));
         resetPlayerPos();
     }
     // Methods
     @Override
-    protected void initFrames() {
-        GameWorld gameWorld = getGameWorld();
+    protected void initLevel(int levelNumber) {
+        if (levelNumber == 1) {
+            levelOneStructures();
+            levelOneMobs();
+        } else if (levelNumber == 2) {
+            levelTwoStructures();
+            levelTwoMobs();
+        }
+    }
+    private void levelOneStructures() {
         addGroundFrame("PillarA", new HauntedPillar(gameWorld, 35,0, false, true, this));
         addGroundFrame("SlopeA", new HauntedSlopePlatform(gameWorld, 20, 0, 3, Direction.UP));
         addGroundFrame("PlatformA", new HauntedFlatPlatform(gameWorld, -0.8f, -1, 3));
-        addGroundFrame("SlopeB", new HauntedSlopePlatform(gameWorld, -31.3f, -12f, 6, Direction.DOWN));
-        addGroundFrame("BackdropA", new HauntedBackdrop(gameWorld, getGroundFramePosition("SlopeB").x - getGroundFrame("SlopeB").getHalfDimensions().x - HauntedBackdrop.WIDTH/2, -5.8f));
-        addGroundFrame("BackdropB", new HauntedBackdrop(gameWorld, getGroundFramePosition("BackdropA").x - HauntedBackdrop.WIDTH, -5.8f));
-        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.TREE_1_IMG), -1);
-        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.TREE_2_IMG), -1);
-        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.PILLAR_1_IMG), -1);
-        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.PILLAR_2_IMG), -1);
-        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.PILLAR_FACE_IMG), -1);
+        Vec2 aPos = getGroundFramePosition("PlatformA");
+        GroundFrame platformA = getGroundFrame("PlatformA");
+        addGroundFrame("SlopeB", new HauntedSlopePlatform(gameWorld, aPos.x - platformA.getHalfDimensions().x - HauntedSlopePlatform.IMG.getDimensions().x*6, aPos.y + HauntedFlatPlatform.IMG_A.getHalfDimensions().x - HauntedSlopePlatform.IMG.getHalfDimensions().y*6, 6, Direction.UP));
+        addGroundFrame("BackdropA", new HauntedBackdrop(gameWorld, getGroundFramePosition("SlopeB").x - getGroundFrame("SlopeB").getHalfDimensions().x - HauntedBackdrop.IMG.getHalfDimensions().x*3, getGroundFramePosition("SlopeB").y + HauntedBackdrop.IMG.getHalfDimensions().y - HauntedBackdrop.PLATFORM_HEIGHT*2 + 0.1f, 3));
+        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.TREE_1_IMG), 0);
+        getGroundFrame("PlatformA").addProp(new HauntedProp(gameWorld, HauntedProp.TREE_2_IMG), 2);
     }
-    @Override
-    protected void initMobs() {
-        GameWorld gameWorld = getGameWorld();
-        float xCentre = getCentre().x;
-        float yCentre = getCentre().y;
-        // Add mobs here
-    }
+    private void levelOneMobs() {}
+    private void levelTwoStructures() {}
+    private void levelTwoMobs() {}
 }

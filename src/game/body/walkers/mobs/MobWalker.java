@@ -145,7 +145,7 @@ public class MobWalker extends WalkerFrame {
         mobStepListener.remove();
         dropLoot();
         boolean gameOver = true;
-        for (MobWalker mob : getGameWorld().level.getMobs()) {
+        for (MobWalker mob : getGameWorld().environment.getMobs()) {
             if (!mob.isDead()) {
                 gameOver = false;
                 break;
