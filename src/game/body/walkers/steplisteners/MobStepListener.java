@@ -34,6 +34,11 @@ public abstract class MobStepListener implements MobStepListenerFrame {
     // Methods
     @Override
     public void preStep(StepEvent stepEvent) {
+        if (mob.getLinearVelocity().y < 0) {
+            if (gameWorld.environment.isOutOfBounds(mob)) {
+                mob.die();
+            }
+        }
         Vec2 mobPos = mob.getPosition();
         // movement handling
         if (mob.getHit() || mob.isDead()) { // don't want the mob to move if it is hit or dead

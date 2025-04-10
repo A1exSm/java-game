@@ -4,8 +4,6 @@ package game.levels;
 import game.body.staticstructs.ground.magicCliffs.Bridge;
 import game.body.staticstructs.ground.magicCliffs.FloatingPlatform;
 import game.body.staticstructs.ground.magicCliffs.MagicPlatform;
-import game.body.walkers.mobs.WizardWalker;
-import game.body.walkers.mobs.WormWalker;
 import game.core.GameWorld;
 import game.enums.PlatformType;
 import game.enums.Walkers;
@@ -17,11 +15,12 @@ import org.jbox2d.common.Vec2;
 // Class
 public class MagicCliff extends LevelFrame {
     // Fields
-    public static final int NUM_MOBS = 4;
+    public static final MobStore NUM_MOBS = new MobStore(2, new int[]{4, 0});
+
     // Constructor
     public MagicCliff(GameWorld gameWorld, int levelNumber) {
         super(gameWorld);
-        setBoundaries(new Vec2(0,0), 20, -20, -300, 300);
+        setBoundaries(new Vec2(0,0), 20, -10, -300, 300);
         initLevel(levelNumber);
         setPlayerSpawn(new Vec2(0, 2));
         resetPlayerPos();

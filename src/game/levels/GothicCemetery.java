@@ -1,7 +1,6 @@
 package game.levels;
 // Imports
 
-import game.body.staticstructs.ground.Prop;
 import game.body.staticstructs.ground.gothicCemetery.*;
 import game.core.GameWorld;
 import game.enums.Direction;
@@ -13,7 +12,7 @@ import org.jbox2d.common.Vec2;
 // Class
 public class GothicCemetery extends LevelFrame{
     // Fields
-    public static final int NUM_MOBS = 0;
+    public static final MobStore NUM_MOBS = new MobStore(2, new int[]{0, 0});
     // Constructor
     public GothicCemetery(GameWorld gameWorld, int levelNumber) {
         super(gameWorld);

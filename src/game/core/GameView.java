@@ -7,6 +7,7 @@ import game.enums.Environments;
 import game.levels.LevelFrame;
 import game.utils.InventoryButton;
 import game.menu.JMenuPanel;
+import game.utils.endOfGameButton;
 import org.jbox2d.common.Vec2;
 import javax.swing.*;
 import java.awt.*;
@@ -27,12 +28,13 @@ public class GameView extends UserView {
     public static final Font STATUS_FONT = new Font("Monospaced", Font.PLAIN, 20);
     public static final Font DISPLAY_FONT = new  Font("Niagara Solid", Font.BOLD, 50);
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
-    private boolean gameOver = false;
+    private String gameOverMessage;
+    private String victoryMessage;
+    private boolean blackScreenDeath = false;
     private final GameWorld gameWorld;
     public final JMenuPanel jMenuPanel = new JMenuPanel(this);
     private boolean drawReactiveClouds = false;
-    public boolean isOutOfBounds = false;
-    private final Environments level;
+    public final Environments level;
 
     static {
         slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
@@ -203,18 +205,20 @@ public class GameView extends UserView {
         if (gameWorld.getPlayer().isDead()) {
             pauseInterface();
         }
-        if (gameOver) {
-            graphics.setColor(Color.BLACK);
-            graphics.fillRect(0,0, getWidth(), getHeight());
+        if (gameOverMessage != null) {
+            if (blackScreenDeath) {
+                graphics.setColor(Color.BLACK);
+                graphics.fillRect(0,0, getWidth(), getHeight());
+            }
             graphics.setColor(Color.RED);
             graphics.setFont(DISPLAY_FONT);
-            graphics.drawString("GAME OVER", 520, 250);
-            /*
-            I used to stop the world here.
-            BUT I felt that it would be cool if the world and mobs kept doing their things.
-            Its like the world is not centred around the player concept, things keep going even if the player is dead.
-            */
+            graphics.drawString(gameOverMessage, 520, 250);
+        } else if (victoryMessage != null) {
+            graphics.setColor(Color.ORANGE);
+            graphics.setFont(DISPLAY_FONT);
+            graphics.drawString(victoryMessage, 520, 250);
         }
+
     }
     /**
      * Applies a visual effect (vignette) to indicate the player is hurt.
@@ -236,14 +240,8 @@ public class GameView extends UserView {
      * @param graphics the graphics context
      */
     private void drawGameTime(Graphics2D graphics) {
-        graphics.setFont(STATUS_FONT);
-        if (Game.gameTime.getTime() == 0) {
-            graphics.setColor(Color.RED);
-            graphics.drawString("LOADING...", 550, 315);
-        } else {
-            graphics.setColor(Color.BLUE);
-            graphics.drawString(String.format("Timer: %02d" + ":%02d", Game.gameTime.getTimeMinutes(), Game.gameTime.getTimeSeconds()), 5, 20);
-        }
+        graphics.setColor(Color.BLUE);
+        graphics.drawString(String.format("Timer: %02d" + ":%02d", Game.gameTime.getTimeMinutes(), Game.gameTime.getTimeSeconds()), 5, 20);
     }
     /**
      * Draws the health bar on the screen.
@@ -346,8 +344,28 @@ public class GameView extends UserView {
     }
     /**
      * Sets the game over state to true.
+     * @param gameOverMessage the game over message
      */
-    public void gameOver() {
-        gameOver = true;
+    public void gameOver(String gameOverMessage) {
+        this.gameOverMessage = gameOverMessage;
+        add(new endOfGameButton());
+
+    }
+    /**
+     * Ends game with the black screen death state to true.
+     *
+     * @param gameOverMessage the game over message
+     */
+    public void blackScreenDeath(String gameOverMessage) {
+        blackScreenDeath = true;
+        gameOver(gameOverMessage);
+    }
+    /**
+     * Sets the game over state to false.
+     * @param victoryMessage the victory message
+     */
+    public void gameWon(String victoryMessage) {
+        this.victoryMessage = victoryMessage;
+        add(new endOfGameButton());
     }
 }

@@ -9,9 +9,15 @@ public enum Environments {
     MAGIC_CLIFF,
     HAUNTED_FOREST,
     GOTHIC_CEMETERY;
+    static {
+        MAGIC_CLIFF.index = 1;
+        HAUNTED_FOREST.index = 2;
+        GOTHIC_CEMETERY.index = 3;
+    }
     // Fields
     private boolean levelOne;
     private boolean levelTwo;
+    public int index;
     // Methods
 
     public boolean getBool(int level) {

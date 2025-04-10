@@ -2,10 +2,13 @@ package game.menu;
 // Imports
 
 import game.Game;
+import game.core.console.Console;
 import game.enums.Environments;
 import game.levels.GothicCemetery;
 import game.levels.HauntedForest;
 import game.levels.MagicCliff;
+import game.levels.MobStore;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -61,9 +64,9 @@ public class SelectLevel {
         initIcons();
         initLevels();
         initButtons(game);
-        magicDescriptionPane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ MagicCliff.NUM_MOBS + "</p></body></html>");
-        forestDescription.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ HauntedForest.NUM_MOBS + "</p></body></html>");
-        cemeteryDescription.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: "+ GothicCemetery.NUM_MOBS + "</p></body></html>");
+        updateDescriptionPane(Environments.MAGIC_CLIFF);
+        updateDescriptionPane(Environments.HAUNTED_FOREST);
+        updateDescriptionPane(Environments.GOTHIC_CEMETERY);
 
     }
     // reminder, use GameView JPanel to check whether the scaled images have been completed, and call a static method on a future progress bar to increment!
@@ -165,6 +168,44 @@ public class SelectLevel {
             }
         } else {
             levelTwo.setEnabled(false);
+        }
+    }
+
+    private void updateDescriptionPane(Environments environment) {
+        // selection process
+        JTextPane pane;
+        JRadioButton levelOne, levelTwo;
+        MobStore mobStore;
+        switch (environment) {
+            case MAGIC_CLIFF -> {
+                pane = magicDescriptionPane;
+                levelOne = magicLevelOne;
+                levelTwo = magicLevelTwo;
+                mobStore = MagicCliff.NUM_MOBS;
+            }
+            case HAUNTED_FOREST -> {
+                pane = forestDescription;
+                levelOne = forestLevelOne;
+                levelTwo = forestLevelTwo;
+                mobStore = HauntedForest.NUM_MOBS;
+            }
+            case GOTHIC_CEMETERY -> {
+                pane = cemeteryDescription;
+                levelOne = cemeteryLevelOne;
+                levelTwo = cemeteryLevelTwo;
+                mobStore = GothicCemetery.NUM_MOBS;
+            }
+            default -> {
+                throw new IllegalArgumentException(Console.exceptionMessage("Invalid environment: " + environment));
+            }
+        }
+        // update the description pane
+        if (levelOne.isSelected()) {
+            pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(0) + "</p></body></html>");
+        } else if (levelTwo.isSelected()) {
+            pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(1) + "</p></body></html>");
+        } else {
+            pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\"></p></body></html>");
         }
     }
 }

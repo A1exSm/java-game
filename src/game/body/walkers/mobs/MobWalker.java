@@ -144,16 +144,8 @@ public class MobWalker extends WalkerFrame {
     public void die() {
         mobStepListener.remove();
         dropLoot();
-        boolean gameOver = true;
-        for (MobWalker mob : getGameWorld().environment.getMobs()) {
-            if (!mob.isDead()) {
-                gameOver = false;
-                break;
-            }
-        }
-        if (gameOver) {
-            Game.gameView.gameOver();
-        }
+        getGameWorld().environment.checkForMobsDead();
+        Console.info(getName() + " has died.");
         destroy();
     }
 

@@ -6,6 +6,8 @@ import city.cs.engine.StepListener;
 import game.Game;
 import game.body.staticstructs.ground.GroundFrame;
 import game.body.staticstructs.ground.gothicCemetery.GothicFlatSkull;
+import game.body.walkers.PlayerWalker;
+import game.body.walkers.WalkerFrame;
 import game.body.walkers.mobs.HuntressWalker;
 import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
@@ -231,11 +233,7 @@ public abstract class LevelFrame {
                 if (gameWorld.environment != LevelFrame.this) {
                     stop();
                 }
-                Vec2 playerPos = gameWorld.getPlayer().getPosition();
-                if (playerPos.y < boundaries.get("Lower").y || playerPos.y > boundaries.get("Upper").y || playerPos.x > boundaries.get("Right").x || playerPos.x < boundaries.get("Left").x) {
-                    Game.gameView.isOutOfBounds = true;
-                    gameWorld.getPlayer().die();
-                }
+                isOutOfBounds(gameWorld.getPlayer());
             }
 
             @Override
@@ -245,6 +243,17 @@ public abstract class LevelFrame {
         };
     }
     // Methods | Public
+    public boolean isOutOfBounds(WalkerFrame walkerFrame) {
+        Vec2 pos = walkerFrame.getPosition();
+        if (pos.y < boundaries.get("Lower").y || pos.y > boundaries.get("Upper").y || pos.x > boundaries.get("Right").x || pos.x < boundaries.get("Left").x) {
+            if (walkerFrame instanceof PlayerWalker player) {
+                player.fallToDeath();
+                return true;
+            }
+            return true;
+        }
+        return false;
+    }
     /**
      * Sets the player's position to the spawn point.<br>
      * If the player spawn point is not set, a warning is given.
@@ -308,6 +317,36 @@ public abstract class LevelFrame {
             Console.warning("Step listener not initialised.");
             return;
         }
+        switch (Game.gameView.level) {
+            case MAGIC_CLIFF -> {
+                Game.magicData.unlockLevel();
+            }
+            case HAUNTED_FOREST -> {
+                Game.hauntedData.unlockLevel();
+            }
+            case GOTHIC_CEMETERY -> {
+                Game.gothicData.unlockLevel();
+            }
+        }
         gameWorld.removeStepListener(stepListener);
+    }
+    /**
+     * Checks if all mobs are dead.<br>
+     * If all mobs are dead, the game is over.
+     */
+    public void checkForMobsDead() {
+        if (mobs.isEmpty()) {
+            return;
+        }
+        boolean gameOver = true;
+        for (MobWalker mob : mobs) {
+            if (!mob.isDead()) {
+                gameOver = false;
+                break;
+            }
+        }
+        if (gameOver) {
+            Game.gameView.gameWon("LEVEL CLEARED: Eliminated All Enemies!");
+        }
     }
 }

@@ -7,7 +7,6 @@ import game.core.console.Console;
 import game.enums.Environments;
 import game.enums.SoundGroups;
 import game.levels.LevelData;
-import game.levels.LevelFrame;
 import game.utils.Controls;
 import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
@@ -164,6 +163,14 @@ public class Game {
         return false;
     }
 
+    public static void exitToMainMenu() {
+        gameWorld.stop();
+        gameView = null;
+        gameWorld = null;
+        gameTime = null;
+        frame.switchLayout(Environments.Main_Menu);
+    }
+
     // Public | Music | Getter
     /**
      * Gets the main soundtrack field.
@@ -216,7 +223,6 @@ public class Game {
 //                view.setCentre(new Vec2(player.getPosition().x, player.getPosition().y+10)); // +10 so that the view does not show the void under the ground
                 Vec2 playerPos = gameWorld.getPlayer().getPosition();
                 gameView.setCentre(new Vec2(playerPos.x, playerPos.y + 2));
-                if(gameWorld.getPlayer().destroyed) {gameView.gameOver();}
             }
             @Override
             public void postStep(StepEvent event) {

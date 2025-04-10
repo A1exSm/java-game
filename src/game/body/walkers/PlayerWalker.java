@@ -1,6 +1,7 @@
 package game.body.walkers;
 // Imports
 import city.cs.engine.*;
+import game.Game;
 import game.body.staticstructs.HauntedBackdrop;
 import game.body.staticstructs.ground.gothicCemetery.GothicSlope;
 import game.core.GameWorld;
@@ -29,6 +30,7 @@ public final class PlayerWalker extends WalkerFrame {
             State.ATTACK1, State.ATTACK2, State.DEATH, State.FALL,
             State.HIT, State.IDLE, State.JUMP, State.RUN
     };
+    private String deathMessage;
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
     public boolean destroyed = false;
@@ -142,6 +144,7 @@ public final class PlayerWalker extends WalkerFrame {
             setLinearVelocity(new Vec2(0, 0));
             stopWalking();
             beginDeath();
+            deathMessage = attacker;
         }
     }
 
@@ -157,6 +160,15 @@ public final class PlayerWalker extends WalkerFrame {
         this.healthPoints += healthPoints;
         if (this.healthPoints > MAX_HP) this.healthPoints = MAX_HP;
     }
+    public void fallToDeath() {
+        if (destroyed) return;
+        stepListener.remove();
+        removeAllImages();
+        if (getDirection() == Direction.LEFT) addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f)).flipHorizontal();
+        else addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f));
+        Game.gameView.blackScreenDeath("FELL TO DEATH");
+        destroyed = true;
+    }
 
     public boolean isHealthFull() {
         return healthPoints == MAX_HP;
@@ -169,6 +181,7 @@ public final class PlayerWalker extends WalkerFrame {
         removeAllImages();
         if (getDirection() == Direction.LEFT) addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f)).flipHorizontal();
         else addImage(new BodyImage("data/PlayerPNG/death/tile005.png", 18f));
+        Game.gameView.gameOver("Died To " + deathMessage);
         destroyed = true;
     }
     // Methods | Public | Movement @Override

@@ -1,5 +1,6 @@
 package game.animation;
 // Imports
+import game.Game;
 import game.core.GameWorld;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.State;
@@ -61,9 +62,11 @@ public class MobAnimationStepListener {
                 if (walker.getWalkerType() != Walkers.WORM) {
                     walker.soundFX.attack1();
                 }
+            } else if (currentHandler == animations.get(DEATH)) {
+                invokeDeathTimer();
+            } else {
+                toggleTimer();
             }
-            else if (currentHandler == animations.get(DEATH)) {invokeDeathTimer();}
-            else toggleTimer();
         }
     }
     /**

@@ -17,7 +17,8 @@ import org.jbox2d.common.Vec2;
 // Class
 public class HauntedForest extends LevelFrame {
     // Fields
-    public static final int NUM_MOBS = 0;
+//    public static final int NUM_MOBS = 0;
+    public static final MobStore NUM_MOBS = new MobStore(2, new int[]{0, 0});
     // Constructor
     public HauntedForest(GameWorld gameWorld, int levelNumber) {
         super(gameWorld);
