@@ -1,6 +1,7 @@
 package game.levels;
 // Imports
 
+import game.Game;
 import game.body.staticstructs.ground.magicCliffs.Bridge;
 import game.body.staticstructs.ground.magicCliffs.FloatingPlatform;
 import game.body.staticstructs.ground.magicCliffs.MagicPlatform;
@@ -19,7 +20,7 @@ public class MagicCliff extends LevelFrame {
 
     // Constructor
     public MagicCliff(GameWorld gameWorld, int levelNumber) {
-        super(gameWorld);
+        super(gameWorld, levelNumber);
         setBoundaries(new Vec2(0,0), 20, -10, -300, 300);
         initLevel(levelNumber);
         setPlayerSpawn(new Vec2(0, 2));
@@ -62,4 +63,8 @@ public class MagicCliff extends LevelFrame {
     }
     private void levelTwoStructures() {}
     private void levelTwoMobs() {}
+    @Override // not explicitly required but good practice apparently
+    protected void objectiveComplete() {
+        Game.magicData.unlockLevel(getLevelNum());
+    }
 }

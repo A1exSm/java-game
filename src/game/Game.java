@@ -72,7 +72,6 @@ public class Game {
      * @see GameSound
      */
     private static GameSound gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", SoundGroups.MUSIC, true);
-
     /**
      * A static instance of {@link LevelData} which stores the level data for {@link Environments#MAGIC_CLIFF}.
      * @see LevelData

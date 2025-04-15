@@ -37,19 +37,19 @@ public abstract class LevelFrame {
     private Vec2 centre;
     private Vec2 playerSpawn;
     private StepListener stepListener;
-
-
+    private final int levelNum;
     /**
      * Constructor for LevelFrame.<br>
      * Initialises the game world and level number.
      *
      * @param gameWorld the game world
      */
-    LevelFrame(GameWorld gameWorld) {
+    LevelFrame(GameWorld gameWorld, int levelNum) {
         this.gameWorld = gameWorld;
         initBoundaries();
         groundFrames = new HashMap<>();
         mobs = new ArrayList<>();
+        this.levelNum = levelNum;
 
     }
     // Methods | Private
@@ -84,6 +84,12 @@ public abstract class LevelFrame {
      * @param levelNumber the level number
      */
     protected abstract void initLevel(int levelNumber);
+
+    /**
+     * Called when the objective is complete.<br>
+     * This method is called in {@link #checkForMobsDead()}.
+     */
+    protected abstract void objectiveComplete();
 
     /**
      * Sets the values of boundaries and returns the centre of the level.<br>
@@ -231,7 +237,7 @@ public abstract class LevelFrame {
             @Override
             public void preStep(StepEvent event) {
                 if (gameWorld.environment != LevelFrame.this) {
-                    stop();
+                    stop("Loss");
                 }
                 isOutOfBounds(gameWorld.getPlayer());
             }
@@ -312,21 +318,10 @@ public abstract class LevelFrame {
      * Stops the level.<br>
      * <p>Removes the level stepListener from the world.</p>
      */
-    public void stop() {
+    public void stop(String winLoss) {
         if (stepListener == null) {
             Console.warning("Step listener not initialised.");
             return;
-        }
-        switch (Game.gameView.level) {
-            case MAGIC_CLIFF -> {
-                Game.magicData.unlockLevel();
-            }
-            case HAUNTED_FOREST -> {
-                Game.hauntedData.unlockLevel();
-            }
-            case GOTHIC_CEMETERY -> {
-                Game.gothicData.unlockLevel();
-            }
         }
         gameWorld.removeStepListener(stepListener);
     }
@@ -347,6 +342,15 @@ public abstract class LevelFrame {
         }
         if (gameOver) {
             Game.gameView.gameWon("LEVEL CLEARED: Eliminated All Enemies!");
+            objectiveComplete();
         }
+    }
+    /**
+     * Returns the level number.
+     *
+     * @return the level number
+     */
+    protected int getLevelNum() {
+        return levelNum;
     }
 }

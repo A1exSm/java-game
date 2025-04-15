@@ -1,6 +1,7 @@
 package game.levels;
 // Imports
 
+import game.Game;
 import game.body.staticstructs.HauntedBackdrop;
 import game.body.staticstructs.ground.GroundFrame;
 import game.body.staticstructs.ground.hauntedForest.HauntedFlatPlatform;
@@ -21,7 +22,7 @@ public class HauntedForest extends LevelFrame {
     public static final MobStore NUM_MOBS = new MobStore(2, new int[]{0, 0});
     // Constructor
     public HauntedForest(GameWorld gameWorld, int levelNumber) {
-        super(gameWorld);
+        super(gameWorld, levelNumber);
         setBoundaries(new Vec2(0, 0), 200, -30, -300, 300);
         initLevel(levelNumber);
         setPlayerSpawn(new Vec2(0, 2));
@@ -52,4 +53,8 @@ public class HauntedForest extends LevelFrame {
     private void levelOneMobs() {}
     private void levelTwoStructures() {}
     private void levelTwoMobs() {}
+    @Override
+    protected void objectiveComplete() {
+        Game.hauntedData.unlockLevel(getLevelNum());
+    }
 }

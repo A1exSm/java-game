@@ -1,6 +1,7 @@
 package game.levels;
 // Imports
 
+import game.Game;
 import game.body.staticstructs.ground.gothicCemetery.*;
 import game.core.GameWorld;
 import game.enums.Direction;
@@ -15,7 +16,7 @@ public class GothicCemetery extends LevelFrame{
     public static final MobStore NUM_MOBS = new MobStore(2, new int[]{0, 0});
     // Constructor
     public GothicCemetery(GameWorld gameWorld, int levelNumber) {
-        super(gameWorld);
+        super(gameWorld, levelNumber);
         setBoundaries(new Vec2(0, 0), 300, -300, -300, 300);
         initLevel(levelNumber);
         setPlayerSpawn(new Vec2(0, 2));
@@ -49,4 +50,8 @@ public class GothicCemetery extends LevelFrame{
     private void levelOneMobs() {}
     private void levelTwoStructures() {}
     private void levelTwoMobs() {}
+    @Override
+    protected void objectiveComplete() {
+        Game.gothicData.unlockLevel(getLevelNum());
+    }
 }

@@ -7,7 +7,7 @@ import game.enums.Environments;
 import game.levels.LevelFrame;
 import game.utils.InventoryButton;
 import game.menu.JMenuPanel;
-import game.utils.endOfGameButton;
+import game.utils.ToMenuButton;
 import org.jbox2d.common.Vec2;
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,6 @@ public class GameView extends UserView {
     private final Image parallaxBackground;
     private final Image parallaxForeground;
     private final Image sea;
-    private int cloudsOffset = 0;
     public static final Font STATUS_FONT = new Font("Monospaced", Font.PLAIN, 20);
     public static final Font DISPLAY_FONT = new  Font("Niagara Solid", Font.BOLD, 50);
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
@@ -33,8 +32,9 @@ public class GameView extends UserView {
     private boolean blackScreenDeath = false;
     private final GameWorld gameWorld;
     public final JMenuPanel jMenuPanel = new JMenuPanel(this);
-    private boolean drawReactiveClouds = false;
     public final Environments level;
+    public JLabel endText;
+    private String winLoss;
 
     static {
         slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
@@ -205,18 +205,29 @@ public class GameView extends UserView {
         if (gameWorld.getPlayer().isDead()) {
             pauseInterface();
         }
+        String message = null;
+        Color color = Color.LIGHT_GRAY;
         if (gameOverMessage != null) {
             if (blackScreenDeath) {
                 graphics.setColor(Color.BLACK);
                 graphics.fillRect(0,0, getWidth(), getHeight());
             }
-            graphics.setColor(Color.RED);
-            graphics.setFont(DISPLAY_FONT);
-            graphics.drawString(gameOverMessage, 520, 250);
+            color = Color.RED;
+            message = gameOverMessage;
         } else if (victoryMessage != null) {
-            graphics.setColor(Color.ORANGE);
-            graphics.setFont(DISPLAY_FONT);
-            graphics.drawString(victoryMessage, 520, 250);
+            color = Color.ORANGE;
+            message = victoryMessage;
+        }
+        if (message != null && endText == null) {
+            endText = new JLabel(message);
+            endText.setFont(DISPLAY_FONT);
+            endText.setForeground(color);
+            endText.setSize(endText.getPreferredSize());
+            add(endText);
+            endText.setLocation(getWidth()/2 - endText.getWidth()/2, getHeight()/4 + endText.getHeight()/2);
+            ToMenuButton toMenuButton = new ToMenuButton(winLoss);
+            add(toMenuButton);
+            toMenuButton.setLocation(getWidth()/2 - toMenuButton.getWidth()/2, getHeight()/4 + endText.getHeight() + 50);
         }
 
     }
@@ -348,7 +359,7 @@ public class GameView extends UserView {
      */
     public void gameOver(String gameOverMessage) {
         this.gameOverMessage = gameOverMessage;
-        add(new endOfGameButton());
+        winLoss = "Loss";
 
     }
     /**
@@ -366,6 +377,6 @@ public class GameView extends UserView {
      */
     public void gameWon(String victoryMessage) {
         this.victoryMessage = victoryMessage;
-        add(new endOfGameButton());
+        winLoss = "Win";
     }
 }

@@ -2,6 +2,7 @@ package game.enums;
 
 import game.Game;
 import game.core.console.Console;
+import game.levels.LevelData;
 
 public enum Environments {
     Main_Menu,
@@ -32,6 +33,16 @@ public enum Environments {
             default -> {
                 Console.error("Level " + level + " does not exist, returning false.");
                 return false;
+            }
+        }
+    }
+    public LevelData getNextEnvironment() {
+        switch (this) {
+            case MAGIC_CLIFF -> {return Game.hauntedData;}
+            case HAUNTED_FOREST -> {return Game.gothicData;}
+            default -> {
+                Console.error("No next environment found, returning null.");
+                return null;
             }
         }
     }

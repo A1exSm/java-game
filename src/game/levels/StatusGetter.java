@@ -22,9 +22,16 @@ public class StatusGetter {
     public static boolean isFilePresent(String path) {
         try (FileReader fr = new FileReader(path)) {
             Console.debug("Checking save file " + (++count) + " / 3");
+            BufferedReader br = new BufferedReader(fr);
+            if (br.readLine() == null) {
+                throw new IOException(Console.exceptionMessage("Empty save file"));
+            }
+            if (!br.readLine().equals("Level Data")) {
+                throw new IOException(Console.exceptionMessage("Invalid save file format"));
+            }
         } catch (IOException e) {
             if (e instanceof FileNotFoundException) {
-                Console.warning("File not found: " + path);
+                Console.warning("Save file not found: " + path);
             }
             return false;
         }
