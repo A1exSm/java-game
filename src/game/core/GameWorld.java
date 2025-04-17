@@ -2,10 +2,7 @@ package game.core;
 // Imports
 import game.Game;
 import game.body.items.Inventory;
-import game.body.staticstructs.ground.*;
-import game.body.staticstructs.Trampoline;
 import game.body.walkers.PlayerWalker;
-import game.body.walkers.mobs.HuntressWalker;
 import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
 import city.cs.engine.*;
@@ -14,14 +11,13 @@ import game.core.console.Console;
 import game.enums.Environments;
 import game.enums.State;
 import game.enums.WalkerBehaviour;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import game.levels.GothicCemetery;
 import game.levels.HauntedForest;
 import game.levels.LevelFrame;
 import game.levels.MagicCliff;
-import org.jbox2d.common.Vec2;
 import game.animation.*;
-import java.awt.*;
+
 import java.util.ArrayList;
 
 // Class
@@ -48,7 +44,7 @@ public class GameWorld extends World {
         super();
         GameWorld.game = game;
         player = new PlayerWalker(this);
-        new WalkerAnimationFrames(State.RUN, Walkers.PLAYER);
+        new WalkerAnimationFrames(State.RUN, WalkerType.PLAYER);
         this.environment = populate(environment, level);
         this.environment.start();
         // end of constructor start of a new world :)
@@ -142,7 +138,7 @@ public class GameWorld extends World {
      */
     public static WormWalker nameToWorm(String name) {
         for (MobWalker mob : mobs) {
-            if (mob.getWalkerType().equals(Walkers.WORM) && mob.getName().equals(name)) { // ensures correct type & name
+            if (mob.getWalkerType().equals(WalkerType.WORM) && mob.getName().equals(name)) { // ensures correct type & name
                 return (WormWalker) mob; // casts the mob to a WormWalker
             }
         }
@@ -157,7 +153,7 @@ public class GameWorld extends World {
      */
     public static WizardWalker nameToWizard(String name) {
         for (MobWalker mob : mobs) {
-            if (mob.getWalkerType().equals(Walkers.WIZARD) && mob.getName().equals(name)) { // ensures correct type & name
+            if (mob.getWalkerType().equals(WalkerType.WIZARD) && mob.getName().equals(name)) { // ensures correct type & name
                 return (WizardWalker) mob; // casts the mob to a WormWalker
             }
         }

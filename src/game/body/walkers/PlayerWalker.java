@@ -2,7 +2,8 @@ package game.body.walkers;
 // Imports
 import city.cs.engine.*;
 import game.Game;
-import game.body.staticstructs.HauntedBackdrop;
+import game.body.staticstructs.ground.hauntedForest.HauntedBackdrop;
+import game.body.staticstructs.ground.GroundFrame;
 import game.body.staticstructs.ground.gothicCemetery.GothicSlope;
 import game.core.GameWorld;
 import game.animation.PlayerStepListener;
@@ -10,15 +11,15 @@ import game.body.walkers.mobs.MobWalker;
 import game.core.console.Console;
 import game.enums.Direction;
 import game.enums.State;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
 
 // Class
 public final class PlayerWalker extends WalkerFrame {
     // Fields
-    public final float HALF_X = 1;
-    public final float HALF_Y = 2; // not using Vec2 since objects' contents can be changed when final
+    public static final float HALF_X = 1;
+    public static final float HALF_Y = 2; // not using Vec2 since objects' contents can be changed when final
     private SensorListener attackRight;
     private SensorListener attackLeft;
     private Sensor rightSensor;
@@ -37,7 +38,7 @@ public final class PlayerWalker extends WalkerFrame {
     private final int damage = 350;
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
-        super(gameWorld, new BoxShape(0.2f,1.6F), new Vec2(0,3), Walkers.PLAYER);
+        super(gameWorld, new BoxShape(0.2f,1.6F), new Vec2(0,3), WalkerType.PLAYER);
         setName("Player");
         constructFixtures();
         createSensorListeners();
@@ -113,12 +114,8 @@ public final class PlayerWalker extends WalkerFrame {
     }
     // Methods | Public | Attack Sensors
     public void checkMob() {
-        // x handling
-        inRightSensor.removeIf(mob -> (mob.getPosition().x > (getPosition().x + 7 + mob.HALF_X)) || mob.getPosition().x < getPosition().x);
-        inLeftSensor.removeIf(mob -> (mob.getPosition().x < (getPosition().x -7) + (-mob.HALF_X)) || mob.getPosition().x > getPosition().x);
-        // y handling
-        inRightSensor.removeIf(mob -> mob.getPosition().y + mob.ORIGIN_Y < getPosition().y - 1.5f || mob.getPosition().y - mob.ORIGIN_Y > getPosition().y + 1.5f);
-        inLeftSensor.removeIf(mob -> mob.getPosition().y + mob.ORIGIN_Y < getPosition().y - 1.5f || mob.getPosition().y - mob.ORIGIN_Y > getPosition().y + 1.5f);
+       inRightSensor.removeIf(mob -> !rightSensor.intersects(mob.getPosition(),mob.getHalfDimensions().x,mob.getHalfDimensions().y));
+       inLeftSensor.removeIf(mob -> !leftSensor.intersects(mob.getPosition(),mob.getHalfDimensions().x,mob.getHalfDimensions().y));
     }
 
     public void hurtMob() {
@@ -128,7 +125,7 @@ public final class PlayerWalker extends WalkerFrame {
         else temp = new ArrayList<>(inLeftSensor);
         for (MobWalker mob : temp) {
             mob.toggleOnHit();
-            javax.swing.Timer timer1 = new javax.swing.Timer(100, e -> { // delay timer so that it looks like they were hurt as animation blade hits them
+            javax.swing.Timer timer1 = new javax.swing.Timer(100, _ -> { // delay timer so that it looks like they were hurt as animation hits them
                 mob.takeDamage(damage);
             });
             timer1.setRepeats(false);
@@ -204,19 +201,23 @@ public final class PlayerWalker extends WalkerFrame {
     }
     // Methods | Private | Movement
     public boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
-        for (Body body : getBodiesInContact()) {
-            if (body.getPosition().y < getPosition().y-1.8) {
-                return true;
-            } else if (body instanceof HauntedBackdrop) {
-                return true;
+        Boolean onSurface = false;
+        for (Body body : this.getBodiesInContact()) {
+            if (onSurface) { // only runs while onSurface is false, meaning less unnecessary checks
+                break;
+            }
+            if (body instanceof GroundFrame frame && !(body instanceof HauntedBackdrop) && !(body instanceof GothicSlope)) { // ensures player is on-top of flat ground
+                onSurface =  frame.getPosition().y + frame.getHalfDimensions().y < getPosition().y-1.8;
+            } else if (body.getPosition().y < getPosition().y-1.8 || body instanceof HauntedBackdrop) {
+                onSurface = true;
             } else if (body instanceof GothicSlope slope) {
                 if (getPosition().y - 2.8 < slope.getLineEquationYPos(getPosition().x)) {
                     setLinearVelocity(new Vec2(0, 0));
-                    return true;
+                    onSurface =  true;
                 }
             }
         }
-        return false;
+        return onSurface;
     }
     // Methods | Public | Level
 }

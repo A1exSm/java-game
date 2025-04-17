@@ -225,7 +225,7 @@ public class GameView extends UserView {
             endText.setSize(endText.getPreferredSize());
             add(endText);
             endText.setLocation(getWidth()/2 - endText.getWidth()/2, getHeight()/4 + endText.getHeight()/2);
-            ToMenuButton toMenuButton = new ToMenuButton(winLoss);
+            ToMenuButton toMenuButton = new ToMenuButton();
             add(toMenuButton);
             toMenuButton.setLocation(getWidth()/2 - toMenuButton.getWidth()/2, getHeight()/4 + endText.getHeight() + 50);
         }

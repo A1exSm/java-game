@@ -1,10 +1,10 @@
 package game.animation;
-import static game.enums.Walkers.*;
+import static game.enums.WalkerType.*;
 import static game.enums.State.*;
 
 import game.core.console.Console;
 import game.enums.State;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import java.util.HashMap;
 // Class
 /**
@@ -13,13 +13,13 @@ import java.util.HashMap;
  */
 public final class WalkerAnimationFrames extends AnimationFrames {
     // Fields
-    private static final HashMap<Walkers, HashMap<State, Integer>> WALKER_MAP = new HashMap<>();
+    private static final HashMap<WalkerType, HashMap<State, Integer>> WALKER_MAP = new HashMap<>();
     public final State animationType;
-    public final Walkers walkerType;
+    public final WalkerType walkerType;
 
     static { // We are making a static map as we don't need a large chunk of logic to execute everytime a new object is made
         // Populate WALKER_MAP
-        for (Walkers w : Walkers.values()) {WALKER_MAP.put(w, new HashMap<>());}
+        for (WalkerType w : WalkerType.values()) {WALKER_MAP.put(w, new HashMap<>());}
         // Player
         WALKER_MAP.get(PLAYER).put(ATTACK1, 6);
         WALKER_MAP.get(PLAYER).put(ATTACK2, 6);
@@ -64,7 +64,7 @@ public final class WalkerAnimationFrames extends AnimationFrames {
      * @param animationName The state of the animation (e.g., IDLE, RUN).
      * @param walkerType The type of walker (e.g., PLAYER, WIZARD).
      */
-    public WalkerAnimationFrames(State animationName, Walkers walkerType) {
+    public WalkerAnimationFrames(State animationName, WalkerType walkerType) {
         super(); // parent constructor is empty, but is here to facilitate future implementation
         // assigning inherited fields
         animationType = animationName;
@@ -82,7 +82,7 @@ public final class WalkerAnimationFrames extends AnimationFrames {
      * @param animationName The state of the animation.
      * @param walkerType The type of walker.
      */
-    private void initWalkerType(State animationName, Walkers walkerType) {
+    private void initWalkerType(State animationName, WalkerType walkerType) {
         // Error Handling
         if (!WALKER_MAP.containsKey(walkerType) || !WALKER_MAP.get(walkerType).containsKey(animationName)) {
             Console.error("Warning: Animation '" + animationName + "' not defined for walker type '" + walkerType + "'");

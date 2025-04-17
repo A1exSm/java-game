@@ -14,10 +14,10 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
     // Fields
     private JPanel menuPanel;
     private JPanel innerPanel;
-    private JButton startButton;
+    private JButton continueButton;
     private JButton levelSelectButton;
     private JButton optionsButton;
-    private JPanel startPanel;
+    private JPanel continuePanel;
     private JPanel levelPanel;
     private JPanel optionsPanel;
     private JPanel quitPanel;
@@ -25,7 +25,7 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
 
     // Constructor
     public MainMenu(Game game) {
-        startButton.addActionListener(e -> {
+        continueButton.addActionListener(e -> {
 //            game.getFrame().switchLayout(Environments.MAGIC_CLIFF);
         });
         quitButton.addActionListener(e -> {

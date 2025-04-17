@@ -118,13 +118,17 @@ public class Game {
      * When debug mode is off, the grid resolution is set to 0, and all bodies have setAlwaysOutline(false).
      */
     public static void debugOn() {
-        gameView.setGridResolution(!debugOn ? 1 : 0);
-        for (Body body : gameWorld.getDynamicBodies()) {
-            body.setAlwaysOutline(!debugOn);
+        if (gameView != null) {
+            gameView.setGridResolution(!debugOn ? 1 : 0);
         }
-        for (Body body : gameWorld.getStaticBodies()) {
-            body.setAlwaysOutline(!debugOn);
-            body.setLineColor(Color.CYAN);
+        if (gameWorld != null) {
+            for (Body body : gameWorld.getDynamicBodies()) {
+                body.setAlwaysOutline(!debugOn);
+            }
+            for (Body body : gameWorld.getStaticBodies()) {
+                body.setAlwaysOutline(!debugOn);
+                body.setLineColor(Color.CYAN);
+            }
         }
         debugOn = !debugOn;
     }

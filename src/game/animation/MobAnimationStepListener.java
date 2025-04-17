@@ -1,10 +1,9 @@
 package game.animation;
 // Imports
-import game.Game;
 import game.core.GameWorld;
 import game.body.walkers.mobs.MobWalker;
 import game.enums.State;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import java.util.HashMap;
 import static game.enums.State.*;
 // Class
@@ -59,7 +58,7 @@ public class MobAnimationStepListener {
             currentHandler.resetFrame();
             if (currentHandler == animations.get(ATTACK1)) {
                 invokeAttackTimer();
-                if (walker.getWalkerType() != Walkers.WORM) {
+                if (walker.getWalkerType() != WalkerType.WORM) {
                     walker.soundFX.attack1();
                 }
             } else if (currentHandler == animations.get(DEATH)) {

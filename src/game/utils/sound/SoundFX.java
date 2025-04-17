@@ -8,7 +8,7 @@ import game.core.GameSound;
 import game.core.console.Console;
 import game.enums.SoundGroups;
 import game.enums.State;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import java.util.HashMap;
 
 // Class/**
@@ -22,11 +22,11 @@ public class SoundFX implements SoundInterface  {
     // Constructor
     /**
      * Constructs a SoundFX object for the specified walker.
-     * GameSounds are then assigned as per the {@link Walkers Walker}.
+     * GameSounds are then assigned as per the {@link WalkerType Walker}.
      *
      * @param walker the type of walker for which the sound effects are set up
      */
-    public SoundFX(Walkers walker) {
+    public SoundFX(WalkerType walker) {
         hashMapSetup(walker);
         runTimer = new javax.swing.Timer(200, e -> {
             if (soundMap.get(State.RUN).isPlaying()) {
@@ -47,11 +47,11 @@ public class SoundFX implements SoundInterface  {
      * The map is created in the format <State, GameSound> and populated with the appropriate GameSounds.
      *
      * @param walker the type of walker for which the sound map is set up
-     * @throws IllegalArgumentException if an <b>unsupported</b> {@link Walkers Walker} is given
+     * @throws IllegalArgumentException if an <b>unsupported</b> {@link WalkerType Walker} is given
      */
-    private void hashMapSetup(Walkers walker) {
+    private void hashMapSetup(WalkerType walker) {
         SoundGroups group;
-        if (walker.equals(Walkers.PLAYER)) {
+        if (walker.equals(WalkerType.PLAYER)) {
             group = SoundGroups.PLAYER;
         } else {
             group = SoundGroups.MOBS;

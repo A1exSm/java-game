@@ -5,7 +5,7 @@ import game.core.GameWorld;
 import game.body.walkers.WalkerFrame;
 import game.enums.Direction;
 import game.enums.State;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
 
 import java.util.Objects;
@@ -49,7 +49,7 @@ class FrameHandler {
     protected void incrementFrame(Direction direction) {
         currentFrame++;
         if (currentFrame > walkerFrame.numFrames) currentFrame = 1; // ensures that there is no situation where we are accessing a Frame which is out of range (of the array indexing)
-        if (walker.getWalkerType() == Walkers.WORM && animationType == State.ATTACK1 && currentFrame == 11) {
+        if (walker.getWalkerType() == WalkerType.WORM && animationType == State.ATTACK1 && currentFrame == 11) {
             Objects.requireNonNull(GameWorld.nameToWorm(walker.getName())).shootProjectile(); // Apparently requireNonNull is good practice
         }
         cycleFrame(direction);

@@ -43,7 +43,7 @@ public class HauntedFlatPlatform extends GroundFrame {
     // Methods | public
     @Override
     public void paint() {
-        removeAllImages();
+        
         if (lengthScale == 1) {
             GameBodyImage img = ((int)(Math.random() * 101) % 12 != 0) ? IMG_A : IMG_B;
             addImage(img).setOffset(new Vec2(0, -img.getHalfDimensions().y/2));

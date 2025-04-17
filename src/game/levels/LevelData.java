@@ -4,8 +4,6 @@ package game.levels;
 import game.core.console.Console;
 import game.enums.Environments;
 import java.util.HashMap;
-import java.util.logging.Level;
-
 /**
  *
  */
@@ -81,6 +79,9 @@ public class LevelData {
     }
 
     protected void unlockLevel(int levelNumber) {
+        if (levelNumber == 1 && levelData.get(levelNumber+1)) {
+            return;
+        }
         if (levelNumber < getHighestUnlocked()) {return;} // we ignore if this is not the current highest level
         if (getNextLevel() == -1) {
             Console.warning("No more levels to unlock.");

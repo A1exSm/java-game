@@ -4,16 +4,16 @@ package game.body.walkers.mobs;
 import city.cs.engine.BoxShape;
 import game.core.GameWorld;
 import game.body.projectiles.Projectile;
-import game.body.walkers.PlayerWalker;
 import game.enums.Direction;
 import game.enums.State;
 import game.enums.WalkerBehaviour;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
 
 // Class
 public class WormWalker extends MobWalker { // worm does not have additional fixtures due to animation constraints (it moves ALOT)
     // Fields
+    protected static final BoxShape SHAPE = new BoxShape(2, 2);
     public static final float HALF_X = 2.0f;
     public static final float HALF_Y = 2.0f;
     public static final State[] SUPPORTED_STATES = new State[]{
@@ -23,18 +23,10 @@ public class WormWalker extends MobWalker { // worm does not have additional fix
     public static final float CHASE_DISTANCE = 15.0f;
     // Constructor
     public WormWalker(GameWorld gameWorld, Vec2 origin) {
-        super(gameWorld, new BoxShape(2, 2), origin, Walkers.WORM);
+        super(gameWorld, SHAPE, origin, WalkerType.WORM);
         GameWorld.addMob(this);
     }
     // Methods
-    @Override
-    public void attack() {
-        if (!getCooldown() && !getHit()) {
-            toggleActionCoolDown();
-            toggleOnAttack();
-        }
-    }
-
     public void shootProjectile() {
         Vec2 spawnLocation = getPosition();
         if (getDirection() == Direction.LEFT) {

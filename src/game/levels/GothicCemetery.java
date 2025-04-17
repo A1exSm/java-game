@@ -34,18 +34,18 @@ public class GothicCemetery extends LevelFrame{
         }
     }
     private void levelOneStructures() {
-        addGroundFrame("PillarA", new GothicPillar(gameWorld, -GothicFlatDefault.IMG.getHalfDimensions().x - GothicPillar.IMG.getHalfDimensions().x, -1));
-        addGroundFrame("FlatA", new GothicFlatDefault(gameWorld, 0, -1, 1));
-        addGroundFrame("FlatB", new GothicFlatDefault(gameWorld, getGroundFramePosition("PillarA").x - getGroundFrame("PillarA").getHalfDimensions().x - GothicFlatDefault.IMG.getHalfDimensions().x*5, -1, 5));
-        addGroundFrame("SpikesA", new GothicSpikes(gameWorld, GothicSlopeDefault.IMG.getHalfDimensions().x + GothicSpikes.IMG.getHalfDimensions().x*2, -1, 2));
-        addGroundFrame("SlopeA", new GothicSlopeDefault(gameWorld, getGroundFramePosition("SpikesA").x + GothicSpikes.IMG.getHalfDimensions().x*2 + GothicSlopeDefault.IMG.getDimensions().x*3, -1, 3, Direction.DOWN));
-        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STATUE_IMG), -1);
-        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_1_IMG), -1);
-        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_2_IMG), -1);
-        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_3_IMG), -1);
-        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STONE_2_IMG), -1).flip();
-        getGroundFrame("FlatB").removeProp(2);
-        getGroundFrame("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STONE_1_IMG), -1).flip();
+        add("PillarA", new GothicPillar(gameWorld, -GothicFlatDefault.IMG.getHalfDimensions().x - GothicPillar.IMG.getHalfDimensions().x, -1));
+        add("FlatA", new GothicFlatDefault(gameWorld, 0, -1, 1));
+        add("FlatB", new GothicFlatDefault(gameWorld, getPos("PillarA").x - get("PillarA").getHalfDimensions().x - GothicFlatDefault.IMG.getHalfDimensions().x*5, -1, 5));
+        add("SpikesA", new GothicSpikes(gameWorld, GothicSlopeDefault.IMG.getHalfDimensions().x + GothicSpikes.IMG.getHalfDimensions().x*2, -1, 2));
+        add("SlopeA", new GothicSlopeDefault(gameWorld, getPos("SpikesA").x + GothicSpikes.IMG.getHalfDimensions().x*2 + GothicSlopeDefault.IMG.getDimensions().x*3, -1, 3, Direction.DOWN));
+        get("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STATUE_IMG), -1);
+        get("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_1_IMG), -1);
+        get("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_2_IMG), -1);
+        get("FlatB").addProp(new GothicProp(gameWorld, GothicProp.TREE_3_IMG), -1);
+        get("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STONE_2_IMG), -1).flip();
+        get("FlatB").removeProp(2);
+        get("FlatB").addProp(new GothicProp(gameWorld, GothicProp.STONE_1_IMG), -1).flip();
     }
     private void levelOneMobs() {}
     private void levelTwoStructures() {}

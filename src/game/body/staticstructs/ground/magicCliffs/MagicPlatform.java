@@ -17,7 +17,6 @@ import org.jbox2d.common.Vec2;
 // Class
 public class MagicPlatform extends GroundFrame {
     // Fields
-    private boolean tree = false;
     private final PlatformType type;
     // Constructor
     /**
@@ -46,7 +45,6 @@ public class MagicPlatform extends GroundFrame {
     @Override
     public void paint() {
         if (type.equals(PlatformType.GROUND)) {addImage(new BodyImage("data/MagicCliffs/ground/background.png", 11f)).setOffset(new Vec2(0, -1.75f));}
-        if(tree){addImage(new BodyImage("data/MagicCliffs/misc/tree.png", 11f)).setOffset(new Vec2(0, halfDimensions.y*2));}
         AttachedImage leftSide = addImage(type.getSideBody());
         AttachedImage rightSide = addImage(type.getSideBody());
         leftSide.setOffset(new Vec2(-halfDimensions.x+type.getSideWidth(), type.getSideY()));
@@ -56,17 +54,5 @@ public class MagicPlatform extends GroundFrame {
         if (type.equals(PlatformType.CLIFF_LIGHT) || type.equals(PlatformType.CLIFF_DARK)) {
             addImage(type.getMiddleBody()).setOffset(new Vec2(-type.getMiddleX(), type.getMiddleY()));
         }
-    }
-    /**
-     * Adds a tree image to the platform.
-     */
-    public void addTree() {
-        if (tree) {
-            Console.warning("Tree already exists on this platform.");
-            return;
-        }
-        removeAllImages();
-        tree = true;
-        paint();
     }
 }

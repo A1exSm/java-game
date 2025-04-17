@@ -5,7 +5,7 @@ import game.core.GameWorld;
 import game.core.console.Console;
 import game.enums.Direction;
 import game.enums.State;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import game.utils.sound.SoundFX;
 import org.jbox2d.common.Vec2;
 import java.util.ArrayList;
@@ -28,14 +28,14 @@ public abstract class WalkerFrame extends Walker {
     private Direction direction = Direction.RIGHT;
     private final GameWorld gameWorld;
     private boolean dead = false;
-    private final Walkers WALKER_TYPE; // for now, walkers cannot transform into another
+    private final WalkerType WALKER_TYPE; // for now, walkers cannot transform into another
     private boolean isCooldown = false;
     private final ArrayList<Shape> solidFixtures = new ArrayList<>();
     private final ArrayList<Shape> ghostlyFixtures = new ArrayList<>();
     private boolean isGhostly = false;
     public final SoundFX soundFX;
 
-    public WalkerFrame(GameWorld gameWorld, Shape shape, Vec2 origin, Walkers walkerType) {
+    public WalkerFrame(GameWorld gameWorld, Shape shape, Vec2 origin, WalkerType walkerType) {
         super(gameWorld);
         // Initialising constants
         this.ORIGIN_X = origin.x;
@@ -181,7 +181,7 @@ public abstract class WalkerFrame extends Walker {
         return dead;
     }
 
-    public Walkers getWalkerType() {
+    public WalkerType getWalkerType() {
         return WALKER_TYPE;
     }
 

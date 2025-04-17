@@ -70,8 +70,8 @@ public abstract class MobStepListener implements MobStepListenerFrame {
 
     @Override
     public boolean isPlayerInRange(Vec2 pos, boolean playerBehind) {
-        if (playerBehind) {return nearViewX(pos.x, VIEW_RADIUS_X/2) && nearViewY(pos.y, mob.HALF_Y) && !gameWorld.getPlayer().isDead();}
-        else {return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, mob.HALF_Y) && !gameWorld.getPlayer().isDead();}
+        if (playerBehind) {return nearViewX(pos.x, VIEW_RADIUS_X/2) && nearViewY(pos.y, mob.getHalfDimensions().y) && !gameWorld.getPlayer().isDead();}
+        else {return nearViewX(pos.x, VIEW_RADIUS_X) && nearViewY(pos.y, mob.getHalfDimensions().y) && !gameWorld.getPlayer().isDead();}
     }
 
     @Override
@@ -91,7 +91,7 @@ public abstract class MobStepListener implements MobStepListenerFrame {
         if (!isOnPlatform) {
             checkBounds(pos, PATROL_RADIUS_X, mob.ORIGIN_X);
         } else {
-            checkBounds(pos, currentPlatform.getHalfDimensions().x- (mob.HALF_X + 1), currentPlatform.getOriginPos().x);
+            checkBounds(pos, currentPlatform.getHalfDimensions().x- (mob.getHalfDimensions().x + 1), currentPlatform.getOriginPos().x);
         }
     }
 

@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Level bridge between two {@link GroundFrame} instances.
  */
 // Class
-public class Bridge extends GroundFrame {
+public class MagicBridge extends GroundFrame {
     // Fields
     private final HashMap<String, AttachedImage> bridgeParts = new HashMap<>();
     public static final float MAX_DISTANCE = 500f;
@@ -24,14 +24,17 @@ public class Bridge extends GroundFrame {
     private final GroundFrame bridgeEnd;
     private SolidFixture bridgeFixture = null;
     private final Direction facingDirection;
+    private float[] xPos;
+    private String[] path;
 
     // Constructor
-    public Bridge(GameWorld gameWorld, GroundFrame bridgeStart, GroundFrame bridgeEnd) {
+    public MagicBridge(GameWorld gameWorld, GroundFrame bridgeStart, GroundFrame bridgeEnd) {
         super(gameWorld);
         this.bridgeStart = bridgeStart;
         this.bridgeEnd = bridgeEnd;
         facingDirection = calcDirection();
         if (validateBridge()) {
+            setup();
             paint();
         } else {
             destroy();
@@ -39,12 +42,11 @@ public class Bridge extends GroundFrame {
     }
 
     // Methods | private | setup
-    @Override
-    public void paint() {
+    private void setup() {
         float dist;
         halfDimensions.y = 2f;
-        float[] xPos = new float[2]; // float[0] = xStart, float[1] = xEnd
-        String[] path = new String[2]; // path[0] = start, path[1] = end
+        xPos = new float[2]; // float[0] = xStart, float[1] = xEnd
+        path = new String[2]; // path[0] = start, path[1] = end
 
         if (facingDirection.equals(Direction.RIGHT)) {
             dist = Math.abs((bridgeStart.getOriginPos().x + bridgeStart.getHalfDimensions().x) - (bridgeEnd.getOriginPos().x - bridgeEnd.getHalfDimensions().x));
@@ -64,6 +66,9 @@ public class Bridge extends GroundFrame {
         bridgeFixture = new SolidFixture(this, new BoxShape((dist / 2) - 0.1f, halfDimensions.y, new Vec2(0, 0)));
         halfDimensions.x = dist / 2;
         setPosition(new Vec2(originPos.x,(bridgeStart.getOriginPos().y + bridgeStart.getHalfDimensions().y) - 1.5f));
+    }
+    @Override
+    public void paint() {
         putBridgePart("bridgeStart", path[0], xPos[0], 0);
         middleBridge();
         putBridgePart("bridgeEnd", path[1], xPos[1], 0);

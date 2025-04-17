@@ -28,6 +28,10 @@ public abstract class GroundFrame extends StaticBody {
         this.originPos = new Vec2();
         this.setName("Ground"+(++count));
     }
+    // protected
+    protected void superSetPosition(Vec2 pos) {
+        super.setPosition(pos);
+    }
     // override
     @Override
     public void setPosition(Vec2 pos) {
@@ -53,6 +57,11 @@ public abstract class GroundFrame extends StaticBody {
     public void resetYTop() {
         yTop = originPos.y + halfDimensions.y;
     }
+    // Methods | Protected
+    public void setYTop(float yTop) {
+        this.yTop = yTop;
+    }
+
     public void setPropEnabled(boolean propEnabled, int nodeCount) {
         this.propEnabled = propEnabled;
         if (propNodes == null) {
@@ -105,9 +114,18 @@ public abstract class GroundFrame extends StaticBody {
         propNodes[index].destroy();
         propNodes[index] = null;
     }
+
+    public void repaint() {
+        removeAllImages();
+        paint();
+    }
+
     // Methods | Public | Static
-    public static float randIntRange(float min, float max) {
+    public static float randRangeFloat(float min, float max) {
         return min + (float) (Math.random() * (max - min));
+    }
+    public static int randRangeInt(int min, int max) {
+        return (int) (min + (Math.random() * (max - min)));
     }
     // Methods | Public | Abstract
     public abstract void paint();

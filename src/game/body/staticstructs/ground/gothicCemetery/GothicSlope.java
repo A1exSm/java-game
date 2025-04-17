@@ -42,6 +42,7 @@ public abstract class GothicSlope extends GroundFrame { // this class is witchcr
 
     // Methods | Private
     public void paint() {
+        
         AttachedImage image;
         for (int i = 0; i < lengthScale * 2; i++) {
             image = addImage(bodyImage);

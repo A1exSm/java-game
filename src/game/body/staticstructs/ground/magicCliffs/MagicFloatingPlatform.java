@@ -14,7 +14,7 @@ import org.jbox2d.common.Vec2;
  * Platform object which extends {@link GroundFrame}.
  */
 // Class
-public class FloatingPlatform extends GroundFrame {
+public class MagicFloatingPlatform extends GroundFrame {
     // Fields
     private final String size;
     // Constructor
@@ -27,7 +27,7 @@ public class FloatingPlatform extends GroundFrame {
      * @param y the y-coordinate of the ground
      * @param size the size of the platform: {@code "MEDIUM"} or {@code "LARGE"}
      */
-    public FloatingPlatform(GameWorld gameWorld, float x, float y, String size) {
+    public MagicFloatingPlatform(GameWorld gameWorld, float x, float y, String size) {
         super(gameWorld);
         setPosition(new Vec2(x, y));
         setPropEnabled(true, 1);

@@ -30,7 +30,7 @@ class HauntedElevator extends DynamicBody {
             @Override
             public void preStep(StepEvent stepEvent) {
                 if (getPosition().y >= yDestination) {
-                    new HauntedPillar(gameWorld, getPosition(), level);
+                    new HauntedPillar(gameWorld, getPosition().x, getPosition().y, level);
                     destroy();
                     gameWorld.getPlayer().setLinearVelocity(new Vec2(getLinearVelocity().x, 0));
                     gameWorld.removeStepListener(this);

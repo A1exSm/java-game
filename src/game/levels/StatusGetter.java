@@ -23,11 +23,11 @@ public class StatusGetter {
         try (FileReader fr = new FileReader(path)) {
             Console.debug("Checking save file " + (++count) + " / 3");
             BufferedReader br = new BufferedReader(fr);
-            if (br.readLine() == null) {
+            String testLine = br.readLine();
+            if (testLine == null) {
                 throw new IOException(Console.exceptionMessage("Empty save file"));
-            }
-            if (!br.readLine().equals("Level Data")) {
-                throw new IOException(Console.exceptionMessage("Invalid save file format"));
+            } else if (!testLine.equals("Level Data")) {
+                throw new IOException(Console.exceptionMessage("Invalid save file format, first line reads: " + testLine));
             }
         } catch (IOException e) {
             if (e instanceof FileNotFoundException) {

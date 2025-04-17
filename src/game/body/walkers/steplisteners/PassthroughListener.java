@@ -20,7 +20,7 @@ public class PassthroughListener implements StepListener {
     // Methods
     @Override
     public void preStep(StepEvent stepEvent) {
-        if ((mob.getPosition().x - mob.HALF_X) > (passThroughMob.getPosition().x + passThroughMob.HALF_X) || (mob.getPosition().x + mob.HALF_X) < (passThroughMob.getPosition().x - passThroughMob.HALF_X)) {
+        if ((mob.getPosition().x - mob.getHalfDimensions().x) > (passThroughMob.getPosition().x + passThroughMob.getHalfDimensions().x) || (mob.getPosition().x + mob.getHalfDimensions().x) < (passThroughMob.getPosition().x - passThroughMob.getHalfDimensions().x)) {
             mob.makeSolid();
             Game.gameWorld.removeStepListener(this);
         }

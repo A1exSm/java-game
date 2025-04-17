@@ -16,8 +16,6 @@ public enum Environments {
         GOTHIC_CEMETERY.index = 3;
     }
     // Fields
-    private boolean levelOne;
-    private boolean levelTwo;
     public int index;
     // Methods
 

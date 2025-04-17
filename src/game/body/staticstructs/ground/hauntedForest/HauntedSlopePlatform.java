@@ -64,7 +64,7 @@ public class HauntedSlopePlatform extends GroundFrame {
     // Methods | public
     @Override
     public void paint() {
-        removeAllImages();
+        
         if (lengthScale == 1) {
             AttachedImage attachedImage = new AttachedImage(this, IMG, 1f, 0, new Vec2(0, -halfDimensions.y));
             if (direction.equals(Direction.DOWN)) {attachedImage.flipHorizontal();}

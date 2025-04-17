@@ -31,6 +31,7 @@ abstract class GothicFlat extends GroundFrame {
     }
     // Methods
     public void paint() {
+        
         if (lengthScale == 1) {
             addImage(groundImage);
         } else {
@@ -38,9 +39,5 @@ abstract class GothicFlat extends GroundFrame {
                 addImage(groundImage).setOffset(new Vec2(i, 0));
             }
         }
-    }
-    // Methods | Public
-    public void repaint() {
-        paint();
     }
 }

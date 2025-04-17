@@ -2,7 +2,6 @@ package game.body.walkers.mobs;
 // Imports
 import game.Game;
 import game.body.items.HealthPotion;
-import game.body.walkers.PlayerWalker;
 import game.body.walkers.steplisteners.AggressiveStepListener;
 import game.body.walkers.steplisteners.MobStepListener;
 import game.body.walkers.steplisteners.PassiveStepListener;
@@ -15,17 +14,14 @@ import game.body.walkers.WalkerFrame;
 import game.enums.WalkerBehaviour;
 import game.enums.items.ItemSize;
 import game.enums.State;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 // Class
 public class MobWalker extends WalkerFrame {
     // Fields
-    public final float HALF_X;
-    public final float HALF_Y;
     private static int mobCount = -1;
     private MobStepListener mobStepListener;
     private static final int MAX_HP = 1000;
@@ -47,49 +43,36 @@ public class MobWalker extends WalkerFrame {
 
 
     // Constructor
-    public MobWalker(GameWorld gameWorld, BoxShape boxShape, Vec2 origin, Walkers mobType) {
+    public MobWalker(GameWorld gameWorld, BoxShape boxShape, Vec2 origin, WalkerType mobType) {
         super(gameWorld, boxShape, origin, mobType);
         switch  (mobType) {
             case WIZARD -> {
-                HALF_X = WizardWalker.HALF_X;
-                HALF_Y = WizardWalker.HALF_Y;
                 behaviour = WizardWalker.DEFAULT_BEHAVIOUR;
             }
             case WORM -> {
-                HALF_X = WormWalker.HALF_X;
-                HALF_Y = WormWalker.HALF_Y;
                 behaviour = WormWalker.DEFAULT_BEHAVIOUR;
             }
             case HUNTRESS -> {
-                HALF_X = HuntressWalker.HALF_X;
-                HALF_Y = HuntressWalker.HALF_Y;
                 behaviour = HuntressWalker.DEFAULT_BEHAVIOUR;
             }
             default -> {
-                HALF_X = 0.0f;
-                HALF_Y = 0.0f;
                 behaviour = WalkerBehaviour.PASSIVE;
                 Console.error("Error: Invalid mob type, defaulting.");
             }
         }
-        mobCount++;
-        initName();
+        updateName(String.valueOf(++mobCount));
         collisions();
         startWalking(2);
         GameWorld.addMob(this);
-
         setMobStepListener(behaviour);
     }
     // Methods
-    protected void initName() {
-        setName(getWalkerType().name().toLowerCase() + mobCount);
-    }
     private void dropLoot() {
         int randInt = (int) (Math.random() * 100);
         for (ItemSize size : dropRates.keySet()) {
             for (int i : dropRates.get(size)) {
                 if (randInt == i) {
-                    new HealthPotion(size, new Vec2(getPosition().x, getPosition().y-(HALF_Y/1.7f)));
+                    new HealthPotion(size, new Vec2(getPosition().x, getPosition().y-(getWalkerType().getHalfDimensions().y/1.7f)));
                     return;
                 }
             }
@@ -125,6 +108,9 @@ public class MobWalker extends WalkerFrame {
         });
     }
 
+    public void updateName(String identifier) {
+        setName(getWalkerType().name().toLowerCase() + identifier);
+    }
 
     public void attack() {
         if (!getCooldown() && !getHit()) {
@@ -208,4 +194,19 @@ public class MobWalker extends WalkerFrame {
         setMobStepListener(behaviour);
     }
 
+    public Shape getShape() {
+        switch (getWalkerType()) {
+            case WIZARD -> {return WizardWalker.SHAPE;}
+            case WORM -> {return WormWalker.SHAPE;}
+            case HUNTRESS -> {return HuntressWalker.SHAPE;}
+            default -> {
+                Console.error("Invalid mob type: " + getWalkerType() + ", defaulting to null.");
+                return null;
+            }
+        }
+    }
+
+    public Vec2 getHalfDimensions() {
+        return getWalkerType().getHalfDimensions();
+    }
 }

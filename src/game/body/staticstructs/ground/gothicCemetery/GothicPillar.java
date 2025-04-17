@@ -26,13 +26,12 @@ public final class GothicPillar extends GroundFrame {
         setPosition(new Vec2(x, y));
         new SolidFixture(this, new BoxShape(halfDimensions.x, halfDimensions.y));
         vines = (int) (Math.random() * 101) % 2 != 0;
-        if (vines) {vineYOffset = GroundFrame.randIntRange(4.3f, 5.0f);}
+        if (vines) {vineYOffset = GroundFrame.randRangeFloat(4.3f, 5.0f);}
         paint();
 
     }
     // Methods
     public void paint() {
-        removeAllImages();
         addImage(IMG).setOffset(new Vec2(0, 3.3f));
         if (vines) {addImage(VINES_IMG).setOffset(new Vec2(0, vineYOffset));}
     }

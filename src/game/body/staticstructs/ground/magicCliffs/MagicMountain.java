@@ -10,11 +10,11 @@ import org.jbox2d.common.Vec2;
  *
  */
 // Class
-public class Cliff extends GroundFrame {
+public class MagicMountain extends GroundFrame {
     // Fields
 
     // Constructor
-    public Cliff(GameWorld gameWorld, float x, float y) {
+    public MagicMountain(GameWorld gameWorld, float x, float y) { // should rather create the image in an editor, then create a body.
         super(gameWorld);
         setPosition(new Vec2(x,y));
         paint();
@@ -23,7 +23,7 @@ public class Cliff extends GroundFrame {
     // Methods | Public
     @Override
     public void paint() {
-        removeAllImages();
+        
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_centre.png", 11f));
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_inside_large.png", 5.5f)).setOffset(new Vec2(-7.45f, -2.75f));
         addImage(new BodyImage("data/MagicCliffs/cliff/dark_inside_large.png", 5.5f)).setOffset(new Vec2(-7.45f, 2.75f));

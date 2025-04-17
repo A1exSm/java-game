@@ -10,7 +10,10 @@ import game.levels.MagicCliff;
 import game.levels.MobStore;
 
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 
 /**
  *
@@ -200,6 +203,15 @@ public class SelectLevel {
             }
         }
         // update the description pane
+        ChangeListener updateDescription = e -> {
+            if (levelOne.isSelected()) {
+                pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(0) + "</p></body></html>");
+            } else if (levelTwo.isSelected()) {
+                pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(1) + "</p></body></html>");
+            }
+        };
+        levelOne.addChangeListener(updateDescription);
+        levelTwo.addChangeListener(updateDescription);
         if (levelOne.isSelected()) {
             pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(0) + "</p></body></html>");
         } else if (levelTwo.isSelected()) {

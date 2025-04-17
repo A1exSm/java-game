@@ -58,6 +58,7 @@ public class GothicSpikes extends GroundFrame {
     }
     // Methods | Private
     public void paint() {
+        
         if (lengthScale == 1) {
             addImage(IMG);
         } else {

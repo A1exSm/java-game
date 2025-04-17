@@ -5,7 +5,6 @@ import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.Game;
 import game.body.staticstructs.ground.GroundFrame;
-import game.body.staticstructs.ground.gothicCemetery.GothicFlatSkull;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.WalkerFrame;
 import game.body.walkers.mobs.HuntressWalker;
@@ -14,13 +13,10 @@ import game.body.walkers.mobs.WizardWalker;
 import game.body.walkers.mobs.WormWalker;
 import game.core.GameWorld;
 import game.core.console.Console;
-import game.enums.Direction;
-import game.enums.Walkers;
+import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -34,10 +30,12 @@ public abstract class LevelFrame {
     private HashMap<String, Vec2> boundaries;
     private final HashMap<String, GroundFrame> groundFrames;
     private ArrayList<MobWalker> mobs;
+    private ArrayList<MobWalker> noPosInitMobs = new ArrayList<>();
     private Vec2 centre;
     private Vec2 playerSpawn;
     private StepListener stepListener;
     private final int levelNum;
+    protected int count = 0;
     /**
      * Constructor for LevelFrame.<br>
      * Initialises the game world and level number.
@@ -114,14 +112,15 @@ public abstract class LevelFrame {
      * @param name the name of the ground frame
      * @param groundFrame the ground frame to add
      */
-    public void addGroundFrame(String name, GroundFrame groundFrame) {
+    public GroundFrame add(String name, GroundFrame groundFrame) {
         if (groundFrames.putIfAbsent(name, groundFrame) != null) {
             Console.warning("Ground frame with name " + name + " already exists. Destroying Duplicate!");
             groundFrame.destroy();
-            return;
+            return groundFrame;
         }
         groundFrame.setName(name);
         updatePosition(groundFrame);
+        return groundFrame;
     }
     // Methods | Protected
     /**
@@ -130,7 +129,7 @@ public abstract class LevelFrame {
      * @param name the name of the ground frame
      * @return a {@link Vec2} object representing the position of the {@link GroundFrame}
      */
-    protected Vec2 getGroundFramePosition(String name) {
+    protected Vec2 getPos(String name) {
         return new Vec2(groundFrames.get(name).getOriginPos().x + centre.x, groundFrames.get(name).getOriginPos().y + centre.y);
     }
 //    protected void appendGroundFrame(Direction direction, GroundFrame targetFrame, GroundFrame groundFrame) {
@@ -170,11 +169,26 @@ public abstract class LevelFrame {
      * @param name the name of the ground frame
      * @return the {@link GroundFrame} object
      */
-    protected GroundFrame getGroundFrame(String name) {
+    protected GroundFrame get(String name) {
         if (!groundFrames.containsKey(name)) {
             throw new NullPointerException(Console.exceptionMessage("Ground frame with key " + name + " does not exist in groundFrame HashMap."));
         }
         return groundFrames.get(name);
+    }
+    /**
+     * Returns the {@link MobWalker} with the given identifier.
+     *
+     * @param identifier the identifier of the mob
+     * @return the {@link MobWalker} object
+     */
+    private MobWalker getMob(String identifier) {
+        for (MobWalker mob : mobs) {
+            if (mob.getName().equals(mob.getWalkerType().name().toLowerCase() + identifier)) {
+                return mob;
+            }
+        }
+        Console.warning("No mob with identifier " + identifier + " found.");
+        return null;
     }
     // Methods | Public
     /**
@@ -199,14 +213,46 @@ public abstract class LevelFrame {
     protected void setPlayerSpawn(Vec2 playerSpawn) {
         this.playerSpawn = new Vec2(centre.x + playerSpawn.x, centre.y + playerSpawn.y);
     }
+    /**
+     * Sets the player spawn position without centering it.
+     *
+     * @param playerSpawn the player spawn position
+     */
+    protected void setPlayerSpawnNoCentre(Vec2 playerSpawn) {
+        this.playerSpawn.set(playerSpawn);
+    }
 
     /**
      * Returns the {@link GameWorld} instance associated with this level.
      *
      * @return the {@link GameWorld} instance
      */
-    protected GameWorld getGameWorld() {
+    public GameWorld getGameWorld() {
         return gameWorld;
+    }
+
+    private MobWalker addMob(WalkerType walkerType, Vec2 pos, String identifier) {
+        MobWalker mob;
+        switch (walkerType) {
+            case WORM -> {
+                mob = new WormWalker(gameWorld, pos);
+                mobs.add(mob);
+            }
+            case WIZARD -> {
+                mob = new WizardWalker(gameWorld, pos);
+                mobs.add(mob);
+            }
+            case WalkerType.HUNTRESS -> {
+                mob = new HuntressWalker(gameWorld, pos);
+                mobs.add(mob);
+            }
+            default -> {
+                Console.errorTraceCustom("Walker type " + walkerType + " not recognised, returning null!", 3);
+                mob = null;
+            }
+        }
+        if (mob != null) {mob.updateName(identifier);}
+        return mob;
     }
 
     /**
@@ -215,20 +261,57 @@ public abstract class LevelFrame {
      *
      * @param walkerType the type of mob to add
      * @param pos the position of the mob
+     * @param identifier the identifier of the mob
      */
-    protected void addMob(Walkers walkerType, Vec2 pos) {
-        switch (walkerType) {
-            case WORM -> {
-                mobs.add(new WormWalker(gameWorld, new Vec2(centre.x + pos.x, centre.y + pos.y)));
-            }
-            case WIZARD -> {
-                mobs.add(new WizardWalker(gameWorld, new Vec2(centre.x + pos.x, centre.y + pos.y)));
-            }
-            case Walkers.HUNTRESS -> {
-                mobs.add(new HuntressWalker(gameWorld, new Vec2(centre.x + pos.x, centre.y + pos.y)));
-            }
-            default -> Console.warning("Walker type " + walkerType + " not recognised.");
+    protected MobWalker add(WalkerType walkerType, Vec2 pos, String identifier) {
+        return addMob(walkerType, new Vec2(centre.x + pos.x, centre.y + pos.y), identifier);
+    }
+    /**
+     * Sets the position of a {@link MobWalker} with the given identifier to a random place on top of a {@link GroundFrame}.<br>
+     * @see GroundFrame#randRangeFloat(float, float)
+     *
+     * @param identifier the identifier of the mob
+     * @param platform the ground frame to set the position on
+     */
+    protected void setPos(String identifier, GroundFrame platform) {
+        MobWalker walker = getMob(identifier);
+        if (walker == null) {
+            Console.errorTraceCustom("Mob with name " + identifier + " not found!", 3);
+            return;
         }
+        float pPosX = platform.getPosition().x;
+        float x = GroundFrame.randRangeFloat(pPosX - platform.getHalfDimensions().x + walker.getHalfDimensions().x, pPosX + platform.getHalfDimensions().x - walker.getHalfDimensions().x);
+        walker.setPosition(new Vec2(x, platform.getYTop() + walker.getHalfDimensions().y));
+    }
+
+    /**
+     * Adds a child of {@link MobWalker} to the level.<br>
+     * The position is set in relation to the {@link #centre} of the level.
+     *
+     * @param walkerType the type of mob to add
+     * @param pos the position of the mob
+     * @param identifier the identifier of the mob
+     */
+    protected MobWalker add(WalkerType walkerType, Vec2 pos, int identifier) {
+        return addMob(walkerType, new Vec2(centre.x + pos.x, centre.y + pos.y), String.valueOf(identifier));
+    }
+
+    protected void checkForNoPosInitMobs() {
+        if (noPosInitMobs.isEmpty()) {
+            return;
+        }
+        for (MobWalker mob : noPosInitMobs) {
+            if (mob.getPosition().x <= -1000 && mob.getPosition().y <= -1000) {
+                Console.warning("Mob " + mob.getName() + " not initialised, removing from level.");
+                mob.destroy();
+            }
+        }
+    }
+
+    protected MobWalker add(WalkerType walkerType, int identifier) {
+        MobWalker walker = addMob(walkerType, new Vec2(-1000 - count, -1000 - count), String.valueOf(identifier));
+        noPosInitMobs.add(walker);
+        return walker;
     }
 
     // Methods | Private | StepListener
@@ -237,9 +320,10 @@ public abstract class LevelFrame {
             @Override
             public void preStep(StepEvent event) {
                 if (gameWorld.environment != LevelFrame.this) {
-                    stop("Loss");
+                    stop();
                 }
                 isOutOfBounds(gameWorld.getPlayer());
+                checkForMobsDead();
             }
 
             @Override
@@ -249,6 +333,13 @@ public abstract class LevelFrame {
         };
     }
     // Methods | Public
+    /**
+     * Checks if the given walker is out of bounds.<br>
+     * If the walker is out of bounds, it will fall to death.
+     *
+     * @param walkerFrame the walker to check
+     * @return true if the walker is out of bounds, false otherwise
+     */
     public boolean isOutOfBounds(WalkerFrame walkerFrame) {
         Vec2 pos = walkerFrame.getPosition();
         if (pos.y < boundaries.get("Lower").y || pos.y > boundaries.get("Upper").y || pos.x > boundaries.get("Right").x || pos.x < boundaries.get("Left").x) {
@@ -280,7 +371,7 @@ public abstract class LevelFrame {
         return centre;
     }
     /**
-     * Returns the player spawn position.<br>
+     * Returns the player's spawn position.<br>
      * @return the player spawn value ({@link Vec2})
      */
     public Vec2 getPlayerSpawn() {
@@ -318,7 +409,7 @@ public abstract class LevelFrame {
      * Stops the level.<br>
      * <p>Removes the level stepListener from the world.</p>
      */
-    public void stop(String winLoss) {
+    public void stop() {
         if (stepListener == null) {
             Console.warning("Step listener not initialised.");
             return;
@@ -335,7 +426,7 @@ public abstract class LevelFrame {
         }
         boolean gameOver = true;
         for (MobWalker mob : mobs) {
-            if (!mob.isDead()) {
+            if (mob == null || !mob.isDead()) {
                 gameOver = false;
                 break;
             }
@@ -343,6 +434,7 @@ public abstract class LevelFrame {
         if (gameOver) {
             Game.gameView.gameWon("LEVEL CLEARED: Eliminated All Enemies!");
             objectiveComplete();
+            stop();
         }
     }
     /**

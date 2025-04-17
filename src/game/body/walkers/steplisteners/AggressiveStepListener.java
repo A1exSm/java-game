@@ -78,10 +78,10 @@ public final class AggressiveStepListener extends MobStepListener {
 
     private int isInChasedDistance(float mobX, float playerX, boolean isPlayerLeft) {
         if (isPlayerLeft) {
-            float dist = (playerX + gameWorld.getPlayer().HALF_X) - (mobX - mob.HALF_X);
+            float dist = (playerX + gameWorld.getPlayer().HALF_X) - (mobX - mob.getHalfDimensions().x);
             return (dist >  -CHASE_DISTANCE ? 0 : -5);
         } else {
-            float dist = (playerX - gameWorld.getPlayer().HALF_X) - (mobX + mob.HALF_X);
+            float dist = (playerX - gameWorld.getPlayer().HALF_X) - (mobX + mob.getHalfDimensions().x);
             return (dist < CHASE_DISTANCE ? 0 : 5);
         }
     }
