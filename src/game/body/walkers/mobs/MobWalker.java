@@ -2,6 +2,7 @@ package game.body.walkers.mobs;
 // Imports
 import game.Game;
 import game.body.items.HealthPotion;
+import game.body.walkers.PlayerWalker;
 import game.body.walkers.steplisteners.AggressiveStepListener;
 import game.body.walkers.steplisteners.MobStepListener;
 import game.body.walkers.steplisteners.PassiveStepListener;
@@ -95,7 +96,7 @@ public class MobWalker extends WalkerFrame {
                             timer.start();
                         }
                     }
-                } else if ((e.getOtherBody().getName().equals("Player") && this.behaviour != WalkerBehaviour.AGGRESSIVE) || getWorld().getStaticBodies().contains(e.getOtherBody())) {
+                } else if ((e.getOtherBody() instanceof PlayerWalker && this.behaviour != WalkerBehaviour.AGGRESSIVE) || e.getOtherBody() instanceof StaticBody) {
                     if (normal.x < 0) {
                         setDirection(Direction.RIGHT);
                         startWalking(2);
@@ -130,7 +131,7 @@ public class MobWalker extends WalkerFrame {
     public void die() {
         mobStepListener.remove();
         dropLoot();
-        getGameWorld().environment.checkForMobsDead();
+        getGameWorld().getLevel().checkForMobsDead();
         Console.info(getName() + " has died.");
         destroy();
     }

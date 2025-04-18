@@ -35,7 +35,7 @@ public abstract class MobStepListener implements MobStepListenerFrame {
     @Override
     public void preStep(StepEvent stepEvent) {
         if (mob.getLinearVelocity().y < 0) {
-            if (gameWorld.environment.isOutOfBounds(mob)) {
+            if (gameWorld.getLevel().isOutOfBounds(mob)) {
                 mob.die();
             }
         }

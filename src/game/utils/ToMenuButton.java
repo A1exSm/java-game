@@ -21,7 +21,7 @@ public class ToMenuButton extends JButton {
         setFocusable(false);
         setRolloverEnabled(false);
         addActionListener(e->{
-            Game.gameWorld.environment.stop();
+            Game.gameWorld.getLevel().stop();
             Game.exitToMainMenu();
         });
     }

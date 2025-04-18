@@ -13,6 +13,7 @@ import game.body.walkers.mobs.WizardWalker;
 import game.body.walkers.mobs.WormWalker;
 import game.core.GameWorld;
 import game.core.console.Console;
+import game.enums.Direction;
 import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
 
@@ -132,27 +133,25 @@ public abstract class LevelFrame {
     protected Vec2 getPos(String name) {
         return new Vec2(groundFrames.get(name).getOriginPos().x + centre.x, groundFrames.get(name).getOriginPos().y + centre.y);
     }
-//    protected void appendGroundFrame(Direction direction, GroundFrame targetFrame, GroundFrame groundFrame) {
-//        float half_Dimensions
-//        if (groundFrame instanceof GothicFlatSkull) {}
-//    }
-//        if (direction.equals(Direction.LEFT)) {
-//
-//        }
-//    }
     /**
-     * Sets the position of the ground frame with the given name.<br>
-     * The position is set in relation to the {@link #centre} of the level.
-     *
+     * Returns the edge of the given ground frame in the given direction.
+     * @see Direction
+     * @see GroundFrame
      * @param name the name of the ground frame
-     * @param position the new position of the ground frame
+     * @param side the direction of the edge
+     * @return the edge value
      */
-    protected void setGroundPosition(String name, Vec2 position) {
-        if (!groundFrames.containsKey(name)) {
-            throw new NullPointerException(Console.exceptionMessage("Ground frame with key " + name + " does not exist in groundFrame HashMap."));
+    protected float getEdge(String name, Direction side) {
+        if (side == Direction.RIGHT) {
+            return get(name).getPosition().x + get(name).getHalfDimensions().x;
+        } else if (side == Direction.LEFT) {
+            return get(name).getPosition().x - get(name).getHalfDimensions().x;
+        } else {
+            Console.errorTraceCustom("Invalid direction " + side + " for getEdge() method.", 3);
+            return 0;
         }
-        groundFrames.get(name).setPosition(new Vec2(centre.x + position.x, centre.y + position.y));
     }
+
     /**
      * Updates the position of the given ground frame.<br>
      * The position is set in relation to the {@link #centre} of the level.
@@ -319,7 +318,7 @@ public abstract class LevelFrame {
         stepListener = new StepListener() {
             @Override
             public void preStep(StepEvent event) {
-                if (gameWorld.environment != LevelFrame.this) {
+                if (gameWorld.getLevel() != LevelFrame.this) {
                     stop();
                 }
                 isOutOfBounds(gameWorld.getPlayer());

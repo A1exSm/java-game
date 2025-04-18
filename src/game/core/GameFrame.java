@@ -76,6 +76,13 @@ public class GameFrame extends JFrame {
             default -> {Console.error("GameFrame.switchLayout() called with invalid environment, if attempting to start a level, use the GameFrame.selectLevel() method");}
         }
     }
+
+    /**
+     * Selects the level to play.
+     *
+     * @param environment the environment of the level
+     * @param level       the level number
+     */
     public void selectLevel(Environments environment, int level) {
         addGameView(environment, level);
     }

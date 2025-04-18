@@ -96,7 +96,7 @@ public final class PlayerWalker extends WalkerFrame {
 
     private void updateSensor(SensorEvent e, ArrayList<MobWalker> sensorArray) {
         for (MobWalker mob : GameWorld.getMobs()) {
-            if (e.getContactBody().getName().equals(mob.getName())) {
+            if (e.getContactBody() instanceof MobWalker && e.getContactBody() == mob) {
                 if (!sensorArray.contains(mob)) {
                     sensorArray.add(mob);
                 }
@@ -114,8 +114,10 @@ public final class PlayerWalker extends WalkerFrame {
     }
     // Methods | Public | Attack Sensors
     public void checkMob() {
-       inRightSensor.removeIf(mob -> !rightSensor.intersects(mob.getPosition(),mob.getHalfDimensions().x,mob.getHalfDimensions().y));
-       inLeftSensor.removeIf(mob -> !leftSensor.intersects(mob.getPosition(),mob.getHalfDimensions().x,mob.getHalfDimensions().y));
+        if (!isDead()) {
+            inRightSensor.removeIf(mob -> !rightSensor.intersects(mob.getPosition(), mob.getHalfDimensions().x, mob.getHalfDimensions().y));
+            inLeftSensor.removeIf(mob -> !leftSensor.intersects(mob.getPosition(), mob.getHalfDimensions().x, mob.getHalfDimensions().y));
+        }
     }
 
     public void hurtMob() {

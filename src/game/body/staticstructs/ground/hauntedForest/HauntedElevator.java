@@ -15,7 +15,7 @@ class HauntedElevator extends DynamicBody {
     private static int count = 0;
     public final Vec2 halfDimensions;
     // Constructor
-    HauntedElevator(GameWorld gameWorld, Vec2 dimensions, Vec2 pos, float yDestination, HauntedForest level) {
+    HauntedElevator(GameWorld gameWorld, Vec2 dimensions, Vec2 pos, float yDestination) {
         super(gameWorld);
         // initial setup
         setName("Elevator" + (++count));
@@ -30,7 +30,7 @@ class HauntedElevator extends DynamicBody {
             @Override
             public void preStep(StepEvent stepEvent) {
                 if (getPosition().y >= yDestination) {
-                    new HauntedPillar(gameWorld, getPosition().x, getPosition().y, level);
+                    new HauntedPillar(gameWorld.getLevel(), getPosition().x, getPosition().y);
                     destroy();
                     gameWorld.getPlayer().setLinearVelocity(new Vec2(getLinearVelocity().x, 0));
                     gameWorld.removeStepListener(this);
@@ -39,12 +39,8 @@ class HauntedElevator extends DynamicBody {
                     setAngle(0);
                 }
             }
-
             @Override
-            public void postStep(StepEvent stepEvent) {
-
-            }
+            public void postStep(StepEvent stepEvent) {}
         });
     }
-    // Methods
 }

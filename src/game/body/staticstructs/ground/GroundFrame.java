@@ -120,6 +120,10 @@ public abstract class GroundFrame extends StaticBody {
         paint();
     }
 
+    public Vec2 getPos() { // shorter cus I want it to be like that
+        return getPosition();
+    }
+
     // Methods | Public | Static
     public static float randRangeFloat(float min, float max) {
         return min + (float) (Math.random() * (max - min));

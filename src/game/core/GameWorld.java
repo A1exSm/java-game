@@ -32,7 +32,7 @@ public class GameWorld extends World {
     private static final ArrayList<MobWalker> mobs = new ArrayList<>();
     public static final Inventory playerInventory = new Inventory(4);
     private boolean toggleMobsPassive = false;
-    public final LevelFrame environment;
+    private final LevelFrame environment;
 
     // Constructor
     /**
@@ -86,6 +86,16 @@ public class GameWorld extends World {
     public void togglePause() {
         game.togglePause();
     }
+
+    /**
+     * Gets the current game level child of {@link LevelFrame}.
+     *
+     * @return the current level
+     */
+    public LevelFrame getLevel() {
+        return environment;
+    }
+
     /**
      * Uses an item from the player's inventory at the specified index.<br>
      * index corresponds to the item's visual position in the inventory. starting from the left.

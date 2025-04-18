@@ -112,7 +112,7 @@ public class GameView extends UserView {
     protected void paintBackground(Graphics2D g) {
         Vec2 playerPos = Game.gameWorld.getPlayer().getPosition();
         int playerX = (int) worldToView(playerPos).getX();
-        LevelFrame currentEnvironment = Game.gameWorld.environment;
+        LevelFrame currentEnvironment = Game.gameWorld.getLevel();
         int yPos;
         int xPos;
         xPos = (int) worldToView(currentEnvironment.getCentre()).getX();

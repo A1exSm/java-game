@@ -10,7 +10,6 @@ import game.levels.LevelData;
 import game.utils.Controls;
 import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -126,11 +125,19 @@ public class Game {
                 body.setAlwaysOutline(!debugOn);
             }
             for (Body body : gameWorld.getStaticBodies()) {
+                body.setLineColor(getColor(!debugOn));
                 body.setAlwaysOutline(!debugOn);
-                body.setLineColor(Color.CYAN);
             }
         }
         debugOn = !debugOn;
+    }
+
+    private static Color getColor(boolean debugOn) {
+        if (debugOn) {
+            return Color.CYAN;
+        } else {
+            return new Color(0, 0, 0, 0);
+        }
     }
 
     // Static | Exit Method
