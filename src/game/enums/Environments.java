@@ -38,6 +38,7 @@ public enum Environments {
         switch (this) {
             case MAGIC_CLIFF -> {return Game.hauntedData;}
             case HAUNTED_FOREST -> {return Game.gothicData;}
+            case GOTHIC_CEMETERY -> {return Game.magicData;}
             default -> {
                 Console.error("No next environment found, returning null.");
                 return null;

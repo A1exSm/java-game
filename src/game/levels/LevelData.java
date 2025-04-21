@@ -1,6 +1,7 @@
 package game.levels;
 // Imports
 
+import game.Game;
 import game.core.console.Console;
 import game.enums.Environments;
 import java.util.HashMap;
@@ -107,8 +108,10 @@ public class LevelData {
         if (highest == levelData.size()) {
             LevelData nextEnvironment = environment.getNextEnvironment();
             if (nextEnvironment == null) {
-                Console.log("No environment found.");
+                Console.errorTrace("No environment found.");
                 return -1;
+            } else if (nextEnvironment == Game.magicData) {
+                Console.info("Game completed, do something here...");
             } else if (nextEnvironment.levelData.get(1)) { // The first level of next environment is unlocked
                 return 10000; // ensures that comparison is always true
             }

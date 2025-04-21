@@ -4,6 +4,8 @@ package game.body.staticstructs.ground.gothicCemetery;
 import city.cs.engine.*;
 import game.body.staticstructs.ground.GroundFrame;
 import game.body.walkers.PlayerWalker;
+import game.body.walkers.WalkerFrame;
+import game.body.walkers.mobs.MobWalker;
 import game.core.GameWorld;
 import game.exceptions.IllegalLengthScaleException;
 import game.utils.GameBodyImage;
@@ -28,7 +30,7 @@ public class GothicSpikes extends GroundFrame {
         new Sensor(this, new BoxShape(halfDimensions.x, halfDimensions.y/2, new Vec2(0, halfDimensions.y/3))).addSensorListener(new SensorListener() {
             @Override
             public void beginContact(SensorEvent sensorEvent) {
-                if (sensorEvent.getContactBody() instanceof PlayerWalker player) {
+                if (sensorEvent.getContactBody() instanceof PlayerWalker player) { // we can change this whole thing to a list of walkers intersecting the sensor and every time the timer ends, hurt them.
                     if (timer != null) {
                         timer.stop();
                         timer = null;
@@ -36,6 +38,17 @@ public class GothicSpikes extends GroundFrame {
                     player.takeDamage(100, "Spikes");
                     timer = new javax.swing.Timer(1500, e -> {
                         player.takeDamage(30, "Spikes");
+                    });
+                    timer.setRepeats(true);
+                    timer.start();
+                } else if (sensorEvent.getContactBody() instanceof MobWalker mob) {
+                    if (timer != null) {
+                        timer.stop();
+                        timer = null;
+                    }
+                    mob.takeDamage(100);
+                    timer = new javax.swing.Timer(1500, e -> {
+                        mob.takeDamage(30);
                     });
                     timer.setRepeats(true);
                     timer.start();
