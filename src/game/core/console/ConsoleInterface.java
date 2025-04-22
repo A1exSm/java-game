@@ -21,15 +21,20 @@ class ConsoleInterface {
     private boolean isVisible = false;
     private final StyledDocument document;
     private final JTextPane textPane;
+    private final JTextField inputField;
     private int inputCounter = 0;
+    private CommandProcessor commandProcessor;
     // Constructor
     ConsoleInterface() {
         frame = setupFrame();
         textPane = getTextPane();
         document = textPane.getStyledDocument();
         JScrollPane scrollPane = new JScrollPane(textPane);
+        inputField = setupInputField();
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+        frame.getContentPane().add(inputField, BorderLayout.SOUTH);
         setupStyles();
+        commandProcessor = new CommandProcessor(this);
     }
     // Methods | Setup | private
     private JFrame setupFrame() {
@@ -51,6 +56,20 @@ class ConsoleInterface {
             StyleConstants.setForeground(style, type.color);
             type.style = style;
         }
+    }
+    private JTextField setupInputField() {
+        JTextField textField = new JTextField();
+        textField.setBackground(Color.BLACK);
+        textField.setForeground(Color.GREEN);
+        textField.setCaretColor(Color.GREEN);
+        textField.addActionListener(e -> {
+            String command = inputField.getText().trim(); // removes leading and trailing whitespace
+            if (!command.isEmpty()) { // only executes when there is text in the field
+                commandProcessor.processCommand(command);
+                inputField.setText("");
+            }
+        });
+        return textField;
     }
     // Methods | protected
     protected void toggleVisibility() {

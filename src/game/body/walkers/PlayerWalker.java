@@ -127,7 +127,7 @@ public final class PlayerWalker extends WalkerFrame {
         else temp = new ArrayList<>(inLeftSensor);
         for (MobWalker mob : temp) {
             mob.toggleOnHit();
-            javax.swing.Timer timer1 = new javax.swing.Timer(100, _ -> { // delay timer so that it looks like they were hurt as animation hits them
+            javax.swing.Timer timer1 = new javax.swing.Timer(100, e -> { // delay timer so that it looks like they were hurt as animation hits them
                 mob.takeDamage(damage);
             });
             timer1.setRepeats(false);
@@ -203,7 +203,7 @@ public final class PlayerWalker extends WalkerFrame {
     }
     // Methods | Private | Movement
     public boolean isOnSurface() { // attempt at preventing jumping on surfaces, flawed cus we need the body in contacts half-height
-        Boolean onSurface = false;
+        boolean onSurface = false;
         for (Body body : this.getBodiesInContact()) {
             if (onSurface) { // only runs while onSurface is false, meaning less unnecessary checks
                 break;

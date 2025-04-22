@@ -2,9 +2,11 @@ package game.menu;
 // Imports
 
 import game.Game;
+import game.core.console.Console;
 import game.enums.Environments;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  *
@@ -27,6 +29,7 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
     public MainMenu(Game game) {
         continueButton.addActionListener(e -> {
 //            game.getFrame().switchLayout(Environments.MAGIC_CLIFF);
+            Console.debug(levelSelectButton.getBackground().toString());
         });
         quitButton.addActionListener(e -> {
             game.exitWindow();
@@ -37,6 +40,16 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
         optionsButton.addActionListener(e -> {;
 //            game.getFrame().switchLayout(Environments.Options); // not implemented yet
         });
+        /*
+        for no apparent reason when running on my Mac instead of windows, the opaque check box is ignored :/ we set re-update it here.
+        If we check whether isOpaque is true, it is true, but the properties of opaque are not applied, thus we re-update it here to fix things.
+         */
+        if (System.getProperty("os.name").contains("Mac")) {
+            continueButton.setOpaque(true);
+            levelSelectButton.setOpaque(true);
+            optionsButton.setOpaque(true);
+            quitButton.setOpaque(true);
+        }
     }
     // Methods
     public JPanel getMenuPanel() {

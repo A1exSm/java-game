@@ -8,7 +8,6 @@ import javax.swing.Timer;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
-
 // Class
 
 /**
@@ -203,7 +202,7 @@ public class GameSound extends SoundClip {
      * @param volume (double) The volume level to set.
      */
     @Override
-    public void setVolume(double volume) {
+    public void setVolume(double volume) { // When used on mac experiences an issue where occasionally Master Gain Control not available.
         localVolume = volume;
         try {
             super.setVolume(volume);

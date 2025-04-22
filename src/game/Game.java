@@ -50,7 +50,7 @@ public class Game {
      * Allows for the debug mode to be toggled in {@link #debugOn()}.
      * @see #debugOn()
      */
-    private static boolean debugOn;
+    private static boolean debugOn = false;
 
     /**
      * A private boolean field used to hold the state of the game pause.<br>
@@ -91,10 +91,10 @@ public class Game {
      * Initialises {@link Game#gameWorld}, {@link Game#gameView} and {@link Game#frame}.<br>
      * Creates a new instance of {@link Controls}.<br>
      * Calls {@link #viewTracker()}
-     * @param debugOn a value of {@code true} starts the game with debug mode on.
      */
-    public Game(Boolean debugOn) {
+    public Game() {
         Console.log("Starting...");
+        Console.debug("OS: " + System.getProperty("os.name"));
         frame = new GameFrame(this);
         frame.switchLayout(Environments.Main_Menu);
     }
@@ -269,7 +269,15 @@ public class Game {
      * @param args ...
      */
     public static void main(String[] args) {
-        new Game(false);
+        new Game();
     }
     // Misc | Getters
+
+    /**
+     * Returns {@code true} if debug mode is on, {@code false} otherwise.
+     * @return {@code boolean} representing whether debug mode is on or off.
+     */
+    public static boolean isDebugOn() {
+        return debugOn;
+    }
 }

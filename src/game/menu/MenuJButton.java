@@ -56,7 +56,11 @@ class MenuJButton extends JButton {
         setBorderPainted(false);
         setFocusable(false);
         setFocusPainted(false);
-        setFont(GameView.DISPLAY_FONT);
-
+        if (System.getProperty("os.name").contains("Mac")) {
+            setFont(JMenuPanel.MAC_FONT);
+        } else {
+            setFont(GameView.DISPLAY_FONT);
+        }
+        setOpaque(true);
     }
 }

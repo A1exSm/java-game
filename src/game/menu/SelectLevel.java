@@ -13,6 +13,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 
 /**
@@ -70,7 +72,11 @@ public class SelectLevel {
         updateDescriptionPane(Environments.MAGIC_CLIFF);
         updateDescriptionPane(Environments.HAUNTED_FOREST);
         updateDescriptionPane(Environments.GOTHIC_CEMETERY);
-
+        if (System.getProperty("os.name").contains("Mac")) { // discussed in MainMenu.java
+            macOsSetup(cemeteryStart, cemeteryBack, cemeteryLevelOne, cemeteryLevelTwo, cemeteryWarning,
+                    forestStart, forestBack, forestLevelOne, forestLevelTwo, forestWarning,
+                    magicStart, magicBack, magicLevelOne, magicLevelTwo);
+        }
     }
     // reminder, use GameView JPanel to check whether the scaled images have been completed, and call a static method on a future progress bar to increment!
     // we can call a static method every time a part of the constructor is done to update a text field stating what is being done, like... "compiling probability map...", "Assigning textures...", "Loading level..." etc.
@@ -79,6 +85,8 @@ public class SelectLevel {
     public JPanel getPanel() {
         return levelPanel;
     }
+
+
     private void initIcons() {
         setThumbnail("data/HauntedForest/thumbnail.png", forestThumbnail);
         setThumbnail("data/MagicCliffs/thumbnail.png", thumbnail);
@@ -142,7 +150,7 @@ public class SelectLevel {
         warning.setVisible(true);
     }
     private void setThumbnail(String path, JLabel thumbnail) {
-        thumbnail.setIcon(new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(1180, 480, Image.SCALE_SMOOTH))); // Slightly stretched, but oh well.
+        thumbnail.setIcon(new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(1160, 480, Image.SCALE_SMOOTH)));
         thumbnail.setHorizontalAlignment(SwingConstants.CENTER);
         thumbnail.setVerticalAlignment(SwingConstants.CENTER);
     }
@@ -218,6 +226,12 @@ public class SelectLevel {
             pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(1) + "</p></body></html>");
         } else {
             pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\"></p></body></html>");
+        }
+    }
+
+    private void macOsSetup(JComponent... components) { // uses varargs to set all inputted components to opaque
+        for (JComponent component : components) {
+            component.setOpaque(true);
         }
     }
 }

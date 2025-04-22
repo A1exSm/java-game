@@ -25,6 +25,7 @@ public class JMenuPanel extends JPanel {
     private Timer timer;
     JLabel backGround = new JLabel();
     private final GameSound openSound = GameSound.createSound("data/Audio/UI/open.wav", SoundGroups.UI, 667);
+    public static final Font MAC_FONT = new Font("Niagara Solid", Font.BOLD, 20);
 
     static {
         X = (1200-WIDTH)/2;

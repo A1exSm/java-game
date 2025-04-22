@@ -13,6 +13,7 @@ import java.awt.*;
 final class MenuSliderSurface extends JPanel {
     // Fields
     private static final Font VOLUME_FONT = new Font("Niagara Solid", Font.BOLD, 25);
+    private static final Font VOLUME_FONT_MAC = new Font("Niagara Solid", Font.BOLD, 10);
     private final MenuJSlider slider;
     private final MenuJButton button;
     private double tempVolume = 0.50;
@@ -45,7 +46,13 @@ final class MenuSliderSurface extends JPanel {
         this.group = group;
         sound = group == null ? gameSound : null;
         button = new MenuJButton(this, String.valueOf(getVolume()), new int[] {sliderWidth, 0, buttonWidth, bounds[3]}, true);
-        button.setFont(VOLUME_FONT);
+        if (System.getProperty("os.name").contains("Mac")) {
+            button.setFont(VOLUME_FONT_MAC);
+            label.setFont(JMenuPanel.MAC_FONT);
+        } else {
+            button.setFont(VOLUME_FONT);
+            label.setFont(GameView.DISPLAY_FONT);
+        }
         addButtonListeners();
         addSliderListeners();
         updateVolumeAll();

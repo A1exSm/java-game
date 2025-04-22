@@ -96,7 +96,9 @@ public class GameFrame extends JFrame {
         add(userView);
         userView.setName("View");
         userView.setBounds(0, 0, 1200, 630);
-        setJMenuBar(new GameJMenuBar());
+        if (Game.isDebugOn()) {
+            setJMenuBar(new GameJMenuBar());
+        }
         userView.requestFocus();
         revalidateFrame();
     }

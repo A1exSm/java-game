@@ -30,8 +30,8 @@ public abstract class LevelFrame {
     protected final GameWorld gameWorld;
     private HashMap<String, Vec2> boundaries;
     private final HashMap<String, GroundFrame> groundFrames;
-    private ArrayList<MobWalker> mobs;
-    private ArrayList<MobWalker> noPosInitMobs = new ArrayList<>();
+    private final ArrayList<MobWalker> mobs;
+    private final ArrayList<MobWalker> noPosInitMobs = new ArrayList<>();
     private Vec2 centre;
     private Vec2 playerSpawn;
     private StepListener stepListener;
@@ -45,10 +45,12 @@ public abstract class LevelFrame {
      */
     LevelFrame(GameWorld gameWorld, int levelNum) {
         this.gameWorld = gameWorld;
+        centre = new Vec2();
         initBoundaries();
         groundFrames = new HashMap<>();
         mobs = new ArrayList<>();
         this.levelNum = levelNum;
+        setPlayerSpawn(new Vec2(0,0)); // ensures player spawn != null
 
     }
     // Methods | Private
@@ -241,7 +243,7 @@ public abstract class LevelFrame {
                 mob = new WizardWalker(gameWorld, pos);
                 mobs.add(mob);
             }
-            case WalkerType.HUNTRESS -> {
+            case HUNTRESS -> {
                 mob = new HuntressWalker(gameWorld, pos);
                 mobs.add(mob);
             }
