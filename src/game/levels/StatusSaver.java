@@ -14,7 +14,8 @@ import java.util.HashMap;
 // Class
 class StatusSaver {
     // Fields
-    public static final String PATH_1 = "data/Saves/save1";
+    public static final String PATH_1 = "data/Saves/save1.txt";
+    public static final String PATH_2 = "data/Saves/save2.txt";
     private static HashMap<Integer, Boolean> magicLevelData;
     private static HashMap<Integer, Boolean> hauntedLevelData;
     private static HashMap<Integer, Boolean> gothicLevelData;
@@ -32,14 +33,14 @@ class StatusSaver {
         } catch (IOException e) {
             Console.errorTrace("Error writing save file: " + e.getMessage());
         }
-        writeLevel(magicLevelData);
-        writeLevel(hauntedLevelData);
-        writeLevel(gothicLevelData);
+        writeLevel(magicLevelData, path);
+        writeLevel(hauntedLevelData, path);
+        writeLevel(gothicLevelData, path);
         Console.info("Finished save process!");
     }
 
-    private static void writeLevel(HashMap<Integer, Boolean> levelData) {
-        try (FileWriter fw = new FileWriter(PATH_1, true)) { // Try-with-resource statement, handles resources that need to be closed. Used instead of finally{...};
+    private static void writeLevel(HashMap<Integer, Boolean> levelData, String path) {
+        try (FileWriter fw = new FileWriter(path, true)) { // Try-with-resource statement, handles resources that need to be closed. Used instead of finally{...};
             for (int i = 1; i <= levelData.size(); i++) {
                 if (i == levelData.size()) {
                     fw.write(i + ":" + levelData.get(i) + "\n");

@@ -7,6 +7,7 @@ import game.core.console.Console;
 import game.enums.Environments;
 import game.enums.SoundGroups;
 import game.levels.LevelData;
+import game.levels.StatusGetter;
 import game.utils.Controls;
 import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
@@ -75,17 +76,17 @@ public class Game {
      * A static instance of {@link LevelData} which stores the level data for {@link Environments#MAGIC_CLIFF}.
      * @see LevelData
      */
-    public static final LevelData magicData = new LevelData(Environments.MAGIC_CLIFF);
+    public static LevelData magicData = new LevelData(Environments.MAGIC_CLIFF);
     /**
      * A static instance of {@link LevelData} which stores the level data for {@link Environments#HAUNTED_FOREST}.
      * @see LevelData
      */
-    public static final LevelData hauntedData = new LevelData(Environments.HAUNTED_FOREST);
+    public static LevelData hauntedData = new LevelData(Environments.HAUNTED_FOREST);
     /**
      * A static instance of {@link LevelData} which stores the level data for {@link Environments#GOTHIC_CEMETERY}.
      * @see LevelData
      */
-    public static final LevelData gothicData = new LevelData(Environments.GOTHIC_CEMETERY);
+    public static LevelData gothicData = new LevelData(Environments.GOTHIC_CEMETERY);
     /**
      * The Constructor.<br>
      * Initialises {@link Game#gameWorld}, {@link Game#gameView} and {@link Game#frame}.<br>
@@ -241,6 +242,18 @@ public class Game {
     }
 
     /**
+     * Selects new level data for the game.
+     * @param path the path to the level data file.
+     */
+    public static void selectNewLevelData(String path) {
+        LevelData.saveLevelDataWithPath("data/Saves/save3.txt");
+        magicData = new LevelData(Environments.MAGIC_CLIFF, path);
+        hauntedData = new LevelData(Environments.HAUNTED_FOREST, path);
+        gothicData = new LevelData(Environments.GOTHIC_CEMETERY, path);
+        LevelData.saveLevelData();
+    }
+
+    /**
      * Scales the given dimensions to fit within the maximum dimensions while maintaining the aspect ratio.
      * @param width the original width.
      * @param height the original height.
@@ -272,7 +285,6 @@ public class Game {
         new Game();
     }
     // Misc | Getters
-
     /**
      * Returns {@code true} if debug mode is on, {@code false} otherwise.
      * @return {@code boolean} representing whether debug mode is on or off.

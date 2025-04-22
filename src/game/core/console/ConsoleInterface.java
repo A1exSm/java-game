@@ -23,7 +23,7 @@ class ConsoleInterface {
     private final JTextPane textPane;
     private final JTextField inputField;
     private int inputCounter = 0;
-    private CommandProcessor commandProcessor;
+    private final CommandProcessor commandProcessor;
     // Constructor
     ConsoleInterface() {
         frame = setupFrame();

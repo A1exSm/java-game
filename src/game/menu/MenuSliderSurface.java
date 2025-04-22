@@ -2,6 +2,7 @@ package game.menu;
 // Imports
 import game.core.GameSound;
 import game.core.GameView;
+import game.core.console.Console;
 import game.enums.SoundGroups;
 import javax.swing.*;
 import java.awt.*;
@@ -20,32 +21,95 @@ final class MenuSliderSurface extends JPanel {
     private final GameSound sound;
     private final SoundGroups group;
     private final JLabel label;
-    // Constructor
+    // Constructors
+    /**
+     * This Constructor is used to initialise the slider surface with a {@link GameSound} instance,
+     * where the parent uses no layout manager.
+     * @param parent The parent {@link JComponent} to which this slider surface will be added.
+     * @param x The x-coordinate of the slider surface.
+     * @param y The y-coordinate of the slider surface.
+     * @param width The width of the slider surface.
+     * @param height The height of the slider surface.
+     * @param sound The {@link GameSound} instance to control the volume of.
+     * @param title The text to be displayed on the label - the name of the {@code group} or {@code gameSound}.
+     */
+    MenuSliderSurface(JComponent parent, int x, int y, int width, int height, GameSound sound, String title) {
+        this(parent, x, y, width, height, sound, null, title);
+    }
+    /**
+     * This Constructor is used to initialise the slider surface with a {@link SoundGroups} instance,
+     * where the parent uses no layout manager.
+     * @param parent The parent {@link JComponent} to which this slider surface will be added.
+     * @param x The x-coordinate of the slider surface.
+     * @param y The y-coordinate of the slider surface.
+     * @param width The width of the slider surface.
+     * @param height The height of the slider surface.
+     * @param group The {@link SoundGroups} instance representing the group of sounds to control the volume of.
+     * @param title The text to be displayed on the label - the name of the {@code group} or {@code gameSound}.
+     */
+    MenuSliderSurface(JComponent parent, int x, int y, int width, int height, SoundGroups group, String title) {
+        this(parent, x, y, width, height, null, group, title);
+    }
+
+    /**
+     * This Constructor is used to initialise the slider surface with a {@link GameSound} instance,
+     * where the parent uses a layout manager.
+     * @param parent The parent {@link JComponent} to which this slider surface will be added.
+     * @param width The width of the slider surface.
+     * @param height The height of the slider surface.
+     * @param sound The {@link GameSound} instance to control the volume of.
+     * @param title The text to be displayed on the label - the name of the {@code group} or {@code gameSound}.
+     */
+    MenuSliderSurface(JComponent parent, int width, int height, GameSound sound, String title) {
+        this(parent, 0, 0, width, height, sound, null, title);
+
+    }
+
+    /**
+     * This Constructor is used to initialise the slider surface with a {@link SoundGroups} instance,
+     * where the parent uses a layout manager.
+     * @param parent The parent {@link JComponent} to which this slider surface will be added.
+     * @param width The width of the slider surface.
+     * @param height The height of the slider surface.
+     * @param group The {@link SoundGroups} instance representing the group of sounds to control the volume of.
+     * @param title The text to be displayed on the label - the name of the {@code group} or {@code gameSound}.
+     */
+    MenuSliderSurface(JComponent parent, int width, int height, SoundGroups group, String title) {
+        this(parent, 0, 0, width, height, null, group, title);
+    }
+
     /**
      * Constructor for MenuSliderSurface.
      * Initializes the slider surface with specified {@code bounds}, game sound, and sound group.
      * Adds the slider surface to the parent component and sets its layout and focusable property.
      * @param parent The parent {@link JComponent} to which this slider surface will be added.
-     * @param bounds The {@code bounds} of the slider surface in the format [x, y, width, height].
+     * @param x The x-coordinate of the slider surface.
+     * @param y The y-coordinate of the slider surface.
+     * @param width The width of the slider surface.
+     * @param height The height of the slider surface.
      * @param gameSound The {@link GameSound} instance to control the volume of.
      * @param group The {@link SoundGroups} instance representing the group of sounds to control the volume of.
      * @param labelText The text to be displayed on the label - the name of the {@code group} or {@code gameSound}.
      */
-    MenuSliderSurface(JComponent parent, int[] bounds, GameSound gameSound, SoundGroups group, String labelText) {
+    MenuSliderSurface(JComponent parent, int x, int y, int width, int height, GameSound gameSound, SoundGroups group, String labelText) {
+        super();
         parent.add(this);
         setLayout(null);
         setFocusable(false);
-
-        JMenuPanel.boundErrorHandler(this, bounds);
-        int sliderWidth = (int) (0.75f * bounds[2]);
-        int buttonWidth = bounds[2] - sliderWidth;
-        slider = new MenuJSlider(this, new int[] {0, 0, sliderWidth, bounds[3]});
-        slider.setMaximum(200);
         label = new JLabel(labelText);
-        initLabel(parent, bounds);
+        if (parent.getLayout() != null) {
+            setSize(width, height);
+        } else {
+            setBounds(x, y, width, height);
+            initLabel(parent, new int[]{x, y, width, height});
+        }
+        int sliderWidth = (int) (0.75f * width);
+        int buttonWidth = width - sliderWidth;
+        slider = new MenuJSlider(this, sliderWidth, height);
+        slider.setMaximum(200);
         this.group = group;
         sound = group == null ? gameSound : null;
-        button = new MenuJButton(this, String.valueOf(getVolume()), new int[] {sliderWidth, 0, buttonWidth, bounds[3]}, true);
+        button = new MenuJButton(this, String.valueOf(getVolume()), new int[] {sliderWidth, 0, buttonWidth, height}, true);
         if (System.getProperty("os.name").contains("Mac")) {
             button.setFont(VOLUME_FONT_MAC);
             label.setFont(JMenuPanel.MAC_FONT);
@@ -57,6 +121,50 @@ final class MenuSliderSurface extends JPanel {
         addSliderListeners();
         updateVolumeAll();
     }
+
+    /**
+     * Constructor for MenuSliderSurface, for setting global volume ONLY. <br>
+     * Initializes the slider surface with specified bounds and label text.
+     * Adds the slider surface to the parent component and sets its layout and focusable property.
+     * @param parent The parent {@link JComponent} to which this slider surface will be added.
+     * @param x The x-coordinate of the slider surface.
+     * @param y The y-coordinate of the slider surface.
+     * @param width The width of the slider surface.
+     * @param height The height of the slider surface.
+     * @param labelText The text to be displayed on the label - e.g. "Global Volume".
+     */
+    MenuSliderSurface(JComponent parent, int x, int y, int width, int height, String labelText) {
+        super();
+        parent.add(this);
+        sound = null;
+        group = null;
+        setLayout(null);
+        setFocusable(false);
+        label = new JLabel(labelText);
+        if (parent.getLayout() != null) {
+            setSize(width, height);
+        } else {
+            setBounds(x, y, width, height);
+            initLabel(parent, new int[]{x, y, width, height});
+        }
+        int sliderWidth = (int) (0.75f * width);
+        int buttonWidth = width - sliderWidth;
+        slider = new MenuJSlider(this, sliderWidth, height);
+        slider.setMaximum(200);
+        button = new MenuJButton(this, String.valueOf(GameSound.getGlobalVolume()), new int[] {sliderWidth, 0, buttonWidth, height}, true);
+        if (System.getProperty("os.name").contains("Mac")) {
+            button.setFont(VOLUME_FONT_MAC);
+            label.setFont(JMenuPanel.MAC_FONT);
+        } else {
+            button.setFont(VOLUME_FONT);
+            label.setFont(GameView.DISPLAY_FONT);
+        }
+        addGlobalButtonListener();
+        addGlobalSliderListeners();
+        updateButtonVolume((int) (GameSound.getGlobalVolume() * 100));
+        updateSliderVolume((int) (GameSound.getGlobalVolume() * 100));
+    }
+
     // Methods
     private void initLabel(JComponent parent, int[] bounds) {
         label.setOpaque(true);
@@ -105,6 +213,7 @@ final class MenuSliderSurface extends JPanel {
             updateVolumeAll();
         });
     }
+
     /**
      * Adds change listeners to the slider to handle volume changes.
      */
@@ -131,5 +240,26 @@ final class MenuSliderSurface extends JPanel {
         } else {
             group.setVolume(volume);
         }
+    }
+    // global functions
+    private void addGlobalButtonListener() {
+        button.addActionListener(e -> {
+            double volume;
+            if (GameSound.getGlobalVolume() == 0) {
+                volume = tempVolume;
+            } else {
+                tempVolume = GameSound.getGlobalVolume();
+                volume = 0;
+            }
+            GameSound.setGlobal(volume);
+            updateButtonVolume((int) (GameSound.getGlobalVolume() * 100));
+            updateSliderVolume((int) (GameSound.getGlobalVolume() * 100));
+        });
+    }
+    private void addGlobalSliderListeners() {
+        slider.addChangeListener(e -> {
+            GameSound.setGlobal(((double) slider.getValue()) / 100);
+            updateButtonVolume(slider.getValue());
+        });
     }
 }

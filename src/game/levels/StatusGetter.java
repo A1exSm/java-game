@@ -28,6 +28,8 @@ public class StatusGetter {
                 throw new IOException(Console.exceptionMessage("Empty save file"));
             } else if (!testLine.equals("Level Data")) {
                 throw new IOException(Console.exceptionMessage("Invalid save file format, first line reads: " + testLine));
+            } else {
+                String line = br.readLine();
             }
         } catch (IOException e) {
             if (e instanceof FileNotFoundException) {
@@ -37,9 +39,9 @@ public class StatusGetter {
         }
         return true;
     }
-    public static HashMap<Integer, Boolean> getLevelData(Environments environment) {
+    public static HashMap<Integer, Boolean> getLevelData(Environments environment, String path, boolean clearOnError) {
         HashMap<Integer, Boolean> levelData = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(StatusSaver.PATH_1))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             int lineNumber = 0;
             while ((line = br.readLine()) != null) {
@@ -48,16 +50,32 @@ public class StatusGetter {
                     for (String data : levels) {
                         String[] parts = data.split(":"); // splits levelData into level and locked status
                         int level = Integer.parseInt(parts[0]);
-                        boolean isLocked = Boolean.parseBoolean(parts[1]);
-                        levelData.put(level, isLocked);
+                        if (!parts[1].equalsIgnoreCase("true") && !parts[1].equalsIgnoreCase("false")) {
+                            throw new IllegalArgumentException("Invalid boolean level data: " + data);
+                        } else {
+                            boolean isLocked = Boolean.parseBoolean(parts[1]);
+                            levelData.put(level, isLocked);
+                        }
                     }
                 }
                 lineNumber++;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             Console.errorTrace("Error reading file for " + environment.name() + ": " + e.getMessage());
+            if (clearOnError) {
+                levelData.clear(); // ensures negative feedBack
+            }
             return levelData;
         }
         return levelData;
+    }
+
+    public static boolean isAllowed(String path) {
+        if (getLevelData(Environments.MAGIC_CLIFF, path, true).isEmpty()) {
+            return false;
+        } else if (getLevelData(Environments.HAUNTED_FOREST, path, false).isEmpty()) {
+            return false;
+        }
+        return !getLevelData(Environments.GOTHIC_CEMETERY, path, false).isEmpty();
     }
 }

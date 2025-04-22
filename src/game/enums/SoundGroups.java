@@ -15,7 +15,7 @@ public enum SoundGroups {
 
     // Fields
     private final ArrayList<GameSound> sounds;
-    private double groupVolume = 0.10;
+    private double groupVolume = GameSound.getGlobalVolume();
 
     // Constructor
     SoundGroups() {

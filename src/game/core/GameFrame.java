@@ -7,6 +7,7 @@ import game.enums.Environments;
 import game.levels.MagicCliff;
 import game.menu.GameJMenuBar;
 import game.menu.MainMenu;
+import game.menu.Options;
 import game.menu.SelectLevel;
 
 import javax.swing.*;
@@ -20,7 +21,6 @@ import java.awt.event.KeyAdapter;
  */
 public class GameFrame extends JFrame {
     private final Game game;
-    private GameView userView;
     private EngineerView engineerView;
     /**
      * Constructs a `GameFrame`
@@ -62,19 +62,25 @@ public class GameFrame extends JFrame {
     public void switchLayout(Environments Layout) {
         switch(Layout) {
             case Main_Menu -> {
-                getContentPane().removeAll();
-                setJMenuBar(null);
-                add(new MainMenu(game).getMenuPanel());
-                revalidateFrame();
+                newLayout(new MainMenu(game).getMenuPanel());
             }
-            case Level_Select -> {
-                getContentPane().removeAll();
-                setJMenuBar(null);
-                add(new SelectLevel(game).getPanel());
-                revalidateFrame();
+            case LEVEL_SELECT -> {
+                newLayout(new SelectLevel(game).getPanel());
+            }
+            case OPTIONS -> {
+                newLayout(new Options(game).getOptionsPanel());
             }
             default -> {Console.error("GameFrame.switchLayout() called with invalid environment, if attempting to start a level, use the GameFrame.selectLevel() method");}
         }
+    }
+
+    private void newLayout(JPanel panel) {
+        getContentPane().removeAll();
+        if (getMenuBar() != null) {
+            setJMenuBar(null);
+        }
+        add(panel);
+        revalidateFrame();
     }
 
     /**
@@ -92,7 +98,7 @@ public class GameFrame extends JFrame {
     private void addGameView(Environments environment, int level) {
         getContentPane().removeAll();
         game.startGame(environment, level);
-        userView = Game.gameView;
+        GameView userView = Game.gameView;
         add(userView);
         userView.setName("View");
         userView.setBounds(0, 0, 1200, 630);

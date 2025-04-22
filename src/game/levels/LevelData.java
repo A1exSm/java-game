@@ -16,15 +16,20 @@ public class LevelData {
 
 
     // Constructor
-    public LevelData(Environments environment) { // we are going to place a load save from file place in the future options panel, which opens a JFileChooser etc...
+    public LevelData(Environments environment) {
+        this(environment, StatusSaver.PATH_1);
+    }
+
+    public LevelData(Environments environment, String path) { // we are going to place a load save from file place in the future options panel, which opens a JFileChooser etc...
         this.environment = environment;
-        if (StatusGetter.isFilePresent(StatusSaver.PATH_1)) {
-            levelData.putAll(StatusGetter.getLevelData(environment));
+        if (StatusGetter.isFilePresent(path)) {
+            levelData.putAll(StatusGetter.getLevelData(environment, path, false));
             if (levelData.isEmpty()) {
                 Console.warning("No level data found for " + environment.name() + ", setting all levels to locked.");
                 freshMap(environment);
             }
         } else {
+            Console.warning("No level data found for " + environment.name() + ", resetting to default.");
            freshMap(environment);
         }
     }
@@ -119,5 +124,47 @@ public class LevelData {
             return -1;
         }
         return highest;
+    }
+
+    /**
+     * CAUTION! this will reset environment level data.
+     */
+    private void reset() {
+        levelData.clear();
+        freshMap(environment);
+    }
+
+
+    // static methods
+
+    /**
+     * Resets all level data to default values.
+     * This stores the previous data in save2 and resets the data in save1.
+     * Save2 will be overridden the next time resetLevelData is called.
+     */
+    public static void resetLevelData() {
+        StatusSaver.saveGame(StatusSaver.PATH_2);
+        Game.magicData.reset();
+        Game.hauntedData.reset();
+        Game.gothicData.reset();
+        StatusSaver.saveGame(StatusSaver.PATH_1);
+    }
+
+    /**
+     * Saves the level data to the specified path.
+     * @param path The path to save the level data to.
+     */
+    public static void saveLevelDataWithPath(String path) {
+        if (Game.magicData == null || Game.hauntedData == null || Game.gothicData == null) {
+            return;
+        }
+        StatusSaver.saveGame(path);
+    }
+
+    /**
+     * Saves the level data to the default path.
+     */
+    public static void saveLevelData() {
+        saveLevelDataWithPath(StatusSaver.PATH_1);
     }
 }

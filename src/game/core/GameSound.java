@@ -52,6 +52,7 @@ public class GameSound extends SoundClip {
      * @see Timer
      */
     private final Timer elapsedTimer;
+
     // Constructor
     /**
      * Constructor for looping sounds.
@@ -99,7 +100,7 @@ public class GameSound extends SoundClip {
     private void setup(String path, SoundGroups group) {
         this.path = path;
         group.addSound(this);
-        setVolume(GameSound.getGlobalVolume());
+        setVolume(group.getVolume());
     }
 
     // Methods | Static | Private

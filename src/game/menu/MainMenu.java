@@ -35,10 +35,10 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
             game.exitWindow();
         });
         levelSelectButton.addActionListener(e -> {
-            game.getFrame().switchLayout(Environments.Level_Select);
+            game.getFrame().switchLayout(Environments.LEVEL_SELECT);
         });
         optionsButton.addActionListener(e -> {;
-//            game.getFrame().switchLayout(Environments.Options); // not implemented yet
+            game.getFrame().switchLayout(Environments.OPTIONS);
         });
         /*
         for no apparent reason when running on my Mac instead of windows, the opaque check box is ignored :/ we set re-update it here.

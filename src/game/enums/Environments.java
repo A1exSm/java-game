@@ -6,7 +6,8 @@ import game.levels.LevelData;
 
 public enum Environments {
     Main_Menu,
-    Level_Select,
+    LEVEL_SELECT,
+    OPTIONS,
     MAGIC_CLIFF,
     HAUNTED_FOREST,
     GOTHIC_CEMETERY;

@@ -1,5 +1,7 @@
 package game.menu;
 // Imports
+import game.core.console.Console;
+
 import javax.swing.*;
 import java.awt.*;
 // Class
@@ -14,15 +16,16 @@ class MenuJSlider extends JSlider {
      * Initializes the slider with specified bounds and adds it to the parent component.
      * Sets the background color and focusable property.
      * @param parent The parent JComponent to which this slider will be added.
-     * @param bounds The bounds of the slider in the format [x, y, width, height].
+     * @param width The width of the slider.
+     * @param height The height of the slider.
      */
-    protected MenuJSlider(JComponent parent, int[] bounds) {
+    protected MenuJSlider(JComponent parent, int width, int height) {
         super();
         parent.add(this);
-        JMenuPanel.boundErrorHandler(this, bounds);
         setBackground(new Color(115, 102, 73));
         setFocusable(false);
         setOpaque(true);
+        setSize(width, height);
     }
     // Methods
 }
