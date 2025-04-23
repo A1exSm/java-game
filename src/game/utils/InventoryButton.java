@@ -1,6 +1,7 @@
 package game.utils;
 // Imports
 
+import game.Game;
 import game.core.GameWorld;
 import game.core.GameView;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public class InventoryButton extends JButton {
     // Fields
     private ImageIcon icon;
+    private final GameWorld world;
     private final int buttonIndex;
     private Timer rePaintTimer;
     private static final ArrayList<int[]> buttonPositions = new ArrayList<>(){};
@@ -41,6 +43,7 @@ public class InventoryButton extends JButton {
         super();
         view.add(this);
         view.setComponentZOrder(this, 1);
+        this.world = view.getGameWorld();
         this.buttonIndex = buttonIndex;
         setRolloverEnabled(false); // stops the button from changing colour when hovered over
         setBackground(new Color(94, 43, 48));
@@ -65,13 +68,13 @@ public class InventoryButton extends JButton {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    GameWorld.dropInventoryItem(buttonIndex);
+                    world.dropInventoryItem(buttonIndex);
                 }
             }
         };
         addMouseListener(mouseListener);
         // ActionListener
-        addActionListener(e -> GameWorld.useInventoryItem(buttonIndex));
+        addActionListener(e -> world.useInventoryItem(buttonIndex));
     }
 
     /**

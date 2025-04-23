@@ -1,6 +1,7 @@
 package game.levels;
 // Imports
 
+import city.cs.engine.StaticBody;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.Game;
@@ -345,8 +346,11 @@ public abstract class LevelFrame {
         Vec2 pos = walkerFrame.getPosition();
         if (pos.y < boundaries.get("Lower").y || pos.y > boundaries.get("Upper").y || pos.x > boundaries.get("Right").x || pos.x < boundaries.get("Left").x) {
             if (walkerFrame instanceof PlayerWalker player) {
-                player.fallToDeath();
-                return true;
+                if (pos.y < boundaries.get("Lower").y) {
+                    player.outOfBounds("FELL TO DEATH");
+                } else {
+                    player.outOfBounds("OUT OF BOUNDS");
+                }
             }
             return true;
         }

@@ -16,15 +16,13 @@ public final class AggressiveStepListener extends MobStepListener {
     public AggressiveStepListener(MobWalker mob, GameWorld gameWorld, float chaseDistance) {
         super(mob, gameWorld);
         this.CHASE_DISTANCE = chaseDistance; // the distance at which the mob chases until (how close not how far), then attacks after reaching.
-        attackTimer = new javax.swing.Timer(400, e -> {
-            attemptAttack(mob.getPosition().x);
-        });
+        attackTimer = new javax.swing.Timer(400, e -> attemptAttack(mob.getPosition().x));
         attackTimer.setRepeats(false);
     }
     // Methods
     @Override
     public void handleMobMovement(Vec2 pos) {
-        if (!mob.getAttacking()) {
+        if (!mob.isAttacking()) {
             if (isPlayerInRange(pos, false)) {
                 float playerDirectionX = getPlayerDirectionX(pos.x);
                 if (playerDirectionX == 0) {
@@ -55,7 +53,7 @@ public final class AggressiveStepListener extends MobStepListener {
             }
         }
         mob.setDirection(isPlayerLeft ? Direction.LEFT : Direction.RIGHT);
-        return isInChasedDistance(mobX, playerX, isPlayerLeft);
+        return isInChasedDistanceX(mobX, playerX, isPlayerLeft);
     }
 
     private void attemptAttack(float mobX) {
@@ -64,7 +62,7 @@ public final class AggressiveStepListener extends MobStepListener {
         if (isPlayerBehindX(mobX, gameWorld.getPlayer().getPosition().x)) {
             return;
         }
-        if (isInChasedDistance(mobX, playerX, isPlayerLeft) == 0) {
+        if (isInChasedDistanceX(mobX, playerX, isPlayerLeft) == 0) {
             mob.damagePlayer();
         }
 
@@ -76,12 +74,11 @@ public final class AggressiveStepListener extends MobStepListener {
         return (isPlayerLeft && direction != Direction.LEFT) || (!isPlayerLeft && direction != Direction.RIGHT);
     }
 
-    private int isInChasedDistance(float mobX, float playerX, boolean isPlayerLeft) {
+    private int isInChasedDistanceX(float mobX, float playerX, boolean isPlayerLeft) {
+        float dist = (playerX) - (mobX); // removed the calculation of halfDimensions due to mobs turning ghostly, meaning they can be within that distance
         if (isPlayerLeft) {
-            float dist = (playerX + gameWorld.getPlayer().HALF_X) - (mobX - mob.getHalfDimensions().x);
             return (dist >  -CHASE_DISTANCE ? 0 : -5);
         } else {
-            float dist = (playerX - gameWorld.getPlayer().HALF_X) - (mobX + mob.getHalfDimensions().x);
             return (dist < CHASE_DISTANCE ? 0 : 5);
         }
     }

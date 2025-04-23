@@ -35,7 +35,8 @@ public final class PlayerWalker extends WalkerFrame {
     private static final int MAX_HP = 1000;
     private int healthPoints = 1000;
     public boolean destroyed = false;
-    private final int damage = 350;
+    public static final int DEFAULT_DAMAGE = 350;
+    private int damage = DEFAULT_DAMAGE;
     // Constructor
     public PlayerWalker(GameWorld gameWorld) {
         super(gameWorld, new BoxShape(0.2f,1.6F), new Vec2(0,3), WalkerType.PLAYER);
@@ -155,11 +156,7 @@ public final class PlayerWalker extends WalkerFrame {
         return MAX_HP;
     }
 
-    public void addHealthPoints(int healthPoints) {
-        this.healthPoints += healthPoints;
-        if (this.healthPoints > MAX_HP) this.healthPoints = MAX_HP;
-    }
-    public void fallToDeath() {
+    public void outOfBounds(String deathMessage) {
         if (destroyed) return;
         stepListener.remove();
         removeAllImages();
@@ -186,7 +183,7 @@ public final class PlayerWalker extends WalkerFrame {
     // Methods | Public | Movement @Override
     @Override
     public void jump(float speed) {
-        if (isOnSurface() && !isGhostly()) {
+        if (isOnSurface() && isSolid()) {
             super.jump(10);
             soundFX.jump();
         }
@@ -221,5 +218,21 @@ public final class PlayerWalker extends WalkerFrame {
         }
         return onSurface;
     }
-    // Methods | Public | Level
+    // Methods | Public | Potions
+    public void addHealthPoints(int healthPoints) {
+        this.healthPoints += healthPoints;
+        if (this.healthPoints > MAX_HP) this.healthPoints = MAX_HP;
+    }
+
+    public void addStrength(int strength) {
+        damage += strength;
+    }
+    public void removeStrength(int strength) {
+        damage -= strength;
+    }
+
+    // Methods | Getters
+    public int getDamage() {
+        return damage;
+    }
 }

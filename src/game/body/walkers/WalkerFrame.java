@@ -73,7 +73,9 @@ public abstract class WalkerFrame extends Walker {
     public void toggleOffAttack() {
         soundFX.stopFX(State.ATTACK1);
         attacking = false;
-        state = State.IDLE;
+        if (state.equals(State.ATTACK1)) {
+            state = State.IDLE;
+        }
     }
 
     public void toggleOnHit() {
@@ -122,6 +124,7 @@ public abstract class WalkerFrame extends Walker {
             ghostlyFixtures.forEach(this::constructGhostlyFixture);
             new Sensor(this, SHAPE); // sensor to use for detect stuff in the future (since collisions don't occur)
             setGravityScale(0);
+            setLinearVelocity(new Vec2(0, 0));
             isGhostly = true;
             return;
         }
@@ -157,11 +160,11 @@ public abstract class WalkerFrame extends Walker {
     }
 
     // Getters
-    public boolean getAttacking() {
+    public boolean isAttacking() {
         return attacking;
     }
 
-    public boolean getHit() {
+    public boolean isHit() {
         return hit;
     }
 
@@ -189,8 +192,8 @@ public abstract class WalkerFrame extends Walker {
         return isCooldown;
     }
 
-    public boolean isGhostly() {
-        return isGhostly;
+    public boolean isSolid() {
+        return !isGhostly;
     }
 
 }

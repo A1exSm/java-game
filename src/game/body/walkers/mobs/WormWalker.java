@@ -2,6 +2,9 @@ package game.body.walkers.mobs;
 // Imports
 
 import city.cs.engine.BoxShape;
+import city.cs.engine.StaticBody;
+import game.body.staticstructs.ground.GroundFrame;
+import game.body.staticstructs.ground.hauntedForest.HauntedBackdrop;
 import game.core.GameWorld;
 import game.body.projectiles.Projectile;
 import game.enums.Direction;
@@ -37,5 +40,6 @@ public class WormWalker extends MobWalker { // worm does not have additional fix
         spawnLocation.y += (HALF_Y - 0.5f);
         new Projectile(this, getDirection(), 60 ,spawnLocation);
         soundFX.attack1();
+        getGameWorld().rePlaceBodies(spawnLocation);
     }
 }

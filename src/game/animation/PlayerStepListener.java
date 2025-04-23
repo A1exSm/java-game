@@ -8,7 +8,6 @@ import org.jbox2d.common.Vec2;
 import java.util.HashMap; // I hope this is allowed :)
 import game.core.GameWorld;
 // importing my enums as static constants for ease of use.
-import javax.swing.*;
 import static game.enums.State.*;
 import static game.enums.Direction.*;
 // Class
@@ -84,7 +83,7 @@ public class PlayerStepListener implements StepListener {
      */
     private void setState() { // detects what sort of movement the player is performing based of the player's velocity.
         if (player.getState() != DEATH) {
-            if (player.getAttacking()) {
+            if (player.isAttacking()) {
                 player.setState(ATTACK1); // currently only handles ATTACK1, still thinking of a use for ATTACK2, Maybe a finisher move or Combo?
             } else {
                 if (linearVelocity.y > 2) player.setState(JUMP); // threshold of 2 to prevent jitter between surfaces.

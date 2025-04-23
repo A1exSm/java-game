@@ -1,14 +1,13 @@
 package game.body.projectiles;
 // Imports
 
-import city.cs.engine.BodyImage;
-import city.cs.engine.CircleShape;
-import city.cs.engine.DynamicBody;
-import city.cs.engine.SolidFixture;
+import city.cs.engine.*;
 import game.Game;
+import game.body.staticstructs.ground.GroundFrame;
 import game.body.walkers.WalkerFrame;
 import game.core.console.Console;
 import game.enums.Direction;
+import game.utils.GameBodyImage;
 import org.jbox2d.common.Vec2;
 
 // Class
@@ -34,8 +33,8 @@ public class Projectile extends DynamicBody {
     // Methods
     private void constructProjectile() {
         new SolidFixture(this, new CircleShape(0.5f));
-        if (direction == Direction.LEFT) {addImage(new BodyImage("data/projectiles/fireball.gif", 10)).flipHorizontal();}
-        else if (direction == Direction.RIGHT) {addImage(new BodyImage("data/projectiles/fireball.gif", 10));}
+        if (direction == Direction.LEFT) {addImage(new GameBodyImage("data/projectiles/fireball.gif", 10)).flipHorizontal();}
+        else if (direction == Direction.RIGHT) {addImage(new GameBodyImage("data/projectiles/fireball.gif", 10));}
     }
 
     private void flingProjectile(Vec2 position) {

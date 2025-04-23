@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class GameView extends UserView {
     // Fields
     private static final ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
+    public static final float DEFAULT_ZOOM = 20.0f;
     private final Image parallaxBackground;
     private final Image parallaxForeground;
     private final Image sea;
@@ -170,7 +171,7 @@ public class GameView extends UserView {
      * @param g the graphics context
      */
     private void checkPlayerStatus(Graphics2D g) {
-        if (gameWorld.getPlayer().getHit() || gameWorld.getPlayer().isDead()) {
+        if (gameWorld.getPlayer().isHit() || gameWorld.getPlayer().isDead()) {
             hurt(g);
         }
     }
@@ -378,5 +379,13 @@ public class GameView extends UserView {
     public void gameWon(String victoryMessage) {
         this.victoryMessage = victoryMessage;
         winLoss = "Win";
+    }
+
+    /**
+     * Gets the assigned GameWorld instance.
+     * @return the {@link GameWorld} instance.
+     */
+    public GameWorld getGameWorld() {
+        return gameWorld;
     }
 }

@@ -19,9 +19,10 @@ import java.awt.*;
  * The ItemBody class is a dynamic body that represents an item in the game world.
  * It is Dynamic, as to allow for the Item to <i>drop</i>.
  */
-public class ItemFrame extends DynamicBody implements itemInterface {
+public abstract class ItemFrame extends DynamicBody implements itemInterface {
     // Fields
     public final ItemBehaviour behaviour; // can be public since it is final
+    private final GameWorld gameWorld;
     private final Timer dropTimer;
     private final ItemType itemType;
     private final ItemSize itemSize;
@@ -35,8 +36,9 @@ public class ItemFrame extends DynamicBody implements itemInterface {
      * @param shape is of the <i>Shape</i> parent class, meaning that the item supports being a polygon, square or circle.
      * @param itemType the item type of the ItemBody enums, allows for potential static references of future item classes with only the ItemBody accessible.
      */
-    public ItemFrame(Shape shape, ItemType itemType, ItemSize size, ItemBehaviour behaviour) {
-        super(Game.gameWorld);
+    public ItemFrame(Shape shape, ItemType itemType, ItemSize size, ItemBehaviour behaviour, GameWorld gameWorld) {
+        super(gameWorld);
+        this.gameWorld = gameWorld;
         itemSize = size;
         setImage();
         this.itemType = itemType;
@@ -53,7 +55,14 @@ public class ItemFrame extends DynamicBody implements itemInterface {
         setLineColor(transparent);
     }
     // Methods
-    public void consume() {}
+    /**
+     * gets the assigned game world.
+     * @return the game world.
+     * @see GameWorld
+     */
+    public GameWorld getGameWorld() {
+        return gameWorld;
+    }
 
     private void addFixtures(Shape shape) {
         new GhostlyFixture(this, shape);
@@ -67,16 +76,12 @@ public class ItemFrame extends DynamicBody implements itemInterface {
      * @return String.
      */
     public String getImagePath() {
-        if (this instanceof HealthPotion) {
-            return HealthPotion.getImgPath(itemSize);
-        } else {
-            Console.warning("ItemType not found! returning my image of choice");
-            return "data/Items/Potions/large/purpleVial.gif";
+        String path = getImgPath(itemSize);
+        if (path != null) {
+            return path;
         }
-    }
-
-    public boolean isInInventory() {
-        return inInventory;
+        Console.errorTrace("ItemType not found! returning my image of choice");
+        return "data/Items/Potions/large/purplePotion.gif";
     }
 
     public void setInInventory(boolean inInventory) {
@@ -89,7 +94,10 @@ public class ItemFrame extends DynamicBody implements itemInterface {
 
 
     @Override
-    public void use() {}
+    public abstract void use();
+
+    @Override
+    public abstract String getImgPath(ItemSize size);
 
     @Override
     public void drop(Vec2 dropLocation) {
@@ -101,14 +109,21 @@ public class ItemFrame extends DynamicBody implements itemInterface {
         }
     }
 
+    /**
+     * Picks up the item and adds it to the inventory.
+     * @param inventory the inventory to add the item to.
+     * @return true if the item was picked up, false otherwise.
+     */
     @Override
-    public void pickUp(Inventory inventory) {
+    public boolean pickUp(Inventory inventory) {
         if (!inInventory) {
             if (inventory.addItem(this)) {
                 setInInventory(true);
                 hide();
+                return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -130,9 +145,7 @@ public class ItemFrame extends DynamicBody implements itemInterface {
     }
 
     @Override
-    public void setItem(ItemSize size) {
-
-    }
+    public abstract int setItem(ItemSize size);
 
     @Override
     public void addSensor(Shape shape) {

@@ -18,11 +18,13 @@ public class HauntedBackdrop extends GroundFrame {
     public static float PLATFORM_HEIGHT  = 0.9f;
     public static float PLATFORM_Y = 7.125f;
     private final int lengthScale;
+    private final GameWorld gameWorld;
 
 
     // Constructor
     public HauntedBackdrop(GameWorld gameWorld, float x, float y, int lengthScale) {
         super(gameWorld);
+        this.gameWorld = gameWorld;
         this.lengthScale = IllegalLengthScaleException.checkLengthScale(lengthScale);
         halfDimensions.x = IMG.getHalfDimensions().x*lengthScale;
         halfDimensions.y = IMG.getHalfDimensions().y;
@@ -54,4 +56,9 @@ public class HauntedBackdrop extends GroundFrame {
             originPos.y = pos.y;
         }
     }
+
+    public void duplicate() {
+        new HauntedBackdrop(gameWorld, getPosition().x, getPosition().y, lengthScale);
+    }
+
 }

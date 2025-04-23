@@ -2,6 +2,7 @@ package game.core;
 // Imports
 import game.Game;
 import game.body.items.Inventory;
+import game.body.staticstructs.ground.hauntedForest.HauntedBackdrop;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
@@ -17,6 +18,7 @@ import game.levels.HauntedForest;
 import game.levels.LevelFrame;
 import game.levels.MagicCliff;
 import game.animation.*;
+import org.jbox2d.common.Vec2;
 
 import java.util.ArrayList;
 
@@ -102,7 +104,7 @@ public class GameWorld extends World {
      *
      * @param index the index of the item to use
      */
-    public static void useInventoryItem(int index) {
+    public void useInventoryItem(int index) {
         playerInventory.use(index);
     }
     /**
@@ -110,7 +112,7 @@ public class GameWorld extends World {
      *
      * @param index the index of the item to drop
      */
-    public static void dropInventoryItem(int index) {
+    public void dropInventoryItem(int index) {
         playerInventory.drop(index);
     }
 
@@ -170,6 +172,24 @@ public class GameWorld extends World {
         Console.warning("WizardWalker with name: "+ name + " not found! Returning null.");
         return null;
     }
+
+    /**
+     * Replaces bodies where pos is inside it's bounds, as to allow for drawing images at a lower z-index.
+     * @param pos the position to check against
+     */
+    public void rePlaceBodies(Vec2 pos) {
+        for (StaticBody body : getStaticBodies()) {
+            if (body instanceof HauntedBackdrop backdrop) {
+                if (backdrop.getPos().x + backdrop.getHalfDimensions().x > pos.x && backdrop.getPos().x - backdrop.getHalfDimensions().x < pos.x) {
+                    if (backdrop.getPos().y + backdrop.getHalfDimensions().y > pos.y && backdrop.getPos().y - backdrop.getHalfDimensions().y < pos.y) {
+                        backdrop.duplicate();
+                        backdrop.destroy();
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Toggles the state of all mobs to passive.
      */

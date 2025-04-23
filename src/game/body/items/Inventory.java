@@ -1,6 +1,7 @@
 package game.body.items;
 // Imports
 import game.Game;
+import game.body.walkers.PlayerWalker;
 import game.core.console.Console;
 import game.enums.items.ItemBehaviour;
 import org.jbox2d.common.Vec2;
@@ -90,7 +91,7 @@ public class Inventory {
     public void drop(int index) {
         if (storage.get(index) != null) {
             Vec2 playerPos = Game.gameWorld.getPlayer().getPosition();
-            Vec2 dropPos = new Vec2(playerPos.x, playerPos.y -  (Game.gameWorld.getPlayer().HALF_Y/1.7f));
+            Vec2 dropPos = new Vec2(playerPos.x, playerPos.y -  (PlayerWalker.HALF_Y/1.7f));
             storage.get(index).item().drop(dropPos);
             storage.set(index, null);
         }
@@ -98,11 +99,7 @@ public class Inventory {
 
     public void use(int index) {
         if (storage.get(index) != null) {
-            if(storage.get(index).behaviour() == ItemBehaviour.CONSUMABLE) {
-                storage.get(index).item().consume();
-            } else {
-                storage.get(index).item().use();
-            }
+            storage.get(index).item().use();
         }
     }
 }

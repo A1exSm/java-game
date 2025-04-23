@@ -3,10 +3,12 @@ package game.body.walkers.steplisteners;
 
 import city.cs.engine.Body;
 import city.cs.engine.StepEvent;
+import game.Game;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
 import game.animation.MobAnimationStepListener;
 import game.body.walkers.mobs.MobWalker;
+import game.core.console.Console;
 import game.enums.Direction;
 import game.enums.State;
 import org.jbox2d.common.Vec2;
@@ -17,7 +19,7 @@ public abstract class MobStepListener implements MobStepListenerFrame {
     protected final MobWalker mob;
     protected final MobAnimationStepListener animationsListener;
     protected static final float PATROL_RADIUS_X = 30.0f;
-    protected static final float PATROL_RADIUS_Y = 10.0f;
+    protected static final float PATROL_RADIUS_Y = 10.0f; // was hopefully going to be used for vertical patrols like maybe flying creates, even if not added, maybe I'll pick this up in the future :)
     protected static final float ANIMATION_RADIUS = 40.0f;
     protected static final float VIEW_RADIUS_X = 20.0f;
     protected static final float WALK_SPEED = 2.0f;
@@ -34,14 +36,9 @@ public abstract class MobStepListener implements MobStepListenerFrame {
     // Methods
     @Override
     public void preStep(StepEvent stepEvent) {
-        if (mob.getLinearVelocity().y < 0) {
-            if (gameWorld.getLevel().isOutOfBounds(mob)) {
-                mob.die();
-            }
-        }
         Vec2 mobPos = mob.getPosition();
         // movement handling
-        if (mob.getHit() || mob.isDead()) { // don't want the mob to move if it is hit or dead
+        if (mob.isHit() || mob.isDead()) { // don't want the mob to move if it is hit or dead
             mob.stopWalking();
             mob.setLinearVelocity(new Vec2(0, mob.getLinearVelocity().y));
             /*
@@ -63,6 +60,11 @@ public abstract class MobStepListener implements MobStepListenerFrame {
 
     @Override
     public void postStep(StepEvent stepEvent) {
+        if (mob.getLinearVelocity().y < 0) {
+            if (gameWorld.getLevel().isOutOfBounds(mob)) {
+                mob.die();
+            }
+        }
     }
 
     @Override

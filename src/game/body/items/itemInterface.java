@@ -5,12 +5,13 @@ import game.enums.items.ItemSize;
 import org.jbox2d.common.Vec2;
 
 interface itemInterface {
+    String getImgPath(ItemSize size);
     void use();
     void drop(Vec2 dropLocation);
-    void pickUp(Inventory inventory);
+    boolean pickUp(Inventory inventory);
     void hide();
     void destroyItem();
-    void setItem(ItemSize size);
+    int setItem(ItemSize size);
     void addSensor(Shape shape);
     void removeSensor();
 
