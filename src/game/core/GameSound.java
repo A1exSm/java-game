@@ -53,6 +53,12 @@ public class GameSound extends SoundClip {
      */
     private final Timer elapsedTimer;
 
+    /**
+     * A SoundGroups field used to hold the sound group of the sound.<br>
+     * @see SoundGroups
+     */
+    private SoundGroups group;
+
     // Constructor
     /**
      * Constructor for looping sounds.
@@ -99,6 +105,7 @@ public class GameSound extends SoundClip {
      */
     private void setup(String path, SoundGroups group) {
         this.path = path;
+        this.group = group;
         group.addSound(this);
         setVolume(group.getVolume());
     }
@@ -167,6 +174,18 @@ public class GameSound extends SoundClip {
         timer.setRepeats(false);
         timer.start();
     }
+
+    /**
+     * If sounds is already playing, creates a duplicate instance and plays it.
+     */
+    public void forcedPlay() {
+        if (isPlaying) {
+            createSound(path, group, elapsedTimer.getDelay()).play();
+        } else {
+            play();
+        }
+    }
+
     // Methods | Public | @Override
     /**
      * Plays the sound if it is not already playing.

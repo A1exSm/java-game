@@ -7,7 +7,6 @@ import game.core.console.Console;
 import game.enums.Environments;
 import game.enums.SoundGroups;
 import game.levels.LevelData;
-import game.levels.StatusGetter;
 import game.utils.Controls;
 import game.menu.JMenuPanel;
 import org.jbox2d.common.Vec2;
@@ -15,7 +14,11 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * The main class for the game.
+ * The main class for the game.<br><br>
+ * As the entry point, it sets up the game world, view, and handles game state management.
+ * <ul>
+ *     <li>Used for static access to </li>
+ * </ul>
  * @author Alexander, Smolowitz, alexander.smolowitz@city.ac.uk
  * @version 1.0
  * @since 2023-10-23
@@ -71,7 +74,7 @@ public class Game {
      * A static instance of {@link GameSound} which stores the main game soundtrack.
      * @see GameSound
      */
-    private static GameSound gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", SoundGroups.MUSIC, true);
+    private static final GameSound gameMusic = GameSound.createSound("data/Audio/Music/time_for_adventure.wav", SoundGroups.MUSIC, true);
     /**
      * A static instance of {@link LevelData} which stores the level data for {@link Environments#MAGIC_CLIFF}.
      * @see LevelData

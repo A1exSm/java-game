@@ -28,8 +28,7 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
     // Constructor
     public MainMenu(Game game) {
         continueButton.addActionListener(e -> {
-//            game.getFrame().switchLayout(Environments.MAGIC_CLIFF);
-            Console.debug(levelSelectButton.getBackground().toString());
+            continueGame(game);
         });
         quitButton.addActionListener(e -> {
             game.exitWindow();
@@ -49,6 +48,30 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
             levelSelectButton.setOpaque(true);
             optionsButton.setOpaque(true);
             quitButton.setOpaque(true);
+        }
+        Options.addSounds(menuPanel);
+    }
+
+    private void continueGame(Game game) {
+        // 10,000 = move to nextLevel, 0 = none unlocked
+        if (Game.magicData.getHighestUnlocked() != 0 && Game.magicData.getHighestUnlocked() != 10000) {
+            if (Game.magicData.getHighestUnlocked() == -1) {
+                game.getFrame().selectLevel(Environments.MAGIC_CLIFF, 2);
+            } else {
+                game.getFrame().selectLevel(Environments.MAGIC_CLIFF, 1);
+            }
+        } else if (Game.hauntedData.getHighestUnlocked() != 0 && Game.hauntedData.getHighestUnlocked() != 10000) {
+            if (Game.hauntedData.getHighestUnlocked() == -1) {
+                game.getFrame().selectLevel(Environments.HAUNTED_FOREST, 2);
+            } else {
+                game.getFrame().selectLevel(Environments.HAUNTED_FOREST, 1);
+            }
+        } else { // since its last level if 0, we assume the user has completed the game
+            if (Game.gothicData.getHighestUnlocked() == -1) {
+                game.getFrame().selectLevel(Environments.GOTHIC_CEMETERY, 2);
+            } else {
+                game.getFrame().selectLevel(Environments.GOTHIC_CEMETERY, 1);
+            }
         }
     }
     // Methods

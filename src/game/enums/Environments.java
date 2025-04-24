@@ -12,12 +12,19 @@ public enum Environments {
     HAUNTED_FOREST,
     GOTHIC_CEMETERY;
     static {
+        // MagicCliffs
         MAGIC_CLIFF.index = 1;
+        MAGIC_CLIFF.title = "Magic Cliffs";
+        // HauntedForest
         HAUNTED_FOREST.index = 2;
+        HAUNTED_FOREST.title = "Haunted Forest";
+        // GothicCemetery
         GOTHIC_CEMETERY.index = 3;
+        GOTHIC_CEMETERY.title = "Gothicvania Cemetery";
     }
     // Fields
     public int index;
+    private String title;
     // Methods
 
     public boolean getBool(int level) {
@@ -45,5 +52,9 @@ public enum Environments {
                 return null;
             }
         }
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

@@ -43,7 +43,6 @@ class MenuJButton extends JButton {
             });
         }
         init();
-
     }
     // Methods
     /**

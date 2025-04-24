@@ -26,6 +26,7 @@ public class JMenuPanel extends JPanel {
     JLabel backGround = new JLabel();
     private final GameSound openSound = GameSound.createSound("data/Audio/UI/open.wav", SoundGroups.UI, 667);
     public static final Font MAC_FONT = new Font("Niagara Solid", Font.BOLD, 20);
+    public static final Font OPTIONS_FONT = new Font("Blackadder ITC", Font.ITALIC, 72);
 
     static {
         X = (1200-WIDTH)/2;
@@ -51,6 +52,7 @@ public class JMenuPanel extends JPanel {
         createBackground(gameView);
         gameView.setComponentZOrder(backGround,1);
         gameView.setComponentZOrder(this, 0);
+        addButtons();
         setVisible(false);
     }
     // Methods
@@ -59,36 +61,49 @@ public class JMenuPanel extends JPanel {
      * Sets action listeners for the buttons.
      */
   private void addButtons() {
-        MenuJButton cont = new MenuJButton(this,"Continue", new int[] {81, 50, 156, 62}, true);
-        MenuJButton quit = new MenuJButton(this,"Quit", new int[] {81, 144, 156, 62}, true);
-        new MenuSliderSurface(this, 302, 239, 313, 62, Game.getGameMusic(), "Music");
-        new MenuSliderSurface(this, 302, 334, 313, 62, SoundGroups.MOBS, "Mob SFX");
-        cont.addActionListener(e -> toggleMenu());
-        quit.addActionListener(e -> Game.exit());
-        JFileChooser fileChooser = new JFileChooser();
-//        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//        add(fileChooser);
-//        fileChooser.showOpenDialog(this);
+      // note 1 square is 31 units
+      new JLabelTitle(this, 333, 50, 251, 157, "Options");
+      MenuJButton cont = new MenuJButton(this,"Continue", new int[] {81, 50, 156, 62}, true);
+      MenuJButton quit = new MenuJButton(this,"Quit", new int[] {81, 144, 156, 62}, true);
+      new MenuSliderSurface(this, 302, 239, 313, 62, Game.getGameMusic(), "Music");
+      new MenuSliderSurface(this, 302, 334, 313, 62, SoundGroups.MOBS, "Mob SFX");
+      cont.addActionListener(e -> toggleMenu());
+      quit.addActionListener(e -> Game.exit());
   }
-    /**
-     * Removes all buttons from the panel.
-     */
-  private void removeButtons() {
-        for (Component comp : getComponents()) {
-            if (comp instanceof MenuJButton) {
-                remove(comp);
-            }
-        }
-    }
+
+  /**
+   * Hides Components of JPanel except for the background.
+   * @see JPanel
+   */
+  private void hideInterface() {
+      for (Component component : getComponents()) {
+          if (component != backGround) {
+              component.setVisible(false);
+          }
+      }
+  }
+
+  /**
+   * Reveals Components of JPanel except for the background.
+   * @see JPanel
+   */
+  private void revealInterface() {
+      for (Component component : getComponents()) {
+          if (component != backGround) {
+              component.setVisible(true);
+          }
+      }
+      }
+
     /**
      * Creates the background for the panel and adds it to the GameView.
      * @param gameView The GameView to which the background will be added.
      */
     private void createBackground(GameView gameView) {
         gameView.add(backGround);
-//        backGround.setIcon(new ImageIcon("data/Display_assets/GUI/Appear/open.png"));
         backGround.setBounds(10, -57,1000, 630);
     }
+
     /**
      * Toggles the visibility of the menu.
      * Plays the open sound, sets the background image, and pauses/resumes the game.
@@ -106,7 +121,7 @@ public class JMenuPanel extends JPanel {
                 timer.start();
             } else {
                 setVisible(false);
-                removeButtons();
+                hideInterface();
                 open = false;
                 backGround.setIcon(new ImageIcon("data/Display_assets/GUI/Appearance/close.gif"));
                 timer.start();
@@ -122,7 +137,7 @@ public class JMenuPanel extends JPanel {
         timer = new Timer(2300, e -> {
             if (open) {
                 backGround.setIcon(new ImageIcon("data/Display_assets/GUI/Appearance/open.png"));
-                addButtons();
+                revealInterface();
                 openSound.stop();
                 setVisible(true);
             } else {
@@ -134,26 +149,18 @@ public class JMenuPanel extends JPanel {
         });
         timer.setRepeats(false);
     }
-    // Getters
-    /**
-     * Checks if the menu is open.
-     * @return {@code true} if the menu is open, {@code false} otherwise.
-     */
-    public boolean isOpen() {
-        return open;
-    }
+
     /**
      * Handles errors when setting bounds for a component.
-     * If the bounds array does not have 4 elements, sets default bounds.
+     * If the {@code bounds} array does not have 4 elements, throws an IllegalArgumentException.
      * @param component The component to set bounds for.
-     * @param bounds The bounds array.
+     * @param bounds The {@code bounds} array.
      */
-    protected static void boundErrorHandler(JComponent component, int[] bounds) {
+    public static void boundErrorHandler(JComponent component, int[] bounds) {
         try {
             component.setBounds(bounds[0], bounds[1], bounds[2], bounds[3]);
         } catch (ArrayIndexOutOfBoundsException e) {
-            Console.error("Bounds array must have 4 elements! Setting bounds to default.");
-            component.setBounds(81, 82, 30, 30);
+            throw new IllegalArgumentException(Console.exceptionMessage("Bounds array must have 4 elements!"));
         }
     }
 }

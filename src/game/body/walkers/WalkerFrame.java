@@ -145,7 +145,9 @@ public abstract class WalkerFrame extends Walker {
     }
 
     public void beginDeath() {
-        makeGhostly();
+        if (!isGhostly) {
+            makeGhostly();
+        }
         dead = true;
         state = State.DEATH;
     }

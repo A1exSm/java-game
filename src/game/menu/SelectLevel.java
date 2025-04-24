@@ -12,10 +12,6 @@ import game.levels.MobStore;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
 
 /**
  *
@@ -63,8 +59,8 @@ public class SelectLevel {
     private JLabel magicWarning;
     private JLabel forestWarning;
     // Fields
-
-    // Constructor
+    private static final String STYLE_1 = "style=\"font-family: 'Blackadder ITC'; font-size: 72pt; color: rgb(96,87,73); font-weight: bold; font-style: italic;\"";
+    private static final String STYLE_2 = "style=\"font-family: 'Blackadder ITC'; font-size: 32pt; color: rgb(96,87,73); font-weight: bold;\"";
     public SelectLevel(Game game) {
         initIcons();
         initLevels();
@@ -77,6 +73,7 @@ public class SelectLevel {
                     forestStart, forestBack, forestLevelOne, forestLevelTwo, forestWarning,
                     magicStart, magicBack, magicLevelOne, magicLevelTwo);
         }
+        Options.addSounds(levelPanel);
     }
     // reminder, use GameView JPanel to check whether the scaled images have been completed, and call a static method on a future progress bar to increment!
     // we can call a static method every time a part of the constructor is done to update a text field stating what is being done, like... "compiling probability map...", "Assigning textures...", "Loading level..." etc.
@@ -213,20 +210,28 @@ public class SelectLevel {
         // update the description pane
         ChangeListener updateDescription = e -> {
             if (levelOne.isSelected()) {
-                pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(0) + "</p></body></html>");
+                setText(pane, mobStore, environment, 0);
             } else if (levelTwo.isSelected()) {
-                pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(1) + "</p></body></html>");
+                setText(pane, mobStore, environment, 1);
             }
         };
         levelOne.addChangeListener(updateDescription);
         levelTwo.addChangeListener(updateDescription);
         if (levelOne.isSelected()) {
-            pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(0) + "</p></body></html>");
+            setText(pane, mobStore, environment, 0);
         } else if (levelTwo.isSelected()) {
-            pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\">Number of enemies: " + mobStore.getMobData(1) + "</p></body></html>");
+            setText(pane, mobStore, environment, 1);
         } else {
-            pane.setText("<html><head></head><body><p style=\"font-size: 30px; color: rgb(96,87,73);\"></p></body></html>");
+            setText(pane, environment);
         }
+    }
+
+    private void setText(JTextPane pane, MobStore mobStore, Environments environment, int level) {
+        pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.getTitle() + "</p><p " + STYLE_2 + ">Level: " + (level+1) + "</p><p " + STYLE_2 + ">Number of enemies: " + mobStore.getMobData(level) + "</p></body></html>");
+    }
+
+    private void setText(JTextPane pane, Environments environment) {
+        pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.getTitle() + "</p><br></body></html>");
     }
 
     private void macOsSetup(JComponent... components) { // uses varargs to set all inputted components to opaque

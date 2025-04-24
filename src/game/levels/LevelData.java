@@ -115,12 +115,9 @@ public class LevelData {
             if (nextEnvironment == null) {
                 Console.errorTrace("No environment found.");
                 return -1;
-            } else if (nextEnvironment == Game.magicData) {
-                Console.info("Game completed, do something here...");
             } else if (nextEnvironment.levelData.get(1)) { // The first level of next environment is unlocked
                 return 10000; // ensures that comparison is always true
             }
-            Console.warning("No levels unlocked.");
             return -1;
         }
         return highest;

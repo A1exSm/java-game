@@ -4,15 +4,17 @@ import game.Game;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import game.core.GameSound;
 import game.core.console.Console;
 import game.enums.SoundGroups;
 import game.levels.LevelData;
 import game.levels.StatusGetter;
 
 import java.awt.*;
-import java.io.FilenameFilter;
 
 public class Options {
+    private static final GameSound GAME_SOUND = GameSound.createSound("data/Audio/UI/confirm_style_2_001.wav", SoundGroups.UI, 1000);
+    private static final GameSound CURSOR_SOUND = GameSound.createSound("data/Audio/UI/cursor_style_5.wav", SoundGroups.UI, 600);
     private JPanel optionsPanel;
     private JPanel topInnerPanel;
     private JPanel innerPanel;
@@ -62,6 +64,7 @@ public class Options {
                 }
             }
         });
+        addSounds(optionsPanel);
     }
 
     public JPanel getOptionsPanel() {
@@ -84,5 +87,20 @@ public class Options {
         panel.setMinimumSize(size);
         panel.setPreferredSize(size);
         panel.setMaximumSize(size);
+    }
+    public static void addSounds(JPanel panel) {
+        for (Component component : panel.getComponents()) {
+            if (component instanceof JButton button) {
+                button.setRolloverEnabled(true);
+                button.addActionListener(e -> GAME_SOUND.play());
+                button.addChangeListener(e -> {
+                    if (button.getModel().isRollover()) {
+                        CURSOR_SOUND.forcedPlay();
+                    }
+                });
+            } else if (component instanceof JPanel) {
+                addSounds((JPanel) component);
+            }
+        }
     }
 }

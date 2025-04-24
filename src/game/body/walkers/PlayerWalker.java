@@ -60,8 +60,8 @@ public final class PlayerWalker extends WalkerFrame {
     //Methods | Private | Sensors
     private void reconstructSensors() {
         if (rightSensor.getBody() == null && leftSensor.getBody() == null) {
-            rightSensor = new Sensor(this, new BoxShape(3, 1.5f, new Vec2(4, 0)));
-            leftSensor = new Sensor(this, new BoxShape(3, 1.5f, new Vec2(-4, 0)));
+            rightSensor = new Sensor(this, new BoxShape(4, 1.5f, new Vec2(4, 0)));
+            leftSensor = new Sensor(this, new BoxShape(4, 1.5f, new Vec2(-4, 0)));
             addSensorListeners();
             return;
         }
@@ -75,7 +75,7 @@ public final class PlayerWalker extends WalkerFrame {
                 updateSensor(e, inRightSensor);
             }
             @Override
-            public void endContact(SensorEvent e) {}
+            public void endContact(SensorEvent e) { checkMob(); }
         };
 
         attackLeft = new SensorListener() {
@@ -85,7 +85,7 @@ public final class PlayerWalker extends WalkerFrame {
             }
 
             @Override
-            public void endContact(SensorEvent e) {}
+            public void endContact(SensorEvent e) { checkMob(); }
         };
 
     }
@@ -97,7 +97,7 @@ public final class PlayerWalker extends WalkerFrame {
 
     private void updateSensor(SensorEvent e, ArrayList<MobWalker> sensorArray) {
         for (MobWalker mob : GameWorld.getMobs()) {
-            if (e.getContactBody() instanceof MobWalker && e.getContactBody() == mob) {
+            if (e.getContactBody() instanceof MobWalker && e.getContactBody() == mob || mob.intersects(this)) {
                 if (!sensorArray.contains(mob)) {
                     sensorArray.add(mob);
                 }
@@ -123,17 +123,21 @@ public final class PlayerWalker extends WalkerFrame {
 
     public void hurtMob() {
         soundFX.attack1(this);
-        ArrayList<MobWalker> temp;
-        if (getDirection() == Direction.RIGHT) temp = new ArrayList<>(inRightSensor);
-        else temp = new ArrayList<>(inLeftSensor);
-        for (MobWalker mob : temp) {
-            mob.toggleOnHit();
-            javax.swing.Timer timer1 = new javax.swing.Timer(100, e -> { // delay timer so that it looks like they were hurt as animation hits them
+        javax.swing.Timer timer1 = new javax.swing.Timer(100, e -> { // delay timer so that it looks like they were hurt as animation hits them
+            ArrayList<MobWalker> temp;
+            if (getDirection() == Direction.RIGHT) {
+                temp = new ArrayList<>(inRightSensor);
+            } else {
+                temp = new ArrayList<>(inLeftSensor);
+            }
+            for (MobWalker mob : temp) {
+                mob.toggleOnHit();
                 mob.takeDamage(damage);
-            });
-            timer1.setRepeats(false);
-            timer1.start();
-        }
+            }
+        });
+        timer1.setRepeats(false);
+        timer1.start();
+
     }
     // Methods | Public | Health
     public void takeDamage(int damage, String  attacker) {
