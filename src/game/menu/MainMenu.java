@@ -1,18 +1,13 @@
 package game.menu;
 // Imports
-
 import game.Game;
-import game.core.console.Console;
 import game.enums.Environments;
-
 import javax.swing.*;
-import java.awt.*;
-
 /**
- *
+ * The MainMenu class represents the main menu of the game, providing options.
  */
 // Class
-public class MainMenu { // Unfortunately, most of my Menus were created before I knew about this amazing GUI builder :(
+public class MainMenu { // Unfortunately, most of my Menus were created before I knew about this amazing GUI builder
     // Fields
     private JPanel menuPanel;
     private JPanel innerPanel;
@@ -26,21 +21,18 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
     private JButton quitButton;
 
     // Constructor
+    /**
+     * Constructor for the MainMenu class.
+     * Initializes the menu with buttons and their actions.
+     * @param game The game instance to which this menu belongs.
+     */
     public MainMenu(Game game) {
-        continueButton.addActionListener(e -> {
-            continueGame(game);
-        });
-        quitButton.addActionListener(e -> {
-            game.exitWindow();
-        });
-        levelSelectButton.addActionListener(e -> {
-            game.getFrame().switchLayout(Environments.LEVEL_SELECT);
-        });
-        optionsButton.addActionListener(e -> {;
-            game.getFrame().switchLayout(Environments.OPTIONS);
-        });
+        continueButton.addActionListener(e -> continueGame(game));
+        quitButton.addActionListener(e -> game.exitWindow());
+        levelSelectButton.addActionListener(e -> game.getFrame().switchLayout(Environments.LEVEL_SELECT));
+        optionsButton.addActionListener(e -> game.getFrame().switchLayout(Environments.OPTIONS));
         /*
-        for no apparent reason when running on my Mac instead of windows, the opaque check box is ignored :/ we set re-update it here.
+        For no clear reason when running on my Mac instead of windows, the opaque check box is ignored, we re-update it here.
         If we check whether isOpaque is true, it is true, but the properties of opaque are not applied, thus we re-update it here to fix things.
          */
         if (System.getProperty("os.name").contains("Mac")) {
@@ -75,6 +67,10 @@ public class MainMenu { // Unfortunately, most of my Menus were created before I
         }
     }
     // Methods
+    /**
+     * gets the menu panel to add to a parent component.
+     * @return The menu panel.
+     */
     public JPanel getMenuPanel() {
         return menuPanel;
     }

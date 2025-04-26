@@ -1,18 +1,13 @@
 package game.utils;
 // Imports
-
-import game.Game;
 import game.core.GameWorld;
 import game.core.GameView;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-
 // Class
 /**
  * The InventoryButton class represents a button in the game's inventory UI.
@@ -25,7 +20,6 @@ public class InventoryButton extends JButton {
     private final int buttonIndex;
     private Timer rePaintTimer;
     private static final ArrayList<int[]> buttonPositions = new ArrayList<>(){};
-
     static {
         buttonPositions.add(new int[]{ 810, 543, 75, 75});
         buttonPositions.add(new int[]{ 894, 543, 75, 75});
@@ -76,7 +70,6 @@ public class InventoryButton extends JButton {
         // ActionListener
         addActionListener(e -> world.useInventoryItem(buttonIndex));
     }
-
     /**
      * Adds an icon to the button and starts a repaint timer.<br>
      * The repaint timer enables GIFs to be updated and displayed correctly.

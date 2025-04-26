@@ -1,14 +1,11 @@
 package game.levels;
 // Imports
-
-import city.cs.engine.StaticBody;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import game.Game;
 import game.body.staticstructs.ground.GroundFrame;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.WalkerFrame;
-import game.body.walkers.mobs.HuntressWalker;
 import game.body.walkers.mobs.MobWalker;
 import game.body.walkers.mobs.WizardWalker;
 import game.body.walkers.mobs.WormWalker;
@@ -17,12 +14,11 @@ import game.core.console.Console;
 import game.enums.Direction;
 import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The `LevelFrame` class is an abstract class that serves as a base for all levels in the game.
+ * An abstract class that serves as a base for all levels in the game.
  * It manages the level number, boundaries, and ground frames.
  */
 // Class
@@ -84,6 +80,7 @@ public abstract class LevelFrame {
      * Initialises {@link game.enums.Environments Environment} level.<br>
      * This method is called in the constructor of the level.
      * @param levelNumber the level number
+     * @throws IllegalArgumentException if the level number is invalid.
      */
     protected abstract void initLevel(int levelNumber);
 
@@ -115,6 +112,7 @@ public abstract class LevelFrame {
      *
      * @param name the name of the ground frame
      * @param groundFrame the ground frame to add
+     * @return the ground frame object
      */
     public GroundFrame add(String name, GroundFrame groundFrame) {
         if (groundFrames.putIfAbsent(name, groundFrame) != null) {
@@ -195,7 +193,7 @@ public abstract class LevelFrame {
     // Methods | Public
     /**
      * Removes the ground frame with the given name.<br>
-     * If the key doesn't exist, an exception is thrown.
+     * If the key does not exist, an exception is thrown.
      *
      * @param name the name of the ground frame
      */
@@ -244,12 +242,8 @@ public abstract class LevelFrame {
                 mob = new WizardWalker(gameWorld, pos);
                 mobs.add(mob);
             }
-            case HUNTRESS -> {
-                mob = new HuntressWalker(gameWorld, pos);
-                mobs.add(mob);
-            }
             default -> {
-                Console.errorTraceCustom("Walker type " + walkerType + " not recognised, returning null!", 3);
+                Console.errorTraceCustom("Walker type " + walkerType + " not recognised or deprecated, returning null!", 3);
                 mob = null;
             }
         }
@@ -324,7 +318,6 @@ public abstract class LevelFrame {
                 if (gameWorld.getLevel() != LevelFrame.this) {
                     stop();
                 }
-                isOutOfBounds(gameWorld.getPlayer());
                 checkForMobsDead();
             }
 
@@ -344,17 +337,22 @@ public abstract class LevelFrame {
      */
     public boolean isOutOfBounds(WalkerFrame walkerFrame) {
         Vec2 pos = walkerFrame.getPosition();
-        if (pos.y < boundaries.get("Lower").y || pos.y > boundaries.get("Upper").y || pos.x > boundaries.get("Right").x || pos.x < boundaries.get("Left").x) {
-            if (walkerFrame instanceof PlayerWalker player) {
-                if (pos.y < boundaries.get("Lower").y) {
-                    player.outOfBounds("FELL TO DEATH");
-                } else {
-                    player.outOfBounds("OUT OF BOUNDS");
-                }
-            }
-            return true;
+        return pos.y < boundaries.get("Lower").y || pos.y > boundaries.get("Upper").y || pos.x > boundaries.get("Right").x || pos.x < boundaries.get("Left").x;
+    }
+    /**
+     * Called when the player is out of bounds.<br>
+     * Kills the player with the appropriate death message.
+     * @see PlayerWalker
+     * @see #isOutOfBounds(WalkerFrame)
+     */
+    public void playerOutOfBounds() {
+        PlayerWalker player = gameWorld.getPlayer();
+        Vec2 pos = player.getPosition();
+        if (pos.y < boundaries.get("Lower").y) {
+            player.outOfBounds("FELL TO DEATH");
+        } else {
+            player.outOfBounds("OUT OF BOUNDS");
         }
-        return false;
     }
     /**
      * Sets the player's position to the spawn point.<br>
@@ -374,13 +372,6 @@ public abstract class LevelFrame {
      */
     public Vec2 getCentre() {
         return centre;
-    }
-    /**
-     * Returns the player's spawn position.<br>
-     * @return the player spawn value ({@link Vec2})
-     */
-    public Vec2 getPlayerSpawn() {
-        return playerSpawn;
     }
 
     /**

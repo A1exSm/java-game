@@ -1,40 +1,42 @@
 package game.core;
 
-import city.cs.engine.EngineerView;
 import game.Game;
 import game.core.console.Console;
 import game.enums.Environments;
-import game.levels.MagicCliff;
 import game.menu.GameJMenuBar;
 import game.menu.MainMenu;
 import game.menu.Options;
 import game.menu.SelectLevel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 
 /**
- * The `GameFrame` class extends `JFrame` and represents the main window for the game.<br>
+ * Extends {@link JFrame} and represents the main window for the game.<br>
  * It provides constructors to initialise the frame with different types of views and
- * sets up the frame with common properties.
+ * sets up the frame with common properties. <br>
+ * It also provides methods to switch between different layouts, select levels.
+ *  @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ *  @since 03-02-2025
  */
-public class GameFrame extends JFrame {
+public final class GameFrame extends JFrame {
     private final Game game;
-    private EngineerView engineerView;
     /**
-     * Constructs a `GameFrame`
-     *
+     * Constructs a {@link GameFrame},
+     * with the title "Slasher" and the specified {@link Game} instance.
+     * @param game the {@link Game} instance to be used
+     * @see Game
+     * @see JFrame
      */
     public GameFrame(Game game) {
         super("Slasher");
         this.game = game;
         setup();
     }
-
     /**
      * Sets up the frame with common properties such as default close operation,
-     * location by platform, non-resizable, menu bar, visibility, and then packs them.
+     * location by platform, non-resizable, visibility, and then packs them.<br>
+     * Also adds a key listener to the frame to toggle the console when F1 is pressed.
      */
     private void setup() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,24 +58,23 @@ public class GameFrame extends JFrame {
     }
     /**
      * Switches the layout of the frame to the specified layout.
-     *
      * @param Layout the layout to switch to
+     * @see Environments
      */
     public void switchLayout(Environments Layout) {
         switch(Layout) {
-            case Main_Menu -> {
-                newLayout(new MainMenu(game).getMenuPanel());
-            }
-            case LEVEL_SELECT -> {
-                newLayout(new SelectLevel(game).getPanel());
-            }
-            case OPTIONS -> {
-                newLayout(new Options(game).getOptionsPanel());
-            }
-            default -> {Console.error("GameFrame.switchLayout() called with invalid environment, if attempting to start a level, use the GameFrame.selectLevel() method");}
+            case Main_Menu -> newLayout(new MainMenu(game).getMenuPanel());
+            case LEVEL_SELECT -> newLayout(new SelectLevel(game).getPanel());
+            case OPTIONS -> newLayout(new Options().getOptionsPanel());
+            default -> Console.error("GameFrame.switchLayout() called with invalid environment, if attempting to start a level, use the GameFrame.selectLevel() method");
         }
     }
-
+    /**
+     * Handles the allocation and construction of a new Layout
+     * after being passed the {@link Environments Environment's} JPanel.
+     * @see JPanel
+     * @see Environments
+     */
     private void newLayout(JPanel panel) {
         getContentPane().removeAll();
         if (getMenuBar() != null) {
@@ -82,10 +83,9 @@ public class GameFrame extends JFrame {
         add(panel);
         revalidateFrame();
     }
-
     /**
-     * Selects the level to play.
-     *
+     * Selects the level to play
+     * and initialises the game.
      * @param environment the environment of the level
      * @param level       the level number
      */
@@ -93,7 +93,9 @@ public class GameFrame extends JFrame {
         addGameView(environment, level);
     }
     /**
-     * Adds the game view to the frame.
+     * Starts the game with the specified environment and level.
+     * @param environment the environment of the level
+     * @param level       the level number
      */
     private void addGameView(Environments environment, int level) {
         getContentPane().removeAll();
@@ -106,7 +108,7 @@ public class GameFrame extends JFrame {
             setJMenuBar(new GameJMenuBar());
         }
         userView.requestFocus();
-        revalidateFrame();
+        revalidateFrame(); // JFrame needs to be revalidated to properly display the new Layout
     }
     /**
      * revalidates the frame and packs it.

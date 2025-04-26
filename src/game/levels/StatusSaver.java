@@ -1,31 +1,30 @@
 package game.levels;
 // Imports
-
 import game.Game;
 import game.core.console.Console;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-
 /**
- *
+ * Handles the saving of level data to a file.
  */
 // Class
 class StatusSaver {
     // Fields
-    public static final String PATH_1 = "data/Saves/save1.txt";
-    public static final String PATH_2 = "data/Saves/save2.txt";
     private static HashMap<Integer, Boolean> magicLevelData;
     private static HashMap<Integer, Boolean> hauntedLevelData;
     private static HashMap<Integer, Boolean> gothicLevelData;
     // Constructor
-    // Methods
+    /**
+     * Saves the level data to the given file path.
+     * @param path The path to save the level data to.
+     */
     public static void saveGame(String path){
         updateLevelData();
         writeData(path);
 
     }
+    // Methods
     private static void writeData(String path) {
         Console.info("Starting save process...");
         try (FileWriter fw = new FileWriter(path, false)) {
@@ -38,7 +37,6 @@ class StatusSaver {
         writeLevel(gothicLevelData, path);
         Console.info("Finished save process!");
     }
-
     private static void writeLevel(HashMap<Integer, Boolean> levelData, String path) {
         try (FileWriter fw = new FileWriter(path, true)) { // Try-with-resource statement, handles resources that need to be closed. Used instead of finally{...};
             for (int i = 1; i <= levelData.size(); i++) {
@@ -52,7 +50,6 @@ class StatusSaver {
             Console.errorTrace("Error writing "+ levelData.toString() +"to file: " + e.getMessage());
         }
     }
-
     private static void updateLevelData() {
         magicLevelData = Game.magicData.getLevelData();
         hauntedLevelData = Game.hauntedData.getLevelData();

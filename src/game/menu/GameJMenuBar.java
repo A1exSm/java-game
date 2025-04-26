@@ -8,15 +8,17 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 // Class
 /**
  * The GameJMenuBar class extends {@link JMenuBar} to create a custom menu bar for the game.
  * It includes menus for File, Settings, and the Player with various menu items and their respective action listeners.
  */
+@SuppressWarnings("SuspiciousMethodCalls")
 public class GameJMenuBar extends JMenuBar {
     // Fields
-    private HashMap<String, ArrayList<JMenuItem>> menuItems = new HashMap<>();
+    private final HashMap<String, ArrayList<JMenuItem>> menuItems = new HashMap<>();
     // Constructor
     /**
      * Constructor for GameJMenuBar.
@@ -65,7 +67,7 @@ public class GameJMenuBar extends JMenuBar {
         }
         JMenuItem item = new JMenuItem(itemName);
         menuItems.get(menuName).add(item);
-        getMenu(menuName).add(item);
+        Objects.requireNonNull(getMenu(menuName)).add(item);
         item.setActionCommand(itemName);
     }
 
@@ -133,7 +135,7 @@ public class GameJMenuBar extends JMenuBar {
             if (e.getActionCommand().equals("Pause")) {
                 if (Game.gameWorld.isRunning()) items[1].setText("Pause");
                 else items[1].setText("Resume");
-                Game.gameView.jMenuPanel.toggleMenu();
+                Game.gameView.toggleMenu();
             }
         });
     }
@@ -220,7 +222,7 @@ public class GameJMenuBar extends JMenuBar {
             Console.warning("Cannot setMnemonic since JMenu with name: " + name + " does not exist! Returning.");
             return;
         }
-        getMenu(name).setMnemonic(keyEvent);
+        Objects.requireNonNull(getMenu(name)).setMnemonic(keyEvent);
     }
     /**
      * Sets the mnemonic for the specified menu item.

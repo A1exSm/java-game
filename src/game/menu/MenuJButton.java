@@ -47,7 +47,7 @@ class MenuJButton extends JButton {
     // Methods
     /**
      * Initializes the button's appearance.
-     * Sets the background color, foreground color, border, and font.
+     * Sets the background colour, foreground colour, border, and font.
      */
     private void init() {
         setBackground(new Color(115, 102, 73));

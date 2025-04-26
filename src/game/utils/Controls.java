@@ -5,13 +5,12 @@ import game.body.walkers.PlayerWalker;
 import game.core.GameView;
 import game.core.console.Console;
 import org.jbox2d.common.Vec2;
-
 import java.awt.event.*;
 // Class
 /**
  * Controls class handles the main keyboard and mouse inputs for the game.
  */
-public class Controls {
+public final class Controls {
     // Fields
     private final GameView view;
     private final PlayerWalker player;
@@ -46,10 +45,17 @@ public class Controls {
         view.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (disabled) {return;}
+                // Binds which cannot be disabled
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    view.jMenuPanel.toggleMenu();
-                } else if (e.getKeyCode() == KeyEvent.VK_1) {
+                    view.toggleMenu();
+                    return;
+                } else if (e.getKeyCode() == KeyEvent.VK_F1) {
+                    Console.toggleConsole();
+                    return;
+                }
+                if (disabled) {return;}
+                // Binds which can be disabled
+                if (e.getKeyCode() == KeyEvent.VK_1) {
                     world.useInventoryItem(0);
                 } else if (e.getKeyCode() == KeyEvent.VK_2) {
                     world.useInventoryItem(1);
@@ -57,14 +63,13 @@ public class Controls {
                     world.useInventoryItem(2);
                 } else if (e.getKeyCode() == KeyEvent.VK_4) {
                     world.useInventoryItem(3);
-                } else if (e.getKeyCode() == KeyEvent.VK_F1) {
-                    Console.toggleConsole();
                 }
             }
         });
     }
     /**
      * Mouse input listener
+     * Handles View Zooming and Player Attacking
      */
     private void addMouseInputs() {
         view.addMouseListener(new MouseAdapter() {
@@ -80,7 +85,6 @@ public class Controls {
             }
         });
     }
-
     /**
      * Adds a mouse wheel listener to the game view for zooming in and out.
      * The zoom level is adjusted based on the mouse wheel rotation.
@@ -95,7 +99,6 @@ public class Controls {
             }
         });
     }
-
     /**
      * decrements the zoom level of the game view by 1.
      */
@@ -104,7 +107,6 @@ public class Controls {
             view.setZoom(view.getZoom() - 1);
         }
     }
-
     /**
      * increments the zoom level of the game view by 1.
      */
@@ -130,7 +132,6 @@ public class Controls {
                     player.jump(0);
                 }
             }
-
             @Override
             public void keyReleased(KeyEvent e) {
                 if (disabled || !world.isRunning() || player.isDead()) {return;}
@@ -142,7 +143,6 @@ public class Controls {
             }
         });
     }
-
     /**
      * gets whether controls are disabled.
      * @return {@code true} if controls are disabled, {@code false} otherwise
@@ -150,7 +150,6 @@ public class Controls {
     public boolean isDisabled() {
         return disabled;
     }
-
     /**
      * sets whether controls are disabled.
      * @param disabled {@code true} to disable controls, {@code false} to enable them
@@ -158,5 +157,4 @@ public class Controls {
     public void setDisable(Boolean disabled) {
         this.disabled = disabled;
     }
-
 }

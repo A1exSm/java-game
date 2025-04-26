@@ -1,6 +1,5 @@
 package game.levels;
 // Imports
-
 import city.cs.engine.BoxShape;
 import city.cs.engine.StaticBody;
 import game.Game;
@@ -12,16 +11,25 @@ import game.enums.Direction;
 import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
 import java.awt.*;
-
 /**
- *
+ * * The HauntedForest Environment class.
  */
 // Class
 public class HauntedForest extends LevelFrame {
     // Fields
-//    public static final int NUM_MOBS = 0;
+    /**
+     * The number of mobs in the level.
+     * This is used to display the number of mobs in the level.
+     */
     public static final MobStore NUM_MOBS = new MobStore(2, new int[]{10, 15});
     // Constructor
+    /**
+     * This is used to create the HauntedForest environment
+     * of a given level.
+     * @param gameWorld The game world to create the environment in.
+     * @param levelNumber The level number to create the environment for.
+     * @throws IllegalArgumentException if the level number is invalid.
+     */
     public HauntedForest(GameWorld gameWorld, int levelNumber) {
         super(gameWorld, levelNumber);
         initLevel(levelNumber);
@@ -29,6 +37,9 @@ public class HauntedForest extends LevelFrame {
         checkForNoPosInitMobs();
     }
     // Methods
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initLevel(int levelNumber) {
         if (levelNumber == 1) {
@@ -49,19 +60,18 @@ public class HauntedForest extends LevelFrame {
         GroundFrame platformA = add("PlatformA", new HauntedFlatPlatform(gameWorld, -0.8f, -1, 3));
         Vec2 aPos = getPos("PlatformA");
         add("SlopeA", new HauntedSlopePlatform(gameWorld, aPos.x - platformA.getHalfDimensions().x - HauntedSlopePlatform.IMG.getDimensions().x*6, aPos.y + HauntedFlatPlatform.IMG_A.getHalfDimensions().x - HauntedSlopePlatform.IMG.getHalfDimensions().y*6, 6, Direction.UP));
-        add("BackdropA", new HauntedBackdrop(gameWorld, getPos("SlopeA").x - get("SlopeA").getHalfDimensions().x - HauntedBackdrop.IMG.getHalfDimensions().x*3, getPos("SlopeA").y + HauntedBackdrop.IMG.getHalfDimensions().y - HauntedBackdrop.PLATFORM_HEIGHT*2 + 0.1f, 3));
+        add("BackdropA", new HauntedBackdrop(gameWorld, getPos("SlopeA").x - get("SlopeA").getHalfDimensions().x - HauntedBackdrop.IMG.getHalfDimensions().x*3, getPos("SlopeA").y + HauntedBackdrop.IMG.getHalfDimensions().y - HauntedBackdrop.getPlatformHeight()*2 + 0.1f, 3));
         GroundFrame platformB = add("PlatformB", new HauntedFlatPlatform(gameWorld, 0,0, 10));
         GroundFrame pillarA = add("PillarA", new HauntedPillar(this, 0,0));
         GroundFrame pillarB = add("PillarB", new HauntedPillar(this, 0,0));
         GroundFrame pillarC = add("PillarC", new HauntedPillar(this, 0,0));
-
         // PosChanges
         platformB.setPosition(new Vec2(platformA.getOriginPos().x + platformA.getHalfDimensions().x + platformB.getHalfDimensions().x,-1));
         pillarA.setPosition(new Vec2(platformB.getPosition().x + platformB.getHalfDimensions().x + pillarA.getHalfDimensions().x, -1));
         pillarB.setPosition(new Vec2(pillarA.getPosition().x + pillarA.getHalfDimensions().x*2, pillarA.getPosition().y + pillarA.getHalfDimensions().y + pillarB.getHalfDimensions().y));
         pillarC.setPosition(new Vec2(pillarA.getPosition().x + pillarA.getHalfDimensions().x*2, -1));
         // Props
-        platformB.addProp(new HauntedProp(gameWorld, HauntedProp.TREE_2_IMG), GroundFrame.randRangeInt(0, 10));
+        platformB.addProp(new HauntedProp(gameWorld, HauntedProp.TREE_2_IMG), GroundFrame.randRangeInt(0, 9));
         platformB.addProp(new HauntedProp(gameWorld, HauntedProp.TREE_1_IMG), 0);
         platformB.addProp(new HauntedProp(gameWorld, HauntedProp.TREE_2_IMG), 2);
     }
@@ -77,7 +87,6 @@ public class HauntedForest extends LevelFrame {
         add(WalkerType.WORM, ++count);
         add(WalkerType.WORM, ++count);
     }
-
     private void levelOnePositioning() {
         setPos("1", get("PlatformB"));
         setPos("2", get("PlatformB"));
@@ -101,8 +110,8 @@ public class HauntedForest extends LevelFrame {
         }
         lastI = -HauntedPillar.PILLAR_FACE_IMAGE.getDimensions().y*lastI - PlayerWalker.HALF_Y - HauntedPillar.PILLAR_FACE_IMAGE.getDimensions().y + HauntedPillar.PILLAR_FACE_IMAGE.getDimensions().y;
         add("HauntedPool", new HauntedPool(this, -HauntedPillar.PILLAR_FACE_IMAGE.getDimensions().x, lastI, HauntedPillar.PILLAR_FACE_IMAGE.getHalfDimensions().x*3, HauntedPillar.PILLAR_FACE_IMAGE.getDimensions().y));
-        add("BackdropA", new HauntedBackdrop(gameWorld, HauntedPillar.PILLAR_FACE_IMAGE.getHalfDimensions().x + HauntedBackdrop.IMG.getHalfDimensions().x, lastI + HauntedBackdrop.PLATFORM_HEIGHT + 0.32f, 1));
-        GroundFrame backdropB = add("BackdropB", new HauntedBackdrop(gameWorld, 0, lastI + HauntedBackdrop.PLATFORM_HEIGHT + 0.32f, 8));
+        add("BackdropA", new HauntedBackdrop(gameWorld, HauntedPillar.PILLAR_FACE_IMAGE.getHalfDimensions().x + HauntedBackdrop.IMG.getHalfDimensions().x, lastI + HauntedBackdrop.getPlatformHeight() + 0.32f, 1));
+        GroundFrame backdropB = add("BackdropB", new HauntedBackdrop(gameWorld, 0, lastI + HauntedBackdrop.getPlatformHeight() + 0.32f, 8));
         backdropB.setPosition(new Vec2(get("BackdropA").getPosition().x + get("BackdropA").getHalfDimensions().x + backdropB.getHalfDimensions().x, backdropB.getPosition().y));
         GroundFrame backdropC = add("BackdropC", new HauntedBackdrop(gameWorld, 0, 0 - HauntedBackdrop.IMG.getHalfDimensions().y, 8));
         backdropC.setPosition(new Vec2(get("BackdropA").getPosition().x + get("BackdropA").getHalfDimensions().x + backdropB.getHalfDimensions().x, backdropC.getPosition().y));
@@ -123,7 +132,6 @@ public class HauntedForest extends LevelFrame {
         boundaryC.setFillColor(new Color(0, 0, 0, 0));
         boundaryC.setLineColor(new Color(0, 0, 0, 0));
     }
-
     private void levelTwoMobs() {
         for (int i = 1; i <= 15; i++) {
             if ((int) (Math.random() * 101) % 2 == 0) {
@@ -134,7 +142,6 @@ public class HauntedForest extends LevelFrame {
         }
     }
     private void levelTwoPositioning() {
-
         for (int i = 1; i <= 5; i++) {
             setPos(i + "", get("BackdropC"));
         }
@@ -142,8 +149,10 @@ public class HauntedForest extends LevelFrame {
             setPos(i + "", get("BackdropB"));
         }
     }
-
-        // Overrides
+    // Overrides
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void objectiveComplete() {
         Game.hauntedData.unlockLevel(getLevelNum());

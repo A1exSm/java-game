@@ -2,6 +2,7 @@ package game.core;
 // Imports
 import city.cs.engine.UserView;
 import game.Game;
+import game.body.walkers.PlayerWalker;
 import game.core.console.Console;
 import game.enums.Environments;
 import game.levels.LevelFrame;
@@ -11,32 +12,54 @@ import game.utils.ToMenuButton;
 import org.jbox2d.common.Vec2;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 
 // Class
 /**
- * The `GameView` class extends {@link UserView} and provides custom rendering for the game.
+ * Extends {@link UserView} and provides custom rendering for the game.
  * It handles the background, foreground, and various UI elements such as the health bar and inventory.
+ *  @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ *  @since 03-02-2025
  */
-public class GameView extends UserView {
+public final class GameView extends UserView {
     // Fields
-    private static final ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
+    /**
+     * Font for time Status <br>
+     * {@code Name}: Monospaced<br>
+     * {@code Style}: {@link Font#PLAIN}<br>
+     * {@code Size}: 20
+     * @deprecated Time Status is not used any more
+     * due to game time being logged in the more robust Console system,
+     * where time is logged for each appended message.
+     * @see game.core.console.Console
+     */
+    @Deprecated
+    public static final Font STATUS_FONT = new Font("Monospaced", Font.PLAIN, 20);
+    /**
+     * {@code Name}: Niagara Solid<br>
+     * {@code Style} {@link Font#BOLD}<br>
+     * {@code Size}: 50
+     */
+    public static final Font DISPLAY_FONT = new  Font("Niagara Solid", Font.BOLD, 50);
+    /**
+     * The default zoom level for the game view,
+     * used to reset default by calling {@link game.core.GameView#setZoom(float) setZoom()}.
+     */
     public static final float DEFAULT_ZOOM = 20.0f;
+    private JLabel endText;
+    private final Environments environment;
+    private static final ArrayList<int[]> slotLocations = new ArrayList<>(); // format: {{x,y,width,height}},{{x,y},{{x,y,width,height}}...
+    private final JMenuPanel jMenuPanel = new JMenuPanel(this);
     private final Image parallaxBackground;
     private final Image parallaxForeground;
     private final Image sea;
-    public static final Font STATUS_FONT = new Font("Monospaced", Font.PLAIN, 20);
-    public static final Font DISPLAY_FONT = new  Font("Niagara Solid", Font.BOLD, 50);
     private final ArrayList<InventoryButton> inventoryButtons = new ArrayList<>();
     private String gameOverMessage;
     private String victoryMessage;
     private boolean blackScreenDeath = false;
     private final GameWorld gameWorld;
-    public final JMenuPanel jMenuPanel = new JMenuPanel(this);
-    public final Environments level;
-    public JLabel endText;
-    private String winLoss;
-
     static {
         slotLocations.add(new int[]{ 800, 533, 400, 100}); //        slotLocations.add(new int[]{x, y, width, height});
         slotLocations.add(new int[]{ 802, 538, 395, 90}); //        slotLocations.add(new int[]{x + 2, y + 35, width-10, height-10});
@@ -47,33 +70,30 @@ public class GameView extends UserView {
     }
     // Constructor
     /**
-     * Constructs a `GameView` with the specified game world, width, and height.
+     * Initialises {@link Game#gameTime},
+     * Renders parallax images for the given environment. <br>
+     * also adds a focus listener to the game view to stop the player when the view loses focus.
      *
      * @param gameWorld the game world to be displayed
-     * @param level the environment level
+     * @param environment the environment
+     * @see Environments
      */
-    public GameView(GameWorld gameWorld, Environments level) {
+    public GameView(GameWorld gameWorld, Environments environment) {
         super(gameWorld, 1200, 630);
         requestFocus();
         setFocusable(true);
         Game.gameTime = new GameTime();
+        this.environment = environment;
         this.gameWorld = gameWorld;
-        this.setLayout(null); // dont want a layout manager
+        this.setLayout(null);
         populateButtons();
-        for(Component component : this.getComponents()) {
-            if (component instanceof InventoryButton) {
-                this.setComponentZOrder(component, getComponentCount()-1); // manually correcting z-order after all components are added during init
-            }
-        }
-        this.level = level;
-        switch (level) {
+        switch (environment) {
             case MAGIC_CLIFF -> {
                 parallaxBackground = new ImageIcon("data/MagicCliffs/PNG/sky2.png").getImage();
                 parallaxForeground = new ImageIcon("data/MagicCliffs/PNG/clouds.png").getImage();
                 sea = new ImageIcon("data/MagicCliffs/PNG/sea3.png").getImage();
             }
             case HAUNTED_FOREST -> {
-                // getting scaled dimensions for the background and foreground images
                 parallaxBackground = scaleImage(new ImageIcon("data/HauntedForest/back.png").getImage());
                 parallaxForeground = scaleImage(new ImageIcon("data/HauntedForest/middle.png").getImage());
                 sea = null;
@@ -86,13 +106,32 @@ public class GameView extends UserView {
                 setBackground(new Color(0, 0, 34));
 
             }
-            default -> {throw new IllegalStateException(Console.exceptionMessage("Unexpected value: " + level));}
+            default -> throw new IllegalStateException(Console.exceptionMessage("Unexpected value: " + environment));
         }
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                PlayerWalker player = gameWorld.getPlayer();
+                if (!player.isDead()) {
+                    player.stopWalking();
+                    player.setLinearVelocity(new Vec2(0, player.getLinearVelocity().y));
+                }
+            }
+        });
     }
     // Method | private | scaling
+    /**
+     * Scales the given image based on the view dimensions.
+     *
+     * @param image the image to be scaled
+     * @return the scaled image
+     * @see Game#getScaledDimensions(int, int, int, int) 
+     * @see Image#getScaledInstance(int, int, int)
+     */
     private Image scaleImage(Image image) {
         int scaleWidth, scaleHeight;
-        if (level.equals(Environments.HAUNTED_FOREST)) {
+        if (environment.equals(Environments.HAUNTED_FOREST)) {
             scaleWidth = 1200;
             scaleHeight = 630;
         } else {
@@ -102,12 +141,16 @@ public class GameView extends UserView {
         int[] scaledDimensions = Game.getScaledDimensions(image.getWidth(this), image.getHeight(this), scaleWidth, scaleHeight);
         return image.getScaledInstance(scaledDimensions[0], scaledDimensions[1], Image.SCALE_SMOOTH);
     }
-
     // Methods | Background | @Override
     /**
      * Paints the background of the game view.
+     * It also draws the parallax background and
+     * foreground images based on the player's position,
+     * only drawing the images if they are within a certain
+     * range of the player.
      *
-     * @param g the graphics context
+     * @param g the graphics
+     * @see Graphics2D
      */
     @Override
     protected void paintBackground(Graphics2D g) {
@@ -118,9 +161,9 @@ public class GameView extends UserView {
         int xPos;
         xPos = (int) worldToView(currentEnvironment.getCentre()).getX();
         yPos = (int) worldToView(currentEnvironment.getCentre()).getY();
-        if (level.equals(Environments.HAUNTED_FOREST)) {
+        if (environment.equals(Environments.HAUNTED_FOREST)) {
             yPos -= 30;
-        } else if (level.equals(Environments.GOTHIC_CEMETERY)) {
+        } else if (environment.equals(Environments.GOTHIC_CEMETERY)) {
             yPos += 200;
         }
 
@@ -135,7 +178,7 @@ public class GameView extends UserView {
      * The elements are drawn in a parallax effect based on the player's position.<br><br>
      * this replaced three methods that output the same thing as this; however, this function performs better.
      *
-     * @param graphics the graphics context
+     * @param graphics the graphics
      * @param img the image to be drawn
      * @param playerX the x position of the player
      * @param xPos the x position to start drawing
@@ -152,13 +195,16 @@ public class GameView extends UserView {
         }
     }
     /**
-     * Paints the foreground of the game view.
+     * Paints the foreground of the game view:<br>
+     * - Checks for game over conditions<br>
+     * - Draws the health bar<br>
+     * - Draws the inventory<br>
+     * - Checks the player's status, to draw a vignette when hurt<br>
      *
-     * @param g the graphics context
+     * @param g the graphics
      */
     @Override
     protected void paintForeground(Graphics2D g) {
-        drawGameTime(g);
         checkForGameOver(g);
         drawHealthBar(g);
         drawInventory(g);
@@ -168,7 +214,7 @@ public class GameView extends UserView {
      * Checks the player's status.
      * If the player is hit or dead, a vignette effect is applied.
      *
-     * @param g the graphics context
+     * @param g graphics
      */
     private void checkPlayerStatus(Graphics2D g) {
         if (gameWorld.getPlayer().isHit() || gameWorld.getPlayer().isDead()) {
@@ -176,11 +222,17 @@ public class GameView extends UserView {
         }
     }
     /**
-     * Populates the inventory buttons.
+     * Populates the inventory buttons
+     * and sets the z-order of the components.
      */
     private void populateButtons() {
         for (int i = 0; i < 4; i++) {
             inventoryButtons.add(new InventoryButton(this, i));
+        }
+        for(Component component : this.getComponents()) {
+            if (component instanceof InventoryButton) {
+                this.setComponentZOrder(component, getComponentCount()-1); // manually correcting z-order after all components are added during init
+            }
         }
     }
     /**
@@ -200,7 +252,7 @@ public class GameView extends UserView {
      * If the player is dead, the interface is paused, preventing item use.<br>
      * If the game is over, a message is displayed.
      *
-     * @param graphics the graphics context
+     * @param graphics the graphics
      */
     private void checkForGameOver(Graphics2D graphics) {
         if (gameWorld.getPlayer().isDead()) {
@@ -235,12 +287,12 @@ public class GameView extends UserView {
     /**
      * Applies a visual effect (vignette) to indicate the player is hurt.
      *
-     * @param graphics the graphics context
+     * @param graphics the graphics
      */
     private void hurt(Graphics2D graphics) {
         Point centerOfScreen = new Point(getWidth() / 2, getHeight() / 2);
         float r = getWidth() / 2.0f; // radius of the gradient
-        float[] fractions = {0.6f, 1.0f}; // this was kinda trial and error, seems to be the right distribution
+        float[] fractions = {0.6f, 1.0f}; // this was kind of trial and error, seems to be the right distribution
         Color[] colors = {new Color(0, 0, 0, 0), new Color(100, 0, 0, 150)}; // all zero + 0 alpha is transparent, which moves from a fraction of 0.6 to 1,.0f of red.
         RadialGradientPaint vignette = new RadialGradientPaint(centerOfScreen, r, fractions, colors);
         graphics.setPaint(vignette);
@@ -248,9 +300,11 @@ public class GameView extends UserView {
     }
     /**
      * Draws the game time on the screen.
-     *
-     * @param graphics the graphics context
+     * @param graphics the graphics
+     * @deprecated Due to game time being logged in the more robust Console system,
+     * where time is logged for each appended message.
      */
+    @Deprecated
     private void drawGameTime(Graphics2D graphics) {
         graphics.setColor(Color.BLUE);
         graphics.drawString(String.format("Timer: %02d" + ":%02d", Game.gameTime.getTimeMinutes(), Game.gameTime.getTimeSeconds()), 5, 20);
@@ -258,11 +312,11 @@ public class GameView extends UserView {
     /**
      * Draws the health bar on the screen.
      *
-     * @param graphics the graphics context
+     * @param graphics the graphics
      */
     private void drawHealthBar(Graphics2D graphics) {
         // Health bar dimensions and position
-        int xPos = (int)Game.getFrameDimensions().x - 490;
+        int xPos = (int) Game.getFrameDimensions().x - 490;
         int healthBarWidth = 490;
         int healthBarHeight = 35;
         int borderThickness = 3;
@@ -283,11 +337,11 @@ public class GameView extends UserView {
     /**
      * Draws the inventory on the screen.
      *
-     * @param graphics the graphics context
+     * @param graphics the graphics
      */
     private void drawInventory(Graphics2D graphics) {
         Color temp = graphics.getColor();
-        ArrayList<String> path = GameWorld.playerInventory.getInventoryPath(2); // since there are -2 slots in slotLocations
+        ArrayList<String> path = gameWorld.getPlayerInventory().getInventoryPath(2); // since there are -2 slots in slotLocations
         for (int i = 0; i < slotLocations.size(); i++) {
             if (i == 0) {
                 graphics.setColor(new Color(109, 93, 45));
@@ -360,7 +414,6 @@ public class GameView extends UserView {
      */
     public void gameOver(String gameOverMessage) {
         this.gameOverMessage = gameOverMessage;
-        winLoss = "Loss";
 
     }
     /**
@@ -378,7 +431,6 @@ public class GameView extends UserView {
      */
     public void gameWon(String victoryMessage) {
         this.victoryMessage = victoryMessage;
-        winLoss = "Win";
     }
 
     /**
@@ -387,5 +439,13 @@ public class GameView extends UserView {
      */
     public GameWorld getGameWorld() {
         return gameWorld;
+    }
+
+    /**
+     * Toggles the menu panel to show or hide the menu.
+     * @see JMenuPanel
+     */
+    public void toggleMenu() {
+        jMenuPanel.toggleMenu();
     }
 }

@@ -25,7 +25,13 @@ public class JMenuPanel extends JPanel {
     private Timer timer;
     JLabel backGround = new JLabel();
     private final GameSound openSound = GameSound.createSound("data/Audio/UI/open.wav", SoundGroups.UI, 667);
+    /**
+     * The font used when the system is macOS.
+     */
     public static final Font MAC_FONT = new Font("Niagara Solid", Font.BOLD, 20);
+    /**
+     * The font used for the options title.
+     */
     public static final Font OPTIONS_FONT = new Font("Blackadder ITC", Font.ITALIC, 72);
 
     static {
@@ -42,7 +48,7 @@ public class JMenuPanel extends JPanel {
      */
     public JMenuPanel(GameView gameView) {
         super();
-        setLayout(null); // don't want to use a layout manager
+        setLayout(null); // do not want to use a layout manager
         setBackground(new Color(0, 0, 0, 0));
         setBounds(X, Y, WIDTH, HEIGHT);
         setBorder(new EtchedBorder(EtchedBorder.RAISED));

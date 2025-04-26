@@ -5,7 +5,7 @@ import city.cs.engine.StepListener;
 import game.body.walkers.PlayerWalker;
 import game.enums.State;
 import org.jbox2d.common.Vec2;
-import java.util.HashMap; // I hope this is allowed :)
+import java.util.HashMap;
 import game.core.GameWorld;
 // importing my enums as static constants for ease of use.
 import static game.enums.State.*;
@@ -14,8 +14,10 @@ import static game.enums.Direction.*;
 /**
  * The PlayerStepListener class implements {@link StepListener} to manage the animation and state transitions for the PlayerWalker.
  * It handles the player's movement, direction, and animation state based on the game world events.
+ * @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ * @since 04-02-2025
  */
-public class PlayerStepListener implements StepListener {
+public final class PlayerStepListener implements StepListener {
     // Fields
     private FrameHandler currentAnimation;
     private javax.swing.Timer timer;
@@ -28,7 +30,7 @@ public class PlayerStepListener implements StepListener {
     /**
      * Constructor for PlayerStepListener.
      * Initializes the listener with the specified game world and player walker.
-     * Sets up the animation handlers and initial state.
+     * Setups the animation handlers and initial state.
      * @param world The GameWorld object representing the game world.
      * @param player The PlayerWalker object representing the player.
      */
@@ -44,7 +46,7 @@ public class PlayerStepListener implements StepListener {
      * Sets up the animations HashMap with {@link FrameHandler} objects for each supported state of the player.
      */
     private void hashMapSetup() {
-        for (State state : PlayerWalker.SUPPORTED_STATES) {
+        for (State state : PlayerWalker.getSupportedStates()) {
             animations.put(state, new FrameHandler(player, state));
         }
     }
@@ -55,7 +57,9 @@ public class PlayerStepListener implements StepListener {
      * @param stepEvent The StepEvent object representing the step event.
      */
     @Override
-    public void preStep(StepEvent stepEvent) {
+    public void preStep(StepEvent stepEvent) {}
+    @Override
+    public void postStep(StepEvent stepEvent) { // calculation done after the physics step
         if (world.isRunning()) {
             player.checkMob();
             linearVelocity = player.getLinearVelocity();
@@ -64,10 +68,7 @@ public class PlayerStepListener implements StepListener {
         } else if (timer!=null) {
             if (timer.isRunning()) timer.stop();
         }
-
     }
-    @Override
-    public void postStep(StepEvent stepEvent) {}
     // Animation Methods
     private void findDirection() {
         if (linearVelocity.x > 2) {
@@ -88,7 +89,7 @@ public class PlayerStepListener implements StepListener {
             } else {
                 if (linearVelocity.y > 2) player.setState(JUMP); // threshold of 2 to prevent jitter between surfaces.
                 else if (linearVelocity.y < -2 || player.getBodiesInContact().isEmpty())
-                    player.setState(FALL); // check if player is in contact with other bodies, as we don't want a random idle game.animation when the player jumps/falls slower than 2.
+                    player.setState(FALL); // check if player is in contact with other bodies, as we do not want a random idle game.animation when the player jumps/falls slower than 2.
                 else if (linearVelocity.x > 2 || linearVelocity.x < -2) player.setState(RUN);
                 else {
                     player.setState(IDLE);
@@ -102,7 +103,7 @@ public class PlayerStepListener implements StepListener {
      * Updates the animation based on the new state.
      */
     private void setAnimation(State state) {
-        if (currentAnimation == null || currentAnimation != animations.get(state)) { // we just skip this if it's the same state
+        if (currentAnimation == null || currentAnimation != animations.get(state)) { // we just skip this if it is the same state
             currentAnimation = animations.get(state);
             if (currentAnimation == animations.get(ATTACK1)) invokeAttackTimer();
             if (currentAnimation == animations.get(DEATH)) invokeDeathTimer();
@@ -112,17 +113,17 @@ public class PlayerStepListener implements StepListener {
     // Timer Methods
     /**
      * Checks the timer and handles the end of the animation cycle.
-     * Resets the timer count and restarts the timer if necessary.
+     * Resets the timer-count and restarts the timer if necessary.
      */
     private void checkTimer() {
-        if (timerCount == currentAnimation.getNumFrames()) { // although PlayerAnimation.incrementFrame ensures we don't go out of index there, we need to also do that on this side, might be worth making a function which handles both...
+        if (timerCount == currentAnimation.getNumFrames()) { // although PlayerAnimation.incrementFrame ensures we do not go out of index there, we need to also do that on this side, might be worth making a function which handles both...
             if (currentAnimation == animations.get(ATTACK1)) world.togglePlayerAttack();
             if (currentAnimation == animations.get(DEATH)) {
                 player.die();
                 return;
             }
             timerCount = 0;
-            timer.restart(); // timer needs to restart so game.animation doesn't "stall" - where we have to wait for one game.animation to finish for the next to start
+            timer.restart(); // timer needs to restart so game.animation does not "stall" - where we have to wait for one game.animation to finish for the next to start
         }
     }
     /**
@@ -144,7 +145,7 @@ public class PlayerStepListener implements StepListener {
     private void invokeAttackTimer() {
         timer.stop();
         setAnimation(ATTACK1);
-        setTimer(100); // attack needs to be faster so we set it to 100ms, typical gifs (as far as ik) have a 200ms gap between frames.
+        setTimer(100); // attack needs to be faster, so we set it to 100 ms, typical GIFs (as far as ik) have a 200 ms gap between frames.
         player.hurtMob();
     }
     /**

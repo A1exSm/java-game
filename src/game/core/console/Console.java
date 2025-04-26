@@ -5,21 +5,22 @@ package game.core.console;
 import game.enums.LogTypes;
 
 /**
- *
+ * Console class for handling console output and logging.
+ * This class provides a diverse set of Static methods to display information.
+ * @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ * @since 08-04-2025
  */
 // Class
-public class Console {
+public final class Console {
     // Fields
     private static final ConsoleInterface CONSOLE_INTERFACE = new ConsoleInterface();
     // Methods
-
     /**
      * Toggles the visibility of the console.
      */
     public static void toggleConsole() {
         CONSOLE_INTERFACE.toggleVisibility();
     }
-
     /**
      * Prints text to the console and appends it to the console interface in the Error style.
      *
@@ -55,7 +56,7 @@ public class Console {
         errorTraceCustom(text, 3); // 3 since 2 is the immediate caller, but since it traverses through errorTrace to errorTraceCustom, we need to add 1 to the index.
     }
     /**
-     * Prints text to the console and appends it to the console interface in the Info style.
+     * Prints text to the console and appends it to the console interface in the Information style.
      * @param text The text to append.
      */
     public static void info(String text) {

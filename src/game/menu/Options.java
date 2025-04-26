@@ -1,17 +1,17 @@
 package game.menu;
-
 import game.Game;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import game.core.GameSound;
 import game.core.console.Console;
 import game.enums.SoundGroups;
 import game.levels.LevelData;
 import game.levels.StatusGetter;
-
 import java.awt.*;
-
+/**
+ * The Options class provides a user interface for game options, including volume controls and reset progress functionality.
+ * It allows users to adjust game settings and reset their progress if desired.
+ */
 public class Options {
     private static final GameSound GAME_SOUND = GameSound.createSound("data/Audio/UI/confirm_style_2_001.wav", SoundGroups.UI, 1000);
     private static final GameSound CURSOR_SOUND = GameSound.createSound("data/Audio/UI/cursor_style_5.wav", SoundGroups.UI, 600);
@@ -33,14 +33,16 @@ public class Options {
     private JButton back;
     private JPanel dataSelectionPanel;
     private JButton dataSelectionButton;
-
-    public Options(Game game) {
+    /**
+     * Initializes the options panel.
+     * Adds the appropriate components and
+     * assigns their listeners and default values/state.
+     */
+    public Options() {
         new MenuSliderSurface(allVolumePanel, 0,0,313, 62, "All");
         new MenuSliderSurface(musicVolumePanel, 313, 62, Game.getGameMusic(), "Music");
         new MenuSliderSurface(mobVolumePanel, 313, 62, SoundGroups.MOBS, "Mobs");
-        back.addActionListener(e -> {
-            Game.exit();
-        });
+        back.addActionListener(e -> Game.exitToMainMenu());
         resetProgressButton.addActionListener(e -> {
             String message = "Are you sure you want to reset your progress?\nIf so the overridden data will be temporarily saved to data/Saves/save2, until the next reset";
             int answer = JOptionPane.showConfirmDialog(null, message, "Reset Progress", JOptionPane.YES_NO_OPTION);
@@ -58,7 +60,7 @@ public class Options {
             if (answer == JFileChooser.APPROVE_OPTION) {
                 String filePath = fileChooser.getSelectedFile().getPath();
                 if (StatusGetter.isAllowed(filePath)) {
-                    Game.selectNewLevelData(filePath);
+                    Game.selectNewLevelData(filePath, "data/Saves/save3.txt");
                 } else {
                     Console.warning(filePath + " is not allowed");
                 }
@@ -66,7 +68,10 @@ public class Options {
         });
         addSounds(optionsPanel);
     }
-
+    /**
+     * Gets the options panel to add to a parent component.
+     * @return the options panel
+     */
     public JPanel getOptionsPanel() {
         return optionsPanel;}
 
@@ -88,6 +93,11 @@ public class Options {
         panel.setPreferredSize(size);
         panel.setMaximumSize(size);
     }
+    /**
+     * Adds sound effects to buttons in the given panel.
+     * Has a recursive call to add sounds to nested panels.
+     * @param panel The JPanel to which sound effects will be added.
+     */
     public static void addSounds(JPanel panel) {
         for (Component component : panel.getComponents()) {
             if (component instanceof JButton button) {

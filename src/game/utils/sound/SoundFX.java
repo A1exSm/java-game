@@ -1,6 +1,5 @@
 package game.utils.sound;
 // Imports
-
 import game.Game;
 import game.body.walkers.PlayerWalker;
 import game.body.walkers.WalkerFrame;
@@ -10,11 +9,10 @@ import game.enums.SoundGroups;
 import game.enums.State;
 import game.enums.WalkerType;
 import java.util.HashMap;
-
-// Class/**
-// * The SoundFX class implements the SoundInterface and provides sound effects for various game actions.
-// */
-
+// Class
+/**
+ * The SoundFX class implements the SoundInterface and provides sound effects for various game actions.
+ */
 public class SoundFX implements SoundInterface  {
     // Fields
     private final HashMap<State, GameSound> soundMap = new HashMap<>();
@@ -67,22 +65,10 @@ public class SoundFX implements SoundInterface  {
                 soundMap.putIfAbsent(State.JUMP, GameSound.createSound("data/Audio/Player/jump.wav", group, 500));
                 soundMap.putIfAbsent(State.RUN, GameSound.createSound("data/Audio/Player/run.wav", group, 200));
             }
-            case HUNTRESS -> {
-                soundMap.putIfAbsent(State.ATTACK1, GameSound.createSound("data/Audio/Attacks/swing.wav", group, 614));
-            }
-            case WIZARD -> {
-                soundMap.putIfAbsent(State.ATTACK1, GameSound.createSound("data/Audio/Attacks/swing.wav", group, 614));
-
-            }
-            case WORM -> {
-                soundMap.putIfAbsent(State.ATTACK1, GameSound.createSound("data/Audio/Attacks/shoot.wav", group, 820));
-
-            }
-            default -> { // we should never reach this point :)
-                throw new IllegalArgumentException(Console.exceptionMessage("Unknown Walker: " + walker));
-            }
+            case WIZARD -> soundMap.putIfAbsent(State.ATTACK1, GameSound.createSound("data/Audio/Attacks/swing.wav", group, 614));
+            case WORM -> soundMap.putIfAbsent(State.ATTACK1, GameSound.createSound("data/Audio/Attacks/shoot.wav", group, 820));
+            default -> throw new IllegalArgumentException(Console.exceptionMessage("Unknown/Deprecated Walker: " + walker));
         }
-
     }
     /**
      * Attempts to play the sound for the specified state.
@@ -110,19 +96,6 @@ public class SoundFX implements SoundInterface  {
             GameSound.playOnDelay(soundMap.get(state), delayMs);
         }
     }
-    /**
-     * Sets the volume for all sounds.
-     *
-     * @param volume the volume level to set for all sounds
-     */
-    public void setVolumeAll(double volume) {
-        for (State state : State.values()) {
-            if (soundMap.get(state) != null) {
-                soundMap.get(state).setVolume(volume);
-            }
-        }
-    }
-
     // Methods | Public | Specific calls
     /**
      * Plays the attack1 sound for the specified walker frame.
@@ -146,14 +119,6 @@ public class SoundFX implements SoundInterface  {
         if (soundMap.get(state) != null) {
             soundMap.get(state).stop();
         }
-    }
-    /**
-     * Gets the sound for the tracker state.
-     *
-     * @return the GameSound object for designated tracker state
-     */
-    public GameSound getTrackerSound() {
-        return soundMap.get(State.ATTACK1);
     }
     // Methods | Public | @Override
     /**

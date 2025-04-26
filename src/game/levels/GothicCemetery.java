@@ -1,21 +1,30 @@
 package game.levels;
 // Imports
-
 import game.Game;
 import game.body.staticstructs.ground.gothicCemetery.*;
 import game.core.GameWorld;
 import game.enums.Direction;
 import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
-
 /**
- *
+ * * The GothicCemetery Environment class.
  */
 // Class
 public class GothicCemetery extends LevelFrame{
     // Fields
+    /**
+     * The number of mobs in the level.
+     * This is used to display the number of mobs in the level.
+     */
     public static final MobStore NUM_MOBS = new MobStore(2, new int[]{10, 12});
     // Constructor
+    /**
+     * This is used to create the GothicCemetery environment
+     * of a given level.
+     * @param gameWorld The game world to create the environment in.
+     * @param levelNumber The level number to create the environment for.
+     * @throws IllegalArgumentException if the level number is invalid.
+     */
     public GothicCemetery(GameWorld gameWorld, int levelNumber) {
         super(gameWorld, levelNumber);
         setBoundaries(new Vec2(0, 0), 300, -300, -300, 300);
@@ -23,6 +32,9 @@ public class GothicCemetery extends LevelFrame{
         resetPlayerPos();
     }
     // Methods
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initLevel(int levelNumber) {
         if (levelNumber == 1) {
@@ -69,7 +81,6 @@ public class GothicCemetery extends LevelFrame{
         add(WalkerType.WORM, ++count);
         add(WalkerType.WORM, ++count);
     }
-
     private void levelOnePositioning() {
         setPos("1", get("FlatB"));
         setPos("2", get("FlatB"));
@@ -81,7 +92,7 @@ public class GothicCemetery extends LevelFrame{
         setPos("8", get("FlatF"));
         setPos("9", get("FlatF"));
         setPos("10", get("FlatF"));
-    };
+    }
     // Level 2
     private void levelTwoStructures() {
         add("FlatA", new GothicFlatSkull(gameWorld, -250, -6, 2));
@@ -100,10 +111,7 @@ public class GothicCemetery extends LevelFrame{
         add("FlatH", new GothicFlatDefault(gameWorld, getEdge("FlatG", Direction.RIGHT) + GothicFlatDefault.IMG.getHalfDimensions().x*4, -0.5f, 3));
         add("FlatI", new GothicFlatDefault(gameWorld, getEdge("FlatH", Direction.RIGHT) + GothicFlatDefault.IMG.getHalfDimensions().x*3, -2, 1));
         add("FlatJ", new GothicFlatDefault(gameWorld, getEdge("SpikesB", Direction.RIGHT) + GothicFlatDefault.IMG.getHalfDimensions().x*15, -6, 15));
-//        add("SlopeB", new GothicSlopeDefault(gameWorld, getEdge("FlatD", Direction.RIGHT) + GothicSlopeDefault.IMG.getDimensions().x*2, get("FlatD").getPos().y - get("FlatD").getHalfDimensions().y + 0.8f, 2, Direction.UP));
-//        add("FlatE", new GothicFlatDefault(gameWorld, getEdge("SlopeB", Direction.RIGHT) + GothicFlatDefault.IMG.getHalfDimensions().x*20, get("SlopeB").getPos().y + get("SlopeB").getHalfDimensions().y - 0.9f, 20));
     }
-
     private void levelTwoMobs() {
         add(WalkerType.WIZARD, ++count);
         add(WalkerType.WIZARD, ++count);
@@ -118,7 +126,6 @@ public class GothicCemetery extends LevelFrame{
         add(WalkerType.WORM, ++count);
         add(WalkerType.WORM, ++count);
     }
-
     private void levelTwoPositioning() {
         setPos("1", get("FlatD"));
         setPos("2", get("FlatD"));
@@ -133,8 +140,11 @@ public class GothicCemetery extends LevelFrame{
         setPos("11", get("FlatJ"));
         setPos("12", get("FlatJ"));
 
-    };
+    }
     // Methods
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void objectiveComplete() {
         Game.gothicData.unlockLevel(getLevelNum());

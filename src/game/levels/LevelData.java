@@ -1,26 +1,44 @@
 package game.levels;
 // Imports
-
 import game.Game;
 import game.core.console.Console;
 import game.enums.Environments;
 import java.util.HashMap;
 /**
- *
+ * This class Handles the saving, storing, deleting
+ * and loading of level data.
  */
 // Class
 public class LevelData {
     // Fields
+    /**
+     * The default path to save level data.
+     * This is used for the default save file.
+     */
+    public static final String PATH_1 = "data/Saves/save1.txt";
+    /**
+     * The path to save level data to.
+     * This is used for the backup save file.
+     */
+    public static final String PATH_2 = "data/Saves/save2.txt";
     private final HashMap<Integer, Boolean> levelData = new HashMap<>();
     private final Environments environment;
-
-
     // Constructor
+    /**
+     * Constructor for LevelData.
+     * Used to load level data from the default path.
+     * @param environment The environment to load the level data for.
+     */
     public LevelData(Environments environment) {
-        this(environment, StatusSaver.PATH_1);
+        this(environment, PATH_1);
     }
-
-    public LevelData(Environments environment, String path) { // we are going to place a load save from file place in the future options panel, which opens a JFileChooser etc...
+    /**
+     * Constructor for LevelData.
+     * Used to load level data from a given file path.
+     * @param environment The environment to load the level data for.
+     * @param path The path to load the level data from.
+     */
+    public LevelData(Environments environment, String path) {
         this.environment = environment;
         if (StatusGetter.isFilePresent(path)) {
             levelData.putAll(StatusGetter.getLevelData(environment, path, false));
@@ -53,6 +71,11 @@ public class LevelData {
         }
     }
 
+    /**
+     * Checks if the level is locked.
+     * @param level The level to check.
+     * @return {@code true} if the level is locked, {@code false} otherwise.
+     */
     public boolean isLocked(int level) {
         if (levelData.containsKey(level)) {
             return levelData.get(level);
@@ -81,9 +104,14 @@ public class LevelData {
             return;
         }
         levelData.levelData.put(1, true);
-        StatusSaver.saveGame(StatusSaver.PATH_1);
+        StatusSaver.saveGame(PATH_1);
     }
-
+    /**
+     * Unlocks the next level.
+     * This will unlock the next level in the current environment.
+     * If the next level is the last level, it will unlock the first level of the next environment.
+     * Saves the game after unlocking the level.
+     */
     protected void unlockLevel(int levelNumber) {
         if (levelNumber == 1 && levelData.get(levelNumber+1)) {
             return;
@@ -97,12 +125,15 @@ public class LevelData {
             return;
         }
         levelData.put(getNextLevel(), true);
-        StatusSaver.saveGame(StatusSaver.PATH_1);
+        StatusSaver.saveGame(PATH_1);
     }
     protected HashMap<Integer, Boolean> getLevelData() {
         return levelData;
     }
-
+    /**
+     * Gets the highest unlocked level.
+     * @return The highest unlocked level.
+     */
     public int getHighestUnlocked() {
         int highest = 0;
         for (int i = 1; i <= levelData.size(); i++) {
@@ -140,11 +171,11 @@ public class LevelData {
      * Save2 will be overridden the next time resetLevelData is called.
      */
     public static void resetLevelData() {
-        StatusSaver.saveGame(StatusSaver.PATH_2);
+        StatusSaver.saveGame(PATH_2);
         Game.magicData.reset();
         Game.hauntedData.reset();
         Game.gothicData.reset();
-        StatusSaver.saveGame(StatusSaver.PATH_1);
+        StatusSaver.saveGame(PATH_1);
     }
 
     /**
@@ -162,6 +193,6 @@ public class LevelData {
      * Saves the level data to the default path.
      */
     public static void saveLevelData() {
-        saveLevelDataWithPath(StatusSaver.PATH_1);
+        saveLevelDataWithPath(PATH_1);
     }
 }

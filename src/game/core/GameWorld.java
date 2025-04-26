@@ -19,54 +19,59 @@ import game.levels.LevelFrame;
 import game.levels.MagicCliff;
 import game.animation.*;
 import org.jbox2d.common.Vec2;
-
 import java.util.ArrayList;
 
 // Class
 /**
- * The `GameWorld` class extends `World` and represents the game world.
- * It handles the initialisation of the player, mobs, bodies, and various game elements.
+ * Extends {@link World} and represents the game world.
+ *  @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ *  @since 30-01-2025
  */
-public class GameWorld extends World {
+public final class GameWorld extends World {
     // Fields
-    private static Game game;
+    private final Game game;
     private final PlayerWalker player;
     private static final ArrayList<MobWalker> mobs = new ArrayList<>();
-    public static final Inventory playerInventory = new Inventory(4);
+    private final Inventory playerInventory = new Inventory(4);
     private boolean toggleMobsPassive = false;
     private final LevelFrame environment;
-
     // Constructor
     /**
-     * Constructs a `GameWorld` with the specified game.
+     * Constructs a new GameWorld with the specified game, environment, and level.
      *
      * @param game the game instance
+     * @param environment the environment type
+     * @param level the level number
      */
     public GameWorld(Game game, Environments environment, int level) {
         super();
-        GameWorld.game = game;
+        this.game = game;
         player = new PlayerWalker(this);
         new WalkerAnimationFrames(State.RUN, WalkerType.PLAYER);
         this.environment = populate(environment, level);
         this.environment.start();
-        // end of constructor start of a new world :)
+        // end of constructor start of a new world
         start();
     }
 
-    // Population methods
-
     /**
-     * Defines the level.
+     * Populates the game world with the specified environment and level.
+     * @param environment the environment type
+     * @param level the level number
+     * @return the populated level
+     * @throws IllegalArgumentException if the environment is not:
+     * {@link Environments#MAGIC_CLIFF}, {@link Environments#HAUNTED_FOREST}, or {@link Environments#GOTHIC_CEMETERY}
+     * @see Environments
+     * @see LevelFrame
      */
     private LevelFrame populate(Environments environment, int level) {
         switch (environment) {
             case MAGIC_CLIFF -> {return new MagicCliff(this, level);}
             case HAUNTED_FOREST -> {return new HauntedForest(this, level);}
             case GOTHIC_CEMETERY -> {return new GothicCemetery(this, level);}
-            default -> {throw new IllegalArgumentException(Console.exceptionMessage("Invalid environment: " + environment));}
+            default -> throw new IllegalArgumentException(Console.exceptionMessage("Invalid environment: " + environment));
         }
     }
-    // External Getters & Setters
     /**
      * Toggles the player's attack state.
      */
@@ -88,7 +93,6 @@ public class GameWorld extends World {
     public void togglePause() {
         game.togglePause();
     }
-
     /**
      * Gets the current game level child of {@link LevelFrame}.
      *
@@ -97,7 +101,6 @@ public class GameWorld extends World {
     public LevelFrame getLevel() {
         return environment;
     }
-
     /**
      * Uses an item from the player's inventory at the specified index.<br>
      * index corresponds to the item's visual position in the inventory. starting from the left.
@@ -115,12 +118,11 @@ public class GameWorld extends World {
     public void dropInventoryItem(int index) {
         playerInventory.drop(index);
     }
-
     //Mobology
     /**
      * Gets the list of alive {@link MobWalker MobWalkers}.
      *
-     * @return the list of alive Mobs
+     * @return the list of living Mobs
      */
     public static ArrayList<MobWalker> getMobs() {
         ArrayList<MobWalker> aliveMobs = new ArrayList<>();
@@ -129,16 +131,21 @@ public class GameWorld extends World {
         }
         return aliveMobs;
     }
-
+    /**
+     * Adds a mob to the local mobs list
+     * @param mob the mob to add
+     * @see MobWalker
+     */
     public static void addMob(MobWalker mob) {
         mobs.add(mob);
     }
     /**
      * Removes a mob from the game world.<br>
-     * Possibly deprecated, as mobs are ignored by {@link #getMobs()} when they die.
      *
      * @param mob the mob to remove
+     * @deprecated as mobs are ignored by the new {@link #getMobs()} when they die.
      */
+    @Deprecated
     public static void removeMob(MobWalker mob) {
         mobs.remove(mob);
     }
@@ -147,7 +154,10 @@ public class GameWorld extends World {
      *
      * @param name the name of the {@link WormWalker}
      * @return the {@link WormWalker} with the specified name, or null if not found
+     * @deprecated due to {@link MobWalker#getWalkerType()}
+     * and the move to the use of 'instanceof' to check for types.
      */
+    @Deprecated
     public static WormWalker nameToWorm(String name) {
         for (MobWalker mob : mobs) {
             if (mob.getWalkerType().equals(WalkerType.WORM) && mob.getName().equals(name)) { // ensures correct type & name
@@ -162,7 +172,10 @@ public class GameWorld extends World {
      *
      * @param name the name of the {@link WizardWalker}
      * @return the {@link WizardWalker} with the specified name, or null if not found
+     * @deprecated due to {@link MobWalker#getWalkerType()}
+     * and the move to the use of 'instanceof' to check for types.
      */
+    @Deprecated
     public static WizardWalker nameToWizard(String name) {
         for (MobWalker mob : mobs) {
             if (mob.getWalkerType().equals(WalkerType.WIZARD) && mob.getName().equals(name)) { // ensures correct type & name
@@ -172,7 +185,6 @@ public class GameWorld extends World {
         Console.warning("WizardWalker with name: "+ name + " not found! Returning null.");
         return null;
     }
-
     /**
      * Replaces bodies where pos is inside it's bounds, as to allow for drawing images at a lower z-index.
      * @param pos the position to check against
@@ -189,9 +201,9 @@ public class GameWorld extends World {
             }
         }
     }
-
     /**
      * Toggles the state of all mobs to passive.
+     * This is only needed during development
      */
     public void toggleMobsPassive() { // only meant to be called during setup
         toggleMobsPassive = !toggleMobsPassive;
@@ -199,5 +211,19 @@ public class GameWorld extends World {
             mob.setBehaviour(WalkerBehaviour.PASSIVE);
         }
     }
-
+    /**
+     * gets the local stored instance of {@link Game}
+     * @return the game
+     */
+    public Game getGame() {
+        return game;
+    }
+    /**
+     * Gets the player's inventory.
+     * @return the player's inventory
+     * @see Inventory
+     */
+    public Inventory getPlayerInventory() {
+        return playerInventory;
+    }
 }

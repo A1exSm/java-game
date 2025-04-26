@@ -1,6 +1,5 @@
 package game.body.staticstructs.ground.gothicCemetery;
 // Imports
-
 import city.cs.engine.*;
 import game.body.staticstructs.ground.GroundFrame;
 import game.core.GameWorld;
@@ -9,22 +8,40 @@ import game.enums.Direction;
 import game.exceptions.IllegalLengthScaleException;
 import game.utils.GameBodyImage;
 import org.jbox2d.common.Vec2;
-
 import java.awt.*;
-
-/**
- *
- */
 // Class
+/**
+ * An abstract class used to make slopes
+ * which act as a slope for a player to go up and down.
+ *
+ * @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ * @since 06-04-2025
+ */
 public abstract class GothicSlope extends GroundFrame { // this class is witchcraft, all you have to know is that it is reactive to the image and lengthScale :))))
     // Fields
-    private static final GameBodyImage FILL_IMG = new GameBodyImage("data/GothicvaniaCemetery/sliced-Tiles/fill.png", 4f);
+    /**
+     * The image used to fill the centre of the slope object. <br>
+     * <img src="doc-files/fill.png" alt="GothicSlope middle image">
+     */
+    public static final GameBodyImage FILL_IMG = new GameBodyImage("data/GothicvaniaCemetery/sliced-Tiles/fill.png", 4f);
     private final int lengthScale;
     private final GameBodyImage bodyImage;
     private final Direction direction;
     private final int divVal;
     private float yOffset;
     // Constructor
+    /**
+     * Creates a slope object with the given image,
+     * direction and lengthScale.
+     * @param gameWorld The game world to which this slope belongs.
+     * @param x The x position of the slope.
+     * @param y The y position of the slope.
+     * @param lengthScale The length scale of the slope.
+     * @param direction The direction of the slope (UP or DOWN).
+     * @param bodyImage The image used to paint the slope.
+     * @param divVal The divisor value for the height of the slope.
+     * @throws IllegalArgumentException if the direction is not UP or DOWN.
+     */
     GothicSlope(GameWorld gameWorld, float x, float y, int lengthScale, Direction direction, GameBodyImage bodyImage, int divVal) {
         super(gameWorld);
         this.bodyImage = bodyImage;
@@ -39,10 +56,12 @@ public abstract class GothicSlope extends GroundFrame { // this class is witchcr
         setFillColor(Color.RED);
         paint();
     }
-
     // Methods | Private
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void paint() {
-        
         AttachedImage image;
         for (int i = 0; i < lengthScale * 2; i++) {
             image = addImage(bodyImage);
@@ -52,7 +71,10 @@ public abstract class GothicSlope extends GroundFrame { // this class is witchcr
             }
         }
     }
-
+    /**
+     * Returns the vertices of the slope based on the direction.
+     * @return The vertices of the slope.
+     */
     private float[] getFloats() {
         float[] vertices;
         switch (direction) {
@@ -69,6 +91,11 @@ public abstract class GothicSlope extends GroundFrame { // this class is witchcr
         return vertices;
     }
     // Methods | Public
+    /**
+     * gets a position along the line equation of the slope.
+     * @param playerXPos the x position of the player.
+     * @return the yPos of the slope at playerXpos.
+     */
     public float getLineEquationYPos(float playerXPos) {
         float[] vertices = getFloats();
         float x1 = originPos.x + vertices[0];

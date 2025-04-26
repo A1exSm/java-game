@@ -1,22 +1,30 @@
 package game.levels;
 // Imports
-
 import game.Game;
 import game.body.staticstructs.ground.magicCliffs.*;
 import game.core.GameWorld;
 import game.enums.PlatformType;
 import game.enums.WalkerType;
 import org.jbox2d.common.Vec2;
-
 /**
- *
+ * The MagicCliff Environment class.
  */
 // Class
 public class MagicCliff extends LevelFrame {
     // Fields
+    /**
+     * The number of mobs in the level.
+     * This is used to display the number of mobs in the level.
+     */
     public static final MobStore NUM_MOBS = new MobStore(2, new int[]{4, 6});
-
     // Constructor
+    /**
+     * This is used to create the MagicCliff environment
+     * of a given level.
+     * @param gameWorld The game world to create the environment in.
+     * @param levelNumber The level number to create the environment for.
+     * @throws IllegalArgumentException if the level number is invalid.
+     */
     public MagicCliff(GameWorld gameWorld, int levelNumber) {
         super(gameWorld, levelNumber);
         setBoundaries(new Vec2(0,0), 20, -10, -300, 300);
@@ -25,6 +33,9 @@ public class MagicCliff extends LevelFrame {
         resetPlayerPos();
     }
     // Methods | Private | setup
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void initLevel(int levelNumber) {
         if (levelNumber == 1) {
@@ -34,9 +45,10 @@ public class MagicCliff extends LevelFrame {
             levelTwoMobs();
             levelTwoStructures();
             levelTwoPositioning();
+        } else {
+            throw new IllegalArgumentException("Invalid level number: " + levelNumber);
         }
     }
-
     private void levelOneStructures() {
         add("A", new MagicPlatform(gameWorld, 0, -3, PlatformType.GROUND));
         add("B", new MagicPlatform(gameWorld, 48, -3, PlatformType.GROUND));
@@ -65,8 +77,6 @@ public class MagicCliff extends LevelFrame {
         add("FloatingA", new MagicFloatingRockMedium(gameWorld, getPos("DarkA").x + get("DarkA").getHalfDimensions().x + MagicFloatingRockMedium.IMG.getDimensions().x*2, MagicPlatformCliff.IMG.getHalfDimensions().y/2));
         add("FloatingB", new MagicFloatingRockMedium(gameWorld, getPos("FloatingA").x + get("FloatingA").getHalfDimensions().x + MagicFloatingRockMedium.IMG.getDimensions().x*2, MagicPlatformCliff.IMG.getHalfDimensions().y));
         add("DarkB", new MagicCliffDark(gameWorld, getPos("FloatingB").x + get("FloatingB").getHalfDimensions().x + get("DarkA").getHalfDimensions().x + MagicFloatingRockMedium.IMG.getDimensions().x*2,MagicPlatformCliff.IMG.getHalfDimensions().y * 1.5f, 8));
-//        add("SmallRockA", new MagicFloatingRockSmall(gameWorld, 0,0));
-
     }
     private void levelTwoMobs() {
         add(WalkerType.WORM, new Vec2(-1000, -1000), ++count);
@@ -76,7 +86,6 @@ public class MagicCliff extends LevelFrame {
         add(WalkerType.WIZARD, new Vec2(-1000, -1000), ++count);
         add(WalkerType.WORM, new Vec2(-1000, -1000), ++count);
     }
-
     private void levelTwoPositioning() {
         setPos("1", get("DarkA"));
         setPos("2", get ("DarkA"));
@@ -85,6 +94,9 @@ public class MagicCliff extends LevelFrame {
         setPos("5", get("DarkB"));
         setPos("6", get("DarkB"));
     }
+    /**
+     * {@inheritDoc}
+     */
     @Override // not explicitly required but good practice apparently
     protected void objectiveComplete() {
         Game.magicData.unlockLevel(getLevelNum());

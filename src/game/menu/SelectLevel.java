@@ -1,6 +1,5 @@
 package game.menu;
 // Imports
-
 import game.Game;
 import game.core.console.Console;
 import game.enums.Environments;
@@ -8,13 +7,12 @@ import game.levels.GothicCemetery;
 import game.levels.HauntedForest;
 import game.levels.MagicCliff;
 import game.levels.MobStore;
-
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-
 /**
- *
+ * The SelectLevel class provides a user interface for selecting game levels.
+ * It allows users to choose between different levels and display relevant information about each level.
  */
 // Class
 public class SelectLevel {
@@ -61,6 +59,12 @@ public class SelectLevel {
     // Fields
     private static final String STYLE_1 = "style=\"font-family: 'Blackadder ITC'; font-size: 72pt; color: rgb(96,87,73); font-weight: bold; font-style: italic;\"";
     private static final String STYLE_2 = "style=\"font-family: 'Blackadder ITC'; font-size: 32pt; color: rgb(96,87,73); font-weight: bold;\"";
+
+    /**
+     * Sets appropriate default values and states.
+     * Adds necessary listeners to components.
+     * @param game The game instance to be used for level selection.
+     */
     public SelectLevel(Game game) {
         initIcons();
         initLevels();
@@ -77,12 +81,17 @@ public class SelectLevel {
     }
     // reminder, use GameView JPanel to check whether the scaled images have been completed, and call a static method on a future progress bar to increment!
     // we can call a static method every time a part of the constructor is done to update a text field stating what is being done, like... "compiling probability map...", "Assigning textures...", "Loading level..." etc.
+    // future me, this was not viable.
 
     // Methods
+
+    /**
+     * Gets the level panel to be added to a parent component.
+     * @return The level panel.
+     */
     public JPanel getPanel() {
         return levelPanel;
     }
-
 
     private void initIcons() {
         setThumbnail("data/HauntedForest/thumbnail.png", forestThumbnail);
@@ -107,9 +116,7 @@ public class SelectLevel {
                 lockedWarning(magicLevelOne, magicLevelTwo, magicWarning);
             }
         });
-        magicBack.addActionListener(e -> {
-            Game.exit();
-        });
+        magicBack.addActionListener(e -> Game.exitToMainMenu());
         // HauntedForest
         forestStart.addActionListener(e -> {
             if (forestLevelOne.isSelected()) {
@@ -120,9 +127,7 @@ public class SelectLevel {
                 lockedWarning(forestLevelOne, forestLevelTwo, forestWarning);
             }
         });
-        forestBack.addActionListener(e -> {
-            Game.exit();
-        });
+        forestBack.addActionListener(e -> Game.exitToMainMenu());
         // GothicCemetery
         cemeteryStart.addActionListener(e -> {
             if (cemeteryLevelOne.isSelected()) {
@@ -133,9 +138,7 @@ public class SelectLevel {
                 lockedWarning(cemeteryLevelOne, cemeteryLevelTwo, cemeteryWarning);
             }
         });
-        cemeteryBack.addActionListener(e -> {
-            Game.exit();
-        });
+        cemeteryBack.addActionListener(e -> Game.exitToMainMenu());
     }
 
     private void lockedWarning(JRadioButton levelOne, JRadioButton levelTwo, JLabel warning ) {
@@ -203,9 +206,7 @@ public class SelectLevel {
                 levelTwo = cemeteryLevelTwo;
                 mobStore = GothicCemetery.NUM_MOBS;
             }
-            default -> {
-                throw new IllegalArgumentException(Console.exceptionMessage("Invalid environment: " + environment));
-            }
+            default -> throw new IllegalArgumentException(Console.exceptionMessage("Invalid environment: " + environment));
         }
         // update the description pane
         ChangeListener updateDescription = e -> {
@@ -227,11 +228,11 @@ public class SelectLevel {
     }
 
     private void setText(JTextPane pane, MobStore mobStore, Environments environment, int level) {
-        pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.getTitle() + "</p><p " + STYLE_2 + ">Level: " + (level+1) + "</p><p " + STYLE_2 + ">Number of enemies: " + mobStore.getMobData(level) + "</p></body></html>");
+        pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.title + "</p><p " + STYLE_2 + ">Level: " + (level+1) + "</p><p " + STYLE_2 + ">Number of enemies: " + mobStore.getMobData(level) + "</p></body></html>");
     }
 
     private void setText(JTextPane pane, Environments environment) {
-        pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.getTitle() + "</p><br></body></html>");
+        pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.title + "</p><br></body></html>");
     }
 
     private void macOsSetup(JComponent... components) { // uses varargs to set all inputted components to opaque

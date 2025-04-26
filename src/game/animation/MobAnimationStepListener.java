@@ -10,8 +10,10 @@ import static game.enums.State.*;
 /**
  * The MobAnimationStepListener class manages the animation steps for a MobWalker.
  * It handles the animation state transitions and timing for the walker's animations.
+ * @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ * @since 16-02-2025
  */
-public class MobAnimationStepListener {
+public final class MobAnimationStepListener {
     // Fields
     private  FrameHandler currentHandler;
     private javax.swing.Timer animationTimer;
@@ -80,7 +82,7 @@ public class MobAnimationStepListener {
     }
     /**
      * Checks the timer and handles the end of the animation cycle.
-     * Resets the timer count and restarts the timer if necessary.<br>
+     * Resets the timer-count and restarts the timer if necessary.<br>
      * Also handles certain {@link MobWalker} logic
      */
     private void checkTimer() {
@@ -121,7 +123,6 @@ public class MobAnimationStepListener {
         animationTimer.stop();
         setTimer(300);
     }
-
     // Timer Destruction events
     /**
      * ends the Animations

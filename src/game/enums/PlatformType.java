@@ -1,61 +1,54 @@
 package game.enums;
-
-import city.cs.engine.AttachedImage;
-import city.cs.engine.Body;
-import city.cs.engine.BodyImage;
-import org.jbox2d.common.Vec2;
-
+import game.utils.GameBodyImage;
+/**
+ * Enum Representing the different types of platforms for MagicCliffs.
+ */
 public enum PlatformType {
-    CLIFF_DARK,
-    CLIFF_LIGHT,
-    GROUND;
-    static {
-        // CLIFF_DARK | Setup
-        CLIFF_DARK.side = new BodyImage("data/MagicCliffs/cliff/dark_left.png", 15.5f);
-        CLIFF_DARK.middle = new BodyImage("data/MagicCliffs/cliff/dark_middle.png", 15.5f);
-        CLIFF_DARK.sideWidth = 4.8f;
-        CLIFF_DARK.middleX = -1.28f;
-        CLIFF_DARK.middleY = -0.5f;
-        CLIFF_DARK.sideY = -0.5f;
-        // CLIFF_LIGHT | Setup
-        CLIFF_LIGHT.side = new BodyImage("data/MagicCliffs/cliff/light_left.png", 15.5f);
-        CLIFF_LIGHT.middle = new BodyImage("data/MagicCliffs/cliff/dark_middle.png", 15.5f);
-        CLIFF_LIGHT.sideWidth = 4.8f;
-        CLIFF_LIGHT.middleX = -1.28f;
-        CLIFF_LIGHT.middleY = -0.5f;
-        CLIFF_LIGHT.sideY = -0.5f;
-        // GROUND | Setup
-        GROUND.side = new BodyImage("data/MagicCliffs/ground/light_left.png", 15.5f);
-        GROUND.middle = new BodyImage("data/MagicCliffs/ground/light_large.png", 4.5f);
-        GROUND.sideWidth = 5.1f;
-        GROUND.middleX = 0;
-        GROUND.middleY = 4.8f;
-        GROUND.sideY = 0.5f;
-    }
+    /**
+     * Represents {@link game.body.staticstructs.ground.magicCliffs.MagicCliffDark}
+     */
+    CLIFF_DARK(new GameBodyImage("data/MagicCliffs/cliff/dark_left.png", 15.5f), new GameBodyImage("data/MagicCliffs/cliff/dark_middle.png", 15.5f),4.8f, -0.5f, -1.28f,-0.5f),
+    /**
+     * Represents {@link game.body.staticstructs.ground.magicCliffs.MagicCliffLight}
+     */
+    CLIFF_LIGHT(new GameBodyImage("data/MagicCliffs/cliff/light_left.png", 15.5f), new GameBodyImage("data/MagicCliffs/cliff/dark_middle.png", 15.5f),4.8f, -0.5f, -1.28f,-0.5f),
+    /**
+     * *NOT IMPLEMENTED*
+     */
+    GROUND(new GameBodyImage("data/MagicCliffs/ground/light_left.png", 15.5f), new GameBodyImage("data/MagicCliffs/ground/light_large.png", 4.5f), 5.1f, 0.5f, 0, 4.8f);
 
-    private BodyImage middle;
-    private BodyImage side;
-    private float sideWidth;
-    private float middleX;
-    private float middleY;
-    private float sideY;
-    // Methods
-    public BodyImage getMiddleBody() {
-        return middle;
-    }
-    public BodyImage getSideBody() {
-        return side;
-    }
-    public float getSideWidth() {
-        return sideWidth;
-    }
-    public float getMiddleX() {
-        return middleX;
-    }
-    public float getMiddleY() {
-        return middleY;
-    }
-    public float getSideY() {
-        return sideY;
+    // Fields
+    /**
+     * The image for the side of the platform.
+     */
+    public final GameBodyImage sideImage;
+    /**
+     * The image for the middle of the platform.
+     */
+    public final GameBodyImage middleImage;
+    /**
+     * The x offset for the side image.
+     */
+    public final float sideX;
+    /**
+     * The y offset for the side image.
+     */
+    public final float sideY;
+    /**
+     * The x offset for the middle image.
+     */
+    public final float middleX;
+    /**
+     * The y offset for the middle image.
+     */
+    public final float middleY;
+    // Constructor
+    PlatformType(GameBodyImage sideImage, GameBodyImage middleImage, float sideX, float sideY, float middleX, float middleY) {
+        this.sideImage = sideImage;
+        this.middleImage = middleImage;
+        this.sideX = sideX;
+        this.sideY = sideY;
+        this.middleX = middleX;
+        this.middleY = middleY;
     }
 }

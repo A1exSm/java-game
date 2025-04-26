@@ -1,20 +1,23 @@
 package game.body.items.dropTable;
-
-import city.cs.engine.StaticBody;
 import game.body.items.HealthPotion;
 import game.body.items.StrengthPotion;
-import game.body.staticstructs.ground.hauntedForest.HauntedBackdrop;
 import game.core.GameWorld;
 import game.enums.items.ItemSize;
 import game.enums.items.ItemType;
 import org.jbox2d.common.Vec2;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-public class DropTable {
+// Class
+/**
+ * DropTable class manages the drop chances and sizes of items in the game.
+ * It contains a static map of item drop entries and their respective drop chances.
+ * The class provides methods to add new entries, validate them, and drop items based on random chance.
+ * @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ * @since 23-04-2025
+ */
+public final class DropTable {
     // Fields
     private static final Map<ItemDropEntry, Integer> dropTable = new HashMap<>();
     static {
@@ -31,6 +34,12 @@ public class DropTable {
         validateEntries();
     }
     // Private | Static | Methods
+    /**
+     * Adds a new {@link ItemDropEntry} to the drop table with a specified drop chance.
+     * @param entry The ItemDropEntry to be added.
+     * @param dropChance The drop chance for the entry.
+     * @throws IllegalArgumentException if the entry already exists or if the cumulative drop chance exceeds 10.
+     */
     private static void newEntry(ItemDropEntry entry, int dropChance) {
         if (dropTable.containsKey(entry)) {
             throw new IllegalArgumentException("Drop entry " + entry.itemType() + " already exists in the drop table.");
@@ -44,7 +53,12 @@ public class DropTable {
             }
         }
     }
-
+    /**
+     * Retrieves the ItemDropEntry associated with a specific ItemType.
+     * @param itemType The ItemType to search for.
+     * @return The corresponding ItemDropEntry.
+     * @throws NullPointerException if no entry is found for the given ItemType.
+     */
     private static ItemDropEntry getDropEntry(ItemType itemType) {
         for (Map.Entry<ItemDropEntry, Integer> entry : dropTable.entrySet()) {
             if (entry.getKey().itemType() == itemType) {
@@ -53,14 +67,24 @@ public class DropTable {
         }
         throw new NullPointerException("No drop entry found for type " + itemType);
     }
-
+    /**
+     * Validates all entries in the drop table to ensure they are correctly configured.
+     * @throws IllegalStateException if any entry is invalid,
+     * see {@link ItemDropEntry#validate()} for details.
+     * TLDR: dropSize must be 100%, and size must be in the range of 0-10
+     */
     private static void validateEntries() {
         for (ItemDropEntry itemDropEntry  : dropTable.keySet()) {
             itemDropEntry.validate();
         }
     }
-
     // Public | Methods
+    /**
+     * Drops an item at a specified position in the game world.
+     * The item type and size are determined randomly based on the drop table.
+     * @param gameWorld The GameWorld instance where the item will be dropped.
+     * @param position The position where the item will be dropped.
+     */
     public void dropItem(GameWorld gameWorld, Vec2 position) {
         Random rand = new Random();
         ItemDropEntry entry = getRandomEntry(rand.nextInt(10));
@@ -89,7 +113,16 @@ public class DropTable {
         }
         return null;
     }
-
+    /**
+     * Determines the size of the item to be dropped based on a random value.
+     *
+     * @param entry The ItemDropEntry containing size drop entries.
+     * @param randInt A random integer between 0-99 representing percentage chance
+     * @return The selected ItemSize based on probability distribution.
+     * @throws IllegalStateException if no size is found for the given random integer,
+     * generally can only occur if {@link #validateEntries()} was not called.
+     * @see ItemSize
+     */
     private ItemSize getRandomSize(ItemDropEntry entry, int randInt) {
         int pointer = 0;
         for (SizeDropEntry sizeEntry : entry.sizeEntryArray()) {
@@ -100,7 +133,18 @@ public class DropTable {
         }
         throw new IllegalStateException("No size found for random integer " + randInt + ", size should have added to 100!");
     }
-
+    /**
+     * Spawns an item in the game world at a specified position.
+     * The item type and size are provided as parameters.
+     *
+     * @param gameWorld The GameWorld instance where the item will be spawned.
+     * @param position The position where the item will be spawned.
+     * @param itemType The type of item to spawn.
+     * @param size The size of the item to spawn.
+     * @throws IllegalArgumentException if the item type does not have a corresponding case.
+     * @see ItemType
+     * @see ItemSize
+     */
     private void spawnItem(GameWorld gameWorld, Vec2 position, ItemType itemType, ItemSize size) {
         switch (itemType) {
             case HEALTH_POTION -> new HealthPotion(size, position,gameWorld);
@@ -109,5 +153,4 @@ public class DropTable {
         }
        gameWorld.rePlaceBodies(position);
     }
-
 }

@@ -1,6 +1,5 @@
 package game.core;
 // Imports
-
 import city.cs.engine.SoundClip;
 import game.core.console.Console;
 import game.enums.SoundGroups;
@@ -9,10 +8,11 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
 // Class
-
 /**
  * A class that extending SoundClip and is used to handle the game sounds. <br>
  * Has additional features such as volume control, global volume control, and delayed playing.
+ *  @author Alexander Smolowitz, alexander.smolowitz@city.ac.uk
+ *  @since 17-03-2025
  */
 public class GameSound extends SoundClip {
     // Fields
@@ -22,15 +22,12 @@ public class GameSound extends SoundClip {
      * @see #setGlobal(double)
      */
     private static double globalVolume = 0.10;
-
     /**
      * A double field used to hold the local volume of the sound.<br>
      * Allows for individual volume to be set using {@link #setVolume(double)}.
      * @see #setVolume(double)
      */
     private double localVolume;
-
-
     /**
      * A boolean field used to hold the state of sound playing.<br>
      * Allows for the sound to be toggled between playing and stopped using {@link #play()} and {@link #stop()}.
@@ -38,12 +35,10 @@ public class GameSound extends SoundClip {
      * @see #stop()
      */
     private boolean isPlaying = false;
-
     /**
      * A String field used to holding the local path to the sound file from the root directory.<br>
      */
     private String path;
-
     /**
      * A Timer field used to hold the elapsed time of the sound playing.<br>
      * Allows for the sound to be stopped after a certain duration using {@link #stop()}.
@@ -52,13 +47,11 @@ public class GameSound extends SoundClip {
      * @see Timer
      */
     private final Timer elapsedTimer;
-
     /**
      * A SoundGroups field used to hold the sound group of the sound.<br>
      * @see SoundGroups
      */
     private SoundGroups group;
-
     // Constructor
     /**
      * Constructor for looping sounds.
@@ -78,7 +71,6 @@ public class GameSound extends SoundClip {
         elapsedTimer = null;
         setup(path, group);
     }
-
     /**
      * Constructor for sounds with a specific duration.
      * @param path Path to the sound file.
@@ -109,10 +101,10 @@ public class GameSound extends SoundClip {
         group.addSound(this);
         setVolume(group.getVolume());
     }
-
     // Methods | Static | Private
     /**
      * Handles errors during sound creation.
+     * Allows for one unified method for all types of GameSounds.
      * @param path Path to the sound file.
      * @param group The sound group to add the sound to.
      * @param loops Whether the sound should loop.
@@ -140,12 +132,12 @@ public class GameSound extends SoundClip {
         }
         return sound;
     }
-
     // Methods | Static | Public
     /**
      * Creates a new looping sound.
      * @param path Path to the sound file.
      * @param group The sound group to add the sound to.
+     * @param loops Whether the sound should loop.
      * @return A new GameSound instance.
      */
     public static GameSound createSound(String path, SoundGroups group, boolean loops) {
@@ -161,22 +153,19 @@ public class GameSound extends SoundClip {
     public static GameSound createSound(String path, SoundGroups group, int duration) {
         return errorHandle(path, group, false, duration, false);
     }
-
     /**
      * Plays a sound after a specified delay.
      * @param sound The GameSound instance to play.
      * @param delayMs Delay in milliseconds before playing the sound.
      */
     public static void playOnDelay(GameSound sound, int delayMs) {
-        javax.swing.Timer timer = new javax.swing.Timer(delayMs, e ->{
-            sound.play();
-        });
+        javax.swing.Timer timer = new javax.swing.Timer(delayMs, e -> sound.play());
         timer.setRepeats(false);
         timer.start();
     }
-
     /**
-     * If sounds is already playing, creates a duplicate instance and plays it.
+     * If sounds is already playing, creates a duplicate instance
+     * and calls {@link #play()} on it.
      */
     public void forcedPlay() {
         if (isPlaying) {
@@ -185,7 +174,6 @@ public class GameSound extends SoundClip {
             play();
         }
     }
-
     // Methods | Public | @Override
     /**
      * Plays the sound if it is not already playing.
@@ -222,12 +210,16 @@ public class GameSound extends SoundClip {
      * @param volume (double) The volume level to set.
      */
     @Override
-    public void setVolume(double volume) { // When used on mac experiences an issue where occasionally Master Gain Control not available.
+    public void setVolume(double volume) {
+        /*
+        When trying to set the volume on Mac, sometimes I experience an issue where occasionally it says Master Gain Control is not available.
+        Maybe I do not understand how to fix this properly, but as far as I can tell, catching this requires changing city.cs.engine.SoundClip.java which is not possible.
+         */
         localVolume = volume;
         try {
             super.setVolume(volume);
         } catch (IllegalArgumentException e) {
-                super.setVolume(0.0001);
+                super.setVolume(0.0001); // Set to a very low volume instead of 0, which is not allowed.
         }
     }
     // Methods | Static | Public | Setters
@@ -251,7 +243,6 @@ public class GameSound extends SoundClip {
     public boolean isPlaying() {
         return isPlaying;
     }
-
     /**
      * Gets the global volume level.
      * @return (double) The global volume level.
@@ -259,7 +250,6 @@ public class GameSound extends SoundClip {
     public static double getGlobalVolume() {
         return globalVolume;
     }
-
     /**
      * Gets the local volume level of this sound instance.
      * @return (double) The local volume level.

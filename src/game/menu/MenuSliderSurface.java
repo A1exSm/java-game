@@ -2,7 +2,6 @@ package game.menu;
 // Imports
 import game.core.GameSound;
 import game.core.GameView;
-import game.core.console.Console;
 import game.enums.SoundGroups;
 import javax.swing.*;
 import java.awt.*;
