@@ -59,6 +59,8 @@ public class SelectLevel {
     // Fields
     private static final String STYLE_1 = "style=\"font-family: 'Blackadder ITC'; font-size: 72pt; color: rgb(96,87,73); font-weight: bold; font-style: italic;\"";
     private static final String STYLE_2 = "style=\"font-family: 'Blackadder ITC'; font-size: 32pt; color: rgb(96,87,73); font-weight: bold;\"";
+    private static final String STYLE_1_MAC = "style=\"font-family: 'Apple Chancery'; font-size: 72pt; color: rgb(96,87,73); font-weight: bold; font-style: italic;\"";
+    private static final String STYLE_2_MAC = "style=\"font-family: 'Apple Chancery'; font-size: 32pt; color: rgb(96,87,73); font-weight: bold;\"";
 
     /**
      * Sets appropriate default values and states.
@@ -228,10 +230,18 @@ public class SelectLevel {
     }
 
     private void setText(JTextPane pane, MobStore mobStore, Environments environment, int level) {
+        if (System.getProperty("os.name").contains("Mac")) {
+            pane.setText("<html><head></head><body><p " + STYLE_1_MAC + ">" + environment.title + "</p><p " + STYLE_2_MAC + ">Level: " + (level+1) + "</p><p " + STYLE_2_MAC + ">Number of enemies: " + mobStore.getMobData(level) + "</p></body></html>");
+            return;
+        }
         pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.title + "</p><p " + STYLE_2 + ">Level: " + (level+1) + "</p><p " + STYLE_2 + ">Number of enemies: " + mobStore.getMobData(level) + "</p></body></html>");
     }
 
     private void setText(JTextPane pane, Environments environment) {
+        if (System.getProperty("os.name").contains("Mac")) {
+            pane.setText("<html><head></head><body><p " + STYLE_1_MAC + ">" + environment.title + "</p><br></body></html>");
+            return;
+        }
         pane.setText("<html><head></head><body><p " + STYLE_1 + ">" + environment.title + "</p><br></body></html>");
     }
 

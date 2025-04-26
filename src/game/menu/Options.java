@@ -67,13 +67,32 @@ public class Options {
             }
         });
         addSounds(optionsPanel);
+        if (System.getProperty("os.name").contains("Mac")) {
+            Font mac_font = new Font("Apple Chancery", Font.ITALIC, 72);
+            Font mac_font_buttons = new Font("Apple Chancery", Font.BOLD, 36);
+            setMacFonts(optionsPanel, mac_font, mac_font_buttons);
+            Console.log("here");
+        }
     }
+    private void setMacFonts(JPanel panel, Font mac_font, Font mac_font_buttons) {
+        for (Component component : panel.getComponents()) {
+            if (component instanceof JPanel subPanel) {
+                setMacFonts(subPanel, mac_font, mac_font_buttons);
+            } else if (component == titleLabel) {
+                component.setFont(mac_font);
+            } else if (component instanceof JLabel) {
+                component.setFont(mac_font_buttons);
+            }
+        }
+    }
+
     /**
      * Gets the options panel to add to a parent component.
      * @return the options panel
      */
     public JPanel getOptionsPanel() {
-        return optionsPanel;}
+        return optionsPanel;
+    }
 
     private void createUIComponents() {
         // init
