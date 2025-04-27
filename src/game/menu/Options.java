@@ -71,7 +71,6 @@ public class Options {
             Font mac_font = new Font("Apple Chancery", Font.ITALIC, 72);
             Font mac_font_buttons = new Font("Apple Chancery", Font.BOLD, 36);
             setMacFonts(optionsPanel, mac_font, mac_font_buttons);
-            Console.log("here");
         }
     }
     private void setMacFonts(JPanel panel, Font mac_font, Font mac_font_buttons) {
@@ -121,8 +120,10 @@ public class Options {
         for (Component component : panel.getComponents()) {
             if (component instanceof JButton button) {
                 button.setRolloverEnabled(true);
-                button.addActionListener(e -> GAME_SOUND.play());
                 button.addChangeListener(e -> {
+                    if (button.getModel().isPressed()) {
+                        GAME_SOUND.forcedPlay();
+                    }
                     if (button.getModel().isRollover()) {
                         CURSOR_SOUND.forcedPlay();
                     }

@@ -169,7 +169,8 @@ public class GameSound extends SoundClip {
      */
     public void forcedPlay() {
         if (isPlaying) {
-            createSound(path, group, elapsedTimer.getDelay()).play();
+            GameSound newSound  = createSound(path, group, elapsedTimer.getDelay());
+            newSound.play();
         } else {
             play();
         }
