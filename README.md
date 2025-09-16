@@ -1,3 +1,14 @@
+# Java Game
+
+A Java game built on City University of London's Game Engine.
+
+## Overview
+
+This project is a 2D Java game developed in Java, using a custom game engine provided by City University of London. The game focuses on interactive player movement, level-based progression, animated sprites, and a modular game architecture.
+
+## Key Development Focuses
+I Focused on making the game modular and easily expandable, meaning most game features only require an inheritance and a small amount of input to work, and can be build ontop or overriden.
+
 <h3>Commits from GamePlayground repo</h3>
 <details>
   <summary>30/01/2025 - <a href="https://github.com/A1exSm/GamePlayground/commit/d55320c243c27dc3dc19cf69b1122e42e800d7db" target="_blank">Initial Commit</a></summary>
